@@ -1,6 +1,6 @@
 
 const isElement = require('iselement');
-const filter = require('lodash/filter');
+// const filter = require('lodash/filter');
 const SvgPath = require('path-svg/svg-path');
 const cache = require('./cache');
 
@@ -13,6 +13,9 @@ const cache = require('./cache');
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
 const target = '#btn';
+
+// Distance from line to
+const lineOffset = 20;
 
 // Options for arrows
 // const arrowOpts = {
@@ -32,11 +35,21 @@ window.addEventListener('resize', () => {
 function draw() {
   const coached = coach();
   const text = addText('Click this button to do stuff!');
-  arrow(text, coached);
+
+  arrow(
+    // middleOfEdge(text, 'bottom'),
+    // middleOfEdge(coached, 'right'),
+    coached,
+    text,
+
+  );
 }
+window.draw = draw;
 
 function coach() {
   const elm = cache.default('elm', () => document.querySelector(target));
+
+  if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
 
   elm.style.position = 'absolute';
   // elm.style['box-shadow'] = '0 0 150px 30px #fff';
@@ -102,16 +115,27 @@ function addText(textStr) {
     return text;
   });
 
-  text.className = 'coachmark-text';
+  text.className = 'coachmark-text draggable-source';
   // const ref = (text.innerText || text.textContent);
   text.textContent = textStr;
 
   return text;
 }
 
+// Draw arrow from one node to another
 function arrow(from, to) {
-  const fromPos = middleOf(from);
-  const toPos = middleOf(to);
+  const fromRect = elementRect(from);
+  const toRect = elementRect(to);
+
+  const toMiddle = middleOf(to);
+  const fromEdge = intersectionEdge({ x: toMiddle[0], y: toMiddle[1] }, fromRect);
+  const fromPos = middleOfEdge(to, fromEdge);
+
+  const fromMiddle = middleOf(from);
+  const toEdge = intersectionEdge({ x: fromMiddle[0], y: fromMiddle[1] }, toRect);
+  const toPos = middleOfEdge(from, toEdge);
+
+  // console.log(fromEdge, toEdge, fromPos, toPos);
 
   const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
   const recipS = (1 / s) * -1;
@@ -127,7 +151,7 @@ function arrow(from, to) {
   ctrlX *= dir[0];
   ctrlY *= dir[1];
 
-  console.log(recipS, arrowDist, mid, r, ctrlX, ctrlY);
+  // console.log(recipS, arrowDist, mid, r, ctrlX, ctrlY);
 
   const c1x = mid[0];
   const c1y = toPos[1];
@@ -166,6 +190,40 @@ function middleOf(node) {
   const rect = elementRect(node);
 
   return [rect.left + (rect.width / 2), rect.top + (rect.height / 2)];
+}
+
+function middleOfEdge(node, edge) {
+  const rect = elementRect(node);
+
+  const width = rect.width;
+  const height = rect.height;
+  const middleX = rect.width / 2;
+  const middleY = rect.height / 2;
+  let x = rect.left + middleX;
+  let y = rect.top + middleY;
+
+  switch (edge) {
+    case 'top':
+      x = rect.left + middleX;
+      y = rect.top - lineOffset;
+      break;
+    case 'right':
+      x = rect.left + width + lineOffset;
+      y = rect.top + middleY;
+      break;
+    case 'bottom':
+      x = rect.left + middleX;
+      y = rect.top + height + lineOffset;
+      break;
+    case 'left':
+      x = rect.left - lineOffset;
+      y = rect.top + middleY;
+      break;
+    default:
+      // do nothing
+  }
+
+  return [x, y];
 }
 
 function elementRect(node, offsetParent) {
@@ -209,6 +267,37 @@ function dirToViewportMid(pos) {
     pos[0] > mid[0] ? -1 : 1,
     pos[1] > mid[1] ? -1 : 1,
   ];
+}
+
+function intersectionEdge(point, rect) {
+  const slope = (rect.top - point.y) / (rect.left - point.x);
+  const hsw = slope * rect.width / 2;
+  const hsh = (rect.height / 2) / slope;
+  const hh = rect.height / 2;
+  const hw = rect.width / 2;
+  // const TOPLEFT = {x: rect.x - hw, y: rect.y + hh};
+  // const BOTTOMLEFT = {x: rect.x - hw, y: rect.y - hh};
+  // const BOTTOMRIGHT = {x: rect.x + hw, y: rect.y - hh};
+  // const TOPRIGHT = {x: rect.x + hw, y: rect.y + hh};
+  if (-hh <= hsw && hsw <= hh) {
+      // line intersects
+    if (rect.left < point.x) {
+          // right edge;
+      return 'right'; // [TOPRIGHT, BOTTOMRIGHT];
+    } else if (rect.left > point.x) {
+          // left edge
+      return 'left'; // [TOPLEFT, BOTTOMLEFT];
+    }
+  }
+  if (-hw <= hsh && hsh <= hw) {
+    if (rect.top < point.y) {
+          // top edge
+      return 'top'; // [TOPLEFT, TOPRIGHT];
+    } else if (rect.top > point.y) {
+          // bottom edge
+      return 'bottom'; // [BOTTOMLEFT, BOTTOMRIGHT];
+    }
+  }
 }
 
 function clear() {

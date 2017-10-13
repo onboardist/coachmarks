@@ -1,11 +1,12 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
-    <style>
+    <style type="text/css">
       /* Styles go here */
 
       #btn {
         margin-top: 150px;
+        transition: none;
       }
 
       body {
@@ -71,10 +72,11 @@
         color: #fefefe;
         /* text-decoration: underline; */
         position: fixed;
-        bottom: 200px;
+        top: 20px;
         left: 0px;
         text-shadow: 2px 2px #333;
-        padding: 20px;
+        margin: 20px;
+        z-index: 2;
       }
 
       .coachmark-svg {
@@ -83,9 +85,12 @@
         left:0;
         height:100%;
         width:100%;
-        z-index: 200;
+        z-index: 1;
        }
     </style>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.2/lib/draggable.js"></script> -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.8/interact.min.js"></script>
   </head>
   <body>
     <!-- TODO: inject this in the script -->
@@ -111,5 +116,47 @@
       some hello and jeez woodchuck the.</p>
 
     <button class="btn btn-lg btn-primary" id="btn">Foo Bar Baz</button>
+
+    <script>
+      // var drag = new Draggable.Draggable([document.body]);
+      interact('.draggable-source').draggable({
+        // keep the element within the area of it's parent
+        restrict: {
+          // restriction: "parent",
+          // endOnly: true,
+          // elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+        },
+        // enable autoScroll
+        autoScroll: true,
+
+        // call this function on every dragmove event
+        onmove: dragMoveListener,
+        // call this function on every dragend event
+        onend: function (event) {
+          window.draw();
+        }
+      });
+
+      function dragMoveListener (event) {
+        var target = event.target,
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        // translate the element
+        // target.style.webkitTransform =
+        // target.style.transform =
+        //   'translate(' + x + 'px, ' + y + 'px)';
+        //
+        // // update the posiion attributes
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+
+        target.style.top = y;
+        target.style.left = x;
+
+        requestAnimationFrame(window.draw);
+      }
+    </script>
   </body>
 </html>
