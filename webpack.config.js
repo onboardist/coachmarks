@@ -8,7 +8,8 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const plugins = [];
 
 const env = process.env.NODE_ENV || '';
-if (env.indexOf('prod') > -1) {
+const isProd = env.indexOf('prod') > -1;
+if (isProd) {
   plugins.push(new UglifyJSPlugin({
     uglifyOptions: {
       ie8: false,
@@ -32,7 +33,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'coachmarks.js',
+    filename: isProd ? 'coachmarks.min.js' : 'coachmarks.js',
   },
 
   module: {

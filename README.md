@@ -9,13 +9,24 @@
 
 # Usage
 
-    const coachmarks = require('coachmarks');
+```javascript
+const coachmarks = require('coachmarks');
+```
 
 or
 
-    import coachmarks from 'coachmarks';
+```javascript
+import coachmarks from 'coachmarks';
 
+coachmarks.add('start-button', {
+  target: '#start-button',
+  content: 'Click this button to get started!'.
+});
 
+document.addEventListener('DOMContentLoaded', () => {
+  coachmarks.show('start-button');
+});
+```
 
 # Notes
 
@@ -24,10 +35,10 @@ or
 # Todo
 
 - [ ] Make script a node module
-- [ ]
+- [ ] Allow configuring targets and text via JSON. (Multiple targets)
+- [ ] Allow configuring trigger events, or API
 - [x] SVG path getting clipped when it's mostly horizontal (chalk filter causing it). (Fixed in a very hacky way (5000px...))
-- [x] BUG: when text is on right side of button, arrowhead is on left side of button instead of right side.
-      And the start of the line is from the right side of the text, not left side.
+- [x] BUG: when text is on right side of button, arrowhead is on left side of button instead of right side. And the start of the line is from the right side of the text, not left side.
 - [ ] Turn SVG stuff into content that gets appended to page on script load
 - [ ] If text is just a little bit above or below the button vertically, it will anchor to the top position when it should still be the side
 - [x] Reorient arrowhead so its angle matches a straight line from start point to end point. (Done w/ quadratic curve)
@@ -36,3 +47,5 @@ or
 - [ ] Relative-size the arrow marker based on viewport size
 - [ ] Content needs to not scroll, which means scrolling elements into view.
 - [ ] Handle rezizing, orientation changes, and media query changes
+
+# Idea
