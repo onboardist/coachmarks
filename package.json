@@ -1,6 +1,6 @@
 {
   "name": "coachmarks",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "On-board new users to your app and introduce new features with SVG sketches (coachmarks)",
   "main": "dist/coachmarks.js",
   "browser": "dist/coachmarks.js",
