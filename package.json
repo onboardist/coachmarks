@@ -1,7 +1,7 @@
 {
   "name": "coachmarks",
   "version": "1.0.0",
-  "description": "",
+  "description": "On-board new users and introduce new features with explanatory coachmarks",
   "main": "dist/coachmarks.js",
   "browser": "dist/coachmarks.js",
   "scripts": {

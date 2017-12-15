@@ -4,12 +4,6 @@ const isElement = require('iselement');
 const SvgPath = require('path-svg/svg-path');
 const cache = require('./cache');
 
-// Code goes here
-// TODO: relative-size the arrow marker based on viewport size
-// TODO: Fix positioning of arrow head
-// TODO: content needs to not scroll, which means scrolling elements into view.
-// TODO: handle rezizing, orientation changes, and media query changes
-
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
 const target = '#btn';
@@ -135,7 +129,7 @@ function arrow(from, to) {
   const toEdge = intersectionEdge({ x: fromMiddle[0], y: fromMiddle[1] }, toRect);
   const toPos = middleOfEdge(from, toEdge);
 
-  // console.log(fromEdge, toEdge, fromPos, toPos);
+  console.log(fromEdge, toEdge, fromPos, toPos);
 
   const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
   const recipS = (1 / s) * -1;
@@ -170,6 +164,9 @@ function arrow(from, to) {
   path.setAttribute('fill', 'none');
   path.setAttribute('filter', 'url(#coachmark-chalk)');
   path.setAttribute('marker-end', 'url(#arrow)');
+
+  const g = document.createElement('g');
+  // g.appendChild(path);
 
   if (!path.parentNode) {
     svg.appendChild(path);
@@ -284,10 +281,10 @@ function intersectionEdge(point, rect) {
   // const TOPRIGHT = {x: rect.x + hw, y: rect.y + hh};
   if (-hh <= hsw && hsw <= hh) {
       // line intersects
-    if (rect.left < point.x) {
+    if (rect.left >= point.x) {
           // right edge;
       return 'right'; // [TOPRIGHT, BOTTOMRIGHT];
-    } else if (rect.left > point.x) {
+    } else if (rect.left < point.x) {
           // left edge
       return 'left'; // [TOPLEFT, BOTTOMLEFT];
     }
