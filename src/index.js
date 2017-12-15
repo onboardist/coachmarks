@@ -157,7 +157,9 @@ function arrow(from, to) {
   const c1y = toPos[1];
   const c2x = fromPos[0];
   const c2y = mid[1];
-  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
+  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
+  // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
+  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
 
   const svg = cache.default('svg', () => createSVG());
   const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));

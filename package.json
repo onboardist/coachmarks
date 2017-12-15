@@ -62,7 +62,24 @@
         "error",
         "always-multiline"
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": "cypress/**",
+        "globals": {
+          "before": false,
+          "beforeEach": false,
+          "cy ": false,
+          "Cypress ": false,
+          "describe": false,
+          "ddescribe": false,
+          "it": false
+        },
+        "rules": {
+          "semi": "off"
+        }
+      }
+    ]
   },
   "ava": {
     "babel": "inherit",
