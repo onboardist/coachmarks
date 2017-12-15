@@ -9,7 +9,13 @@
 
 # Usage
 
+    const coachmarks = require('coachmarks');
+
+or
+
     import coachmarks from 'coachmarks';
+
+
 
 # Notes
 

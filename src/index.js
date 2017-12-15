@@ -1,5 +1,5 @@
 
-const isElement = require('iselement');
+// const isElement = require('iselement');
 // const filter = require('lodash/filter');
 const SvgPath = require('path-svg/svg-path');
 const cache = require('./cache');
@@ -131,24 +131,24 @@ function arrow(from, to) {
 
   console.log(fromEdge, toEdge, fromPos, toPos);
 
-  const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  const recipS = (1 / s) * -1;
+  // const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
+  // const recipS = (1 / s) * -1;
 
-  const arrowDist = lineDist(fromPos[0], fromPos[1], toPos[0], toPos[1]);
+  // const arrowDist = lineDist(fromPos[0], fromPos[1], toPos[0], toPos[1]);
   const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
 
-  const r = Math.sqrt(1 + (recipS ** recipS));
-  let ctrlX = mid[0] + (arrowDist / r);
-  let ctrlY = mid[1] + (arrowDist * recipS / r);
-  const dir = dirToViewportMid(mid[0], mid[1]);
+  // const r = Math.sqrt(1 + (recipS ** recipS));
+  // let ctrlX = mid[0] + (arrowDist / r);
+  // let ctrlY = mid[1] + (arrowDist * recipS / r);
+  // const dir = dirToViewportMid(mid[0], mid[1]);
 
-  ctrlX *= dir[0];
-  ctrlY *= dir[1];
+  // ctrlX *= dir[0];
+  // ctrlY *= dir[1];
 
   // console.log(recipS, arrowDist, mid, r, ctrlX, ctrlY);
 
-  const c1x = mid[0];
-  const c1y = toPos[1];
+  // const c1x = mid[0];
+  // const c1y = toPos[1];
   const c2x = fromPos[0];
   const c2y = mid[1];
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
@@ -164,9 +164,6 @@ function arrow(from, to) {
   path.setAttribute('fill', 'none');
   path.setAttribute('filter', 'url(#coachmark-chalk)');
   path.setAttribute('marker-end', 'url(#arrow)');
-
-  const g = document.createElement('g');
-  // g.appendChild(path);
 
   if (!path.parentNode) {
     svg.appendChild(path);
@@ -246,28 +243,28 @@ function midPoint(x1, y1, x2, y2) {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
 
-function lineDist(x1, y1, x2, y2) {
-  return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
-}
+// function lineDist(x1, y1, x2, y2) {
+//   return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
+// }
+//
+// function slope(x1, y1, x2, y2) {
+//   return (y2 - y1) / (x2 - x1);
+// }
+//
+// function viewportMid() {
+//   return [
+//     Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 2,
+//     Math.max(document.documentElement.clientHeight, window.innerHeight || 0) / 2,
+//   ];
+// }
 
-function slope(x1, y1, x2, y2) {
-  return (y2 - y1) / (x2 - x1);
-}
-
-function viewportMid() {
-  return [
-    Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 2,
-    Math.max(document.documentElement.clientHeight, window.innerHeight || 0) / 2,
-  ];
-}
-
-function dirToViewportMid(pos) {
-  const mid = viewportMid();
-  return [
-    pos[0] > mid[0] ? -1 : 1,
-    pos[1] > mid[1] ? -1 : 1,
-  ];
-}
+// function dirToViewportMid(pos) {
+//   const mid = viewportMid();
+//   return [
+//     pos[0] > mid[0] ? -1 : 1,
+//     pos[1] > mid[1] ? -1 : 1,
+//   ];
+// }
 
 function intersectionEdge(point, rect) {
   const slope = (rect.top - point.y) / (rect.left - point.x);
@@ -300,19 +297,19 @@ function intersectionEdge(point, rect) {
   }
 }
 
-function clear() {
-  const vals = cache.all();
-
-  for (const key in vals) {
-    if (Object.hasOwnProperty.call(vals, key)) {
-      const val = vals[key];
-      if (isElement(val)) {
-        val.remove();
-        cache.remove(key);
-      }
-    }
-  }
-}
+// function clear() {
+//   const vals = cache.all();
+//
+//   for (const key in vals) {
+//     if (Object.hasOwnProperty.call(vals, key)) {
+//       const val = vals[key];
+//       if (isElement(val)) {
+//         val.remove();
+//         cache.remove(key);
+//       }
+//     }
+//   }
+// }
 
 // function controlPointLength(x1, y1, x2, y2) {
 //
