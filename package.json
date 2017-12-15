@@ -1,6 +1,6 @@
 {
   "name": "coachmarks",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "On-board new users to your app and introduce new features with SVG sketches (coachmarks)",
   "main": "dist/coachmarks.js",
   "browser": "dist/coachmarks.js",
@@ -111,7 +111,7 @@
     "babel": "inherit",
     "require": [
       "babel-register",
-			"./test/helpers/setup-browser-env.js"
+      "./test/helpers/setup-browser-env.js"
     ]
   },
   "dependencies": {
