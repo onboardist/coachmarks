@@ -1,6 +1,6 @@
 {
   "name": "coachmarks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "On-board new users and introduce new features with explanatory coachmarks",
   "main": "dist/coachmarks.js",
   "browser": "dist/coachmarks.js",
@@ -80,9 +80,6 @@
           "comma-dangle": "off",
           "no-var": "off",
           "no-undef": "off",
-          "space-before-function-paren": "off",
-          "space-before-blocks": "off",
-          "prefer-arrow-callback": "off",
           "space-before-function-paren": "off",
           "space-before-blocks": "off",
           "prefer-arrow-callback": "off",
