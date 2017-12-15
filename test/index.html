@@ -122,6 +122,15 @@
     <button class="btn btn-lg btn-primary" id="btn">Foo Bar Baz</button>
 
     <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        coachmarks.add('test', {
+          target: '#btn',
+          text: 'This is some text!',
+        });
+
+        coachmarks.show('test');
+      });
+
       // var drag = new Draggable.Draggable([document.body]);
       interact('.draggable-source').draggable({
         // keep the element within the area of it's parent
@@ -137,12 +146,12 @@
         onmove: dragMoveListener,
         // call this function on every dragend event
         onend: function (event) {
-          window.draw();
+          coachmarks.redrawAll();
         }
       });
 
       function dragMoveListener (event) {
-        const rect = window.elementRect(event.target);
+        const rect = elementRect(event.target);
 
         // console.log(rect);
 
@@ -163,7 +172,23 @@
         target.style.top = y;
         target.style.left = x;
 
-        requestAnimationFrame(window.draw);
+        requestAnimationFrame(() => coachmarks.redrawAll());
+      }
+
+      function elementRect(node, offsetParent) {
+        if (offsetParent === true) offsetParent = node.offsetParent;
+
+        const rect = node.getBoundingClientRect();
+        const prect = offsetParent ?
+          offsetParent.getBoundingClientRect() :
+          { left: 0, top: 0 };
+
+        return {
+          left: rect.left - prect.left,
+          top: rect.top - prect.top,
+          width: rect.width,
+          height: rect.height,
+        };
       }
     </script>
   </body>

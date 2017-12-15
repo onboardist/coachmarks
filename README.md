@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
 - [ ] Make script a node module
 - [ ] Allow configuring targets and text via JSON. (Multiple targets)
 - [ ] Allow configuring trigger events, or API
+- [ ] Add close button
+- [ ] Append CSS to page from inside module
 - [x] SVG path getting clipped when it's mostly horizontal (chalk filter causing it). (Fixed in a very hacky way (5000px...))
 - [x] BUG: when text is on right side of button, arrowhead is on left side of button instead of right side. And the start of the line is from the right side of the text, not left side.
 - [ ] Turn SVG stuff into content that gets appended to page on script load

@@ -1,41 +1,46 @@
+'use strict';
 
-// const isElement = require('iselement');
-// const filter = require('lodash/filter');
 const SvgPath = require('path-svg/svg-path');
 const cache = require('./cache');
 
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
-const target = '#btn';
+const elmNames = ['elm', 'text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'svg', 'path'];
 
-// Distance from line to
-const lineOffset = 20;
-
-// Options for arrows
-// const arrowOpts = {
-//   textPos: 'middle';
-// }
-
-export function redrawAll() {
-  const coached = coach();
-  const text = addText('Click this button to do stuff!');
-
-  arrow(
-    // middleOfEdge(text, 'bottom'),
-    // middleOfEdge(coached, 'right'),
-    coached,
-    text,
-
-  );
+export function clear() {
+  elmNames.forEach(node => {
+    if (node instanceof Node) node.remove();
+  });
 }
 
-export function coach() {
-  const elm = cache.default('elm', () => document.querySelector(target));
+export function redrawAll() {
+  const all = cache.all();
+
+  Object.keys(all).forEach(key => {
+    const item = cache(key);
+    if (!(item instanceof Node)) {
+      draw(key);
+    }
+  });
+}
+
+export function draw(name) {
+  const mark = cache(name);
+  if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
+
+  const coached = coach(mark);
+  const text = addText(mark.text);
+  arrow(coached, text);
+}
+
+function coach(mark) {
+  if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
+
+  const elm = cache.default('elm', () => document.querySelector(mark.target));
 
   if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
 
   elm.style.position = 'absolute';
-  // elm.style['box-shadow'] = '0 0 150px 30px #fff';
   elm.style['z-index'] = 102;
 
   const borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
@@ -66,15 +71,9 @@ export function coach() {
   coachRight.style.left = right + 'px';
   coachBottom.style.top = bottom + 'px';
 
-  // const longDim = height > width ? height : width;
-
   const glow = cache.default('glow', () => document.createElement('div'));
 
   glow.className = 'coachmark-glow';
-  // glow.style.top = (top + height / 4) + 'px';
-  // glow.style.left = (left + width / 4) + 'px';
-  // glow.style.width = width - width / 2 + 'px';
-  // glow.style.height = height - height / 2 + 'px';
   glow.style.top = (top) + 'px';
   glow.style.left = (left) + 'px';
   glow.style.width = (width) + 'px';
@@ -118,7 +117,7 @@ function arrow(from, to) {
   const toEdge = intersectionEdge({ x: fromMiddle[0], y: fromMiddle[1] }, toRect);
   const toPos = middleOfEdge(from, toEdge);
 
-  console.log(fromEdge, toEdge, fromPos, toPos);
+  // console.log(fromEdge, toEdge, fromPos, toPos);
 
   // const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
   // const recipS = (1 / s) * -1;
@@ -178,6 +177,9 @@ function middleOf(node) {
 }
 
 function middleOfEdge(node, edge) {
+  // Spacing between line and node
+  const lineOffset = 20;
+
   const rect = elementRect(node);
 
   const width = rect.width;

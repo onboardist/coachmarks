@@ -34,6 +34,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: isProd ? 'coachmarks.min.js' : 'coachmarks.js',
+    library: 'coachmarks',
+    libraryTarget: 'var',
   },
 
   module: {

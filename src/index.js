@@ -1,6 +1,5 @@
-import isString from 'lodash';
 import cache from './cache';
-import { redrawAll } from './draw';
+import { clear, draw, redrawAll } from './draw';
 
 // Run on module load
 init();
@@ -8,7 +7,7 @@ init();
 module.exports = {
   // Add a coachmark
   add(name, config = {}) {
-    if (!isString(name)) {
+    if (!(typeof name === 'string')) {
       config = name;
       name = Math.random().toString(36).substr(2);
     }
@@ -16,10 +15,13 @@ module.exports = {
     cache(name, config);
   },
   // Show a coachmark given a name
-  // show(name) {
-  //
-  // },
-  cache: () => cache.all(),
+  show(name) {
+    clear();
+    draw(name);
+  },
+  cache: () => cache.cache,
+  draw,
+  redrawAll,
 };
 
 function init() {
