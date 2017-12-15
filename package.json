@@ -14,7 +14,7 @@
     "toc": "doctoc README.md --github",
     "debug": "node --inspect node_modules/ava/profile.js",
     "cover": "nyc ava && nyc report",
-    "version": "toc",
+    "version": "npm run toc",
     "prepublishOnly": "build"
   },
   "author": "Brian Hann",

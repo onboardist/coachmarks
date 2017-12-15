@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [coachmarks](#coachmarks)
+- [Install](#install)
+- [Usage](#usage)
+- [Notes](#notes)
+- [Todo](#todo)
+- [Ideas](#ideas)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 # coachmarks
 
