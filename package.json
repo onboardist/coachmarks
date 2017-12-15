@@ -13,7 +13,8 @@
     "build:watch": "onchange src/** -- webpack",
     "toc": "doctoc README.md --github",
     "debug": "node --inspect node_modules/ava/profile.js",
-    "cover": "nyc ava && nyc report"
+    "cover": "nyc ava && nyc report",
+    "version": "toc"
   },
   "author": "Brian Hann",
   "license": "GPL-3.0",
