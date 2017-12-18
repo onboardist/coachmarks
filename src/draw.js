@@ -5,10 +5,12 @@ const cache = require('./cache');
 
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
-const elmNames = ['elm', 'text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'svg', 'path'];
+const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
 export function clear() {
-  elmNames.forEach(node => {
+  // debugger;
+  elmNames.forEach(name => {
+    const node = cache(name);
     if (node instanceof Node) node.remove();
   });
 }
@@ -81,7 +83,9 @@ function coach(mark) {
   glow.style['border-radius'] = borderRadius;
   glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff';
 
-  [coachTop, coachLeft, coachRight, coachBottom, glow].forEach(c => {
+  const close = createCloseButton();
+
+  [coachTop, coachLeft, coachRight, coachBottom, glow, close].forEach(c => {
     if (!c.parentNode) {
       document.body.appendChild(c);
     }
@@ -141,7 +145,8 @@ function arrow(from, to) {
   const c2y = mid[1];
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
   // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
-  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
+  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
+  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
 
   const svg = cache.default('svg', () => createSVG());
   const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));
@@ -169,6 +174,16 @@ function createSVG() {
   svg.setAttribute('class', 'coachmark-svg');
   return svg;
 }
+
+function createCloseButton() {
+  const close = cache.default('closeButton', () => document.createElement('div'));
+  close.setAttribute('class', 'coachmark-close');
+  close.innerHTML = 'X';
+  close.addEventListener('click', () => clear());
+  return close;
+}
+
+/* Calculations Methods */
 
 function middleOf(node) {
   const rect = elementRect(node);

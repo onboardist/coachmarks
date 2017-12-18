@@ -4,14 +4,19 @@ const path = require('path');
 // const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const plugins = [];
+const plugins = [
+  // new BundleAnalyzerPlugin(),
+];
 
 const env = process.env.NODE_ENV || '';
 const isProd = env.indexOf('prod') > -1;
 if (isProd) {
   plugins.push(new UglifyJSPlugin({
     uglifyOptions: {
+      mangle: true,
+      parallel: true,
       ie8: false,
       compress: {
         warnings: false,
@@ -49,6 +54,10 @@ module.exports = {
             presets: ['env'],
           },
         },
+      },
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },

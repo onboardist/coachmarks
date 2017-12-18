@@ -44,12 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
 # Notes
 
 * I think quadratic curve looks better than cubic, probably due to how I'm calculating stuff but still
+* style-loader+css-loader works, but size is ~5kb bigger than just using my inject-css.js
 
 # Todo
 
 - [x] Append CSS to page from inside module
 - [x] Turn SVG definitions into content that gets appended to page on script load
-- [ ] Add close button
+- [x] Add close button
 - [ ] Minification is breaking global variable name
 - [x] Make script a node module
 - [x] Allow configuring targets and text via JSON. (Multiple targets)
