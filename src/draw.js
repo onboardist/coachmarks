@@ -1,10 +1,13 @@
 'use strict';
 
-const SvgPath = require('path-svg/svg-path');
-const cache = require('./cache');
+import SvgPath from 'path-svg/svg-path';
+import cache from './cache';
+import distance from 'euclidean-distance';
 
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
+// Spacing between line and node
+const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
 export function clear() {
@@ -113,13 +116,17 @@ function arrow(from, to) {
   const fromRect = elementRect(from);
   const toRect = elementRect(to);
 
+  // NOTE: this seems backwards?
+  console.log('toRect', toRect, fromRect);
+
   const toMiddle = middleOf(to);
   const fromEdge = intersectionEdge({ x: toMiddle[0], y: toMiddle[1] }, fromRect);
   const fromPos = middleOfEdge(to, fromEdge);
 
   const fromMiddle = middleOf(from);
   const toEdge = intersectionEdge({ x: fromMiddle[0], y: fromMiddle[1] }, toRect);
-  const toPos = middleOfEdge(from, toEdge);
+  // const toPos = middleOfEdge(from, toEdge);
+  const toPos = nearestEdgePoint(toRect, fromRect);
 
   // console.log(fromEdge, toEdge, fromPos, toPos);
 
@@ -146,13 +153,15 @@ function arrow(from, to) {
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
   // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
+
   const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
 
   const svg = cache.default('svg', () => createSVG());
   const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));
 
   path.setAttribute('d', pathStr);
-  path.setAttribute('stroke', '#fff');
+  // path.setAttribute('stroke', '#fff');
+  path.setAttribute('class', 'coachmark-line');
   path.setAttribute('stroke-width', '5');
   path.setAttribute('fill', 'none');
   path.setAttribute('filter', 'url(#coachmark-chalk)');
@@ -185,16 +194,70 @@ function createCloseButton() {
 
 /* Calculations Methods */
 
+// function dist(pt1, pt2) {
+//   return Math.sqrt(
+//     Math.pow(pt2[0] - pt1[0], 2)
+//     *
+//     Math.pow(pt2[1] - pt1[1], 2)
+//   );
+// }
+
+function nearestEdgePoint(fromRect, toRect) {
+  /*
+    rect: {
+      top, left, width, height
+    }
+  */
+  // Calc line from middle of from rectangle
+  const from = middleOf(fromRect);
+
+  // Get list of point around toRect;
+  const points = {
+    leftTop: [toRect.left, toRect.top],
+    middleTop: [toRect.left + (toRect.width / 2), toRect.top],
+    rightTop: [toRect.left + toRect.width, toRect.top],
+    rightMiddle: [toRect.left + toRect.width, toRect.top + (toRect.height / 2)],
+    rightBottom: [toRect.left + toRect.width, toRect.top + toRect.height],
+    middleBottom: [toRect.left + (toRect.width / 2), toRect.top + toRect.height],
+    leftBottom: [toRect.left, toRect.top + toRect.height],
+    leftMiddle: [toRect.left, toRect.top + (toRect.height / 2)],
+  };
+
+  let nearest = { point: [0, 0], dist: Infinity };
+  let nearestName = '';
+  Object.keys(points).forEach(key => {
+    const point = points[key];
+    // console.log(key, point);
+    const dist = distance(from, point);
+    if (dist < nearest.dist) {
+      nearest = { point, dist };
+      nearestName = key;
+    }
+  });
+
+  nearestName = nearestName.toLowerCase();
+  console.log('nearest', nearestName);
+  const point = nearest.point;
+
+  if (nearestName.indexOf('top') !== -1) point[1] -= lineOffset;
+  if (nearestName.indexOf('bottom') !== -1) point[1] += lineOffset;
+  if (nearestName.indexOf('left') !== -1) point[0] -= lineOffset;
+  if (nearestName.indexOf('right') !== -1) point[0] += lineOffset;
+  // if (nearestName.endsWith('middle')) point[0] += lineOffset;
+
+  return point;
+}
+
 function middleOf(node) {
-  const rect = elementRect(node);
+  let rect = node;
+  if (node instanceof Node) {
+    rect = elementRect(node);
+  }
 
   return [rect.left + (rect.width / 2), rect.top + (rect.height / 2)];
 }
 
 function middleOfEdge(node, edge) {
-  // Spacing between line and node
-  const lineOffset = 20;
-
   const rect = elementRect(node);
 
   const width = rect.width;

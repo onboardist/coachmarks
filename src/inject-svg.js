@@ -8,10 +8,10 @@ const content = `
       <feDisplacementMap scale="5" yChannelSelector="G" in2="result1" xChannelSelector="R" in="SourceGraphic"/>
       <feGaussianBlur stdDeviation="0.5"/>
     </filter>
-    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9.5" refY="4.5" orient="auto" markerUnits="strokeWidth">
+    <marker id="arrow" class="coachmark-line" markerWidth="10" markerHeight="8" refX="9.5" refY="4.5" orient="auto" markerUnits="strokeWidth">
       <!--<path d="M0,0 L0,6 L9,3 z" stroke="#fff" fill="#fff" />-->
       <!--<polyline points="-2,-2 0,0 -2,2" stroke="#fff" fill="none" vector-effect="non-scaling-stroke" />-->
-      <polyline points="1 1, 9 5, 1 7" stroke="#fff" fill="none" />
+      <polyline points="1 1, 9 5, 1 7" fill="none" />
     </marker>
 
     <!-- NOTE: arrowhead is not being used -->

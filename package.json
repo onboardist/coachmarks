@@ -122,6 +122,7 @@
     ]
   },
   "dependencies": {
+    "euclidean-distance": "^1.0.0",
     "iselement": "^1.1.4",
     "lodash": "^4.17.4",
     "path-svg": "^0.2.1"
