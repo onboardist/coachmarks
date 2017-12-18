@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Todo
 
-- [ ] Append CSS to page from inside module
-- [ ] Turn SVG definitions into content that gets appended to page on script load
+- [x] Append CSS to page from inside module
+- [x] Turn SVG definitions into content that gets appended to page on script load
 - [ ] Add close button
 - [ ] Minification is breaking global variable name
 - [x] Make script a node module
