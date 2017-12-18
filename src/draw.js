@@ -87,7 +87,7 @@ function coach(mark) {
   glow.style.width = (width) + 'px';
   glow.style.height = (height) + 'px';
   glow.style['border-radius'] = borderRadius;
-  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff';
+  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
   const close = createCloseButton();
 
@@ -194,6 +194,7 @@ function nearestEdgePoint(from, toRect) {
     from = middleOf(from);
   }
 
+  // NOTE: overall I think snapping to middle only actually looks a bit better, assuming that we calculated the edges properly
   // Get list of point around toRect;
   const points = {
     leftTop: [toRect.left, toRect.top],
@@ -237,6 +238,7 @@ function middleOf(node) {
   return [rect.left + (rect.width / 2), rect.top + (rect.height / 2)];
 }
 
+/* NOTE: not in use currently
 function middleOfEdge(node, edge) {
   const rect = elementRect(node);
 
@@ -270,6 +272,7 @@ function middleOfEdge(node, edge) {
 
   return [x, y];
 }
+*/
 
 function elementRect(node, offsetParent) {
   if (offsetParent === true) offsetParent = node.offsetParent;
@@ -287,9 +290,11 @@ function elementRect(node, offsetParent) {
   };
 }
 
+/* NOTE: not in use currently
 function midPoint(x1, y1, x2, y2) {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
+*/
 
 // function lineDist(x1, y1, x2, y2) {
 //   return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
@@ -314,6 +319,7 @@ function midPoint(x1, y1, x2, y2) {
 //   ];
 // }
 
+/* NOTE: not in use currently
 function intersectionEdge(point, rect) {
   const slope = (rect.top - point.y) / (rect.left - point.x);
   const hsw = slope * rect.width / 2;
@@ -344,29 +350,4 @@ function intersectionEdge(point, rect) {
     }
   }
 }
-
-// function clear() {
-//   const vals = cache.all();
-//
-//   for (const key in vals) {
-//     if (Object.hasOwnProperty.call(vals, key)) {
-//       const val = vals[key];
-//       if (isElement(val)) {
-//         val.remove();
-//         cache.remove(key);
-//       }
-//     }
-//   }
-// }
-
-// function controlPointLength(x1, y1, x2, y2) {
-//
-// }
-//
-// function controlPointPos() {
-//
-// }
-//
-// function intersection(point, box) {
-//   const s = (Ay - By) / (Ax - Bx);
-// }
+*/

@@ -1286,7 +1286,7 @@ function coach(mark) {
   glow.style.width = width + 'px';
   glow.style.height = height + 'px';
   glow.style['border-radius'] = borderRadius;
-  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff';
+  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
   var close = createCloseButton();
 
@@ -1401,6 +1401,7 @@ function nearestEdgePoint(from, toRect) {
     from = middleOf(from);
   }
 
+  // NOTE: overall I think snapping to middle only actually looks a bit better, assuming that we calculated the edges properly
   // Get list of point around toRect;
   var points = {
     leftTop: [toRect.left, toRect.top],
@@ -1444,15 +1445,16 @@ function middleOf(node) {
   return [rect.left + rect.width / 2, rect.top + rect.height / 2];
 }
 
+/* NOTE: not in use currently
 function middleOfEdge(node, edge) {
-  var rect = elementRect(node);
+  const rect = elementRect(node);
 
-  var width = rect.width;
-  var height = rect.height;
-  var middleX = rect.width / 2;
-  var middleY = rect.height / 2;
-  var x = rect.left + middleX;
-  var y = rect.top + middleY;
+  const width = rect.width;
+  const height = rect.height;
+  const middleX = rect.width / 2;
+  const middleY = rect.height / 2;
+  let x = rect.left + middleX;
+  let y = rect.top + middleY;
 
   switch (edge) {
     case 'top':
@@ -1472,11 +1474,12 @@ function middleOfEdge(node, edge) {
       y = rect.top + middleY;
       break;
     default:
-    // do nothing
+      // do nothing
   }
 
   return [x, y];
 }
+*/
 
 function elementRect(node, offsetParent) {
   if (offsetParent === true) offsetParent = node.offsetParent;
@@ -1492,9 +1495,11 @@ function elementRect(node, offsetParent) {
   };
 }
 
+/* NOTE: not in use currently
 function midPoint(x1, y1, x2, y2) {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
+*/
 
 // function lineDist(x1, y1, x2, y2) {
 //   return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
@@ -1519,62 +1524,38 @@ function midPoint(x1, y1, x2, y2) {
 //   ];
 // }
 
+/* NOTE: not in use currently
 function intersectionEdge(point, rect) {
-  var slope = (rect.top - point.y) / (rect.left - point.x);
-  var hsw = slope * rect.width / 2;
-  var hsh = rect.height / 2 / slope;
-  var hh = rect.height / 2;
-  var hw = rect.width / 2;
+  const slope = (rect.top - point.y) / (rect.left - point.x);
+  const hsw = slope * rect.width / 2;
+  const hsh = (rect.height / 2) / slope;
+  const hh = rect.height / 2;
+  const hw = rect.width / 2;
   // const TOPLEFT = {x: rect.x - hw, y: rect.y + hh};
   // const BOTTOMLEFT = {x: rect.x - hw, y: rect.y - hh};
   // const BOTTOMRIGHT = {x: rect.x + hw, y: rect.y - hh};
   // const TOPRIGHT = {x: rect.x + hw, y: rect.y + hh};
   if (-hh <= hsw && hsw <= hh) {
-    // line intersects
+      // line intersects
     if (rect.left >= point.x) {
-      // right edge;
+          // right edge;
       return 'right'; // [TOPRIGHT, BOTTOMRIGHT];
     } else if (rect.left < point.x) {
-      // left edge
+          // left edge
       return 'left'; // [TOPLEFT, BOTTOMLEFT];
     }
   }
   if (-hw <= hsh && hsh <= hw) {
     if (rect.top < point.y) {
-      // top edge
+          // top edge
       return 'top'; // [TOPLEFT, TOPRIGHT];
     } else if (rect.top > point.y) {
-      // bottom edge
+          // bottom edge
       return 'bottom'; // [BOTTOMLEFT, BOTTOMRIGHT];
     }
   }
 }
-
-// function clear() {
-//   const vals = cache.all();
-//
-//   for (const key in vals) {
-//     if (Object.hasOwnProperty.call(vals, key)) {
-//       const val = vals[key];
-//       if (isElement(val)) {
-//         val.remove();
-//         cache.remove(key);
-//       }
-//     }
-//   }
-// }
-
-// function controlPointLength(x1, y1, x2, y2) {
-//
-// }
-//
-// function controlPointPos() {
-//
-// }
-//
-// function intersection(point, box) {
-//   const s = (Ay - By) / (Ax - Bx);
-// }
+*/
 
 /***/ }),
 /* 56 */
@@ -1937,7 +1918,7 @@ exports = module.exports = __webpack_require__(65)(undefined);
 
 
 // module
-exports.push([module.i, ".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text {\n  font-size: 15vmin;\n  line-height: 15vmin;\n  color: #fefefe;\n  /* text-decoration: underline; */\n  position: fixed;\n  top: 134;\n  left: 596px;\n  text-shadow: 2px 2px #333;\n  /*margin: 20px;*/\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line {\n  stroke: #A7CC6B; }\n\npath.coachmark-line {\n  stroke-width: 1.25vmin; }\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: #A7CC6B;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n", ""]);
+exports.push([module.i, ".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text {\n  font-size: 15vmin;\n  line-height: 15vmin;\n  color: #fefefe;\n  position: fixed;\n  top: 134;\n  left: 596px;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line {\n  stroke: #A7CC6B; }\n\npath.coachmark-line {\n  stroke-width: 1vmin; }\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: #A7CC6B;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n", ""]);
 
 // exports
 
@@ -2509,39 +2490,12 @@ var _svgDefs2 = _interopRequireDefault(_svgDefs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// <svg width="0" height="0" xmlns="http://www.w3.org/2000/svg">
-// const content = `
-//   <defs>
-//     <filter id="coachmark-chalk" x="0" y="0" height="5000px" width="5000px" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
-//       <feTurbulence baseFrequency="0.133" seed="500" result="result1" numOctaves="1" type="turbulence"/>
-//       <feOffset result="result2" dx="0" dy="0"/>
-//       <feDisplacementMap scale="5" yChannelSelector="G" in2="result1" xChannelSelector="R" in="SourceGraphic"/>
-//       <feGaussianBlur stdDeviation="0.5"/>
-//     </filter>
-//     <marker id="arrow" class="coachmark-line" markerWidth="10" markerHeight="8" refX="9.5" refY="4.5" orient="auto" markerUnits="strokeWidth">
-//       <!--<path d="M0,0 L0,6 L9,3 z" stroke="#fff" fill="#fff" />-->
-//       <!--<polyline points="-2,-2 0,0 -2,2" stroke="#fff" fill="none" vector-effect="non-scaling-stroke" />-->
-//
-//       <!-- <polyline points="1 1, 9 5, 1 7" fill="none" /> -->
-//       <polyline points="1 1.5, 10 4.5, 2 7" fill="none" />
-//     </marker>
-//
-//     <!-- NOTE: arrowhead is not being used -->
-//     <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-//       <path d="M 0 0 L 10 5 L 0 10 z" />
-//     </marker>
-//   </defs>
-// `;
-// </svg>
-
 function injectSVG() {
   var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   s.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   s.setAttribute('width', 0);
   s.setAttribute('height', 0);
   s.innerHTML = _svgDefs2.default;
-  // const div = document.createElement('div');
-  // div.innerHTML = svg;
   document.body.appendChild(s);
   return s;
 }

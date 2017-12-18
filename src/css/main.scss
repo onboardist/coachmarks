@@ -57,12 +57,10 @@ $buttonSize: 56px;
   font-size: 15vmin;
   line-height: 15vmin;
   color: #fefefe;
-  /* text-decoration: underline; */
   position: fixed;
   top: 134;
   left: 596px;
   text-shadow: 2px 2px #333;
-  /*margin: 20px;*/
   z-index: 2;
 }
 
@@ -80,7 +78,7 @@ $buttonSize: 56px;
 }
 
 path.coachmark-line {
-  stroke-width: 1.25vmin;
+  stroke-width: 1vmin;
 }
 
 .coachmark-close {

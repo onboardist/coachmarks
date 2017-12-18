@@ -50,9 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 - [ ] BUG: Redraw on DOM event is redrawing when coachmark is not even being shown. Need a flag to toggle in the config/cache.
 - [x] BUG: click to show mark not drawing right
+
 - [ ] Dynamically position text relative to target. Should be on opposite side of screen. Maybe break screen into sections (halves / quadrants) and put
       text in opposite section.
+  - Principles:
+    * Favor vertical positioning, centered horizontally
+
 - [ ] Add transition(s) for showing/hiding overlay
+- [ ] Text might be a bit too big?
 - [x] Append CSS to page from inside module
 - [x] Turn SVG definitions into content that gets appended to page on script load
 - [x] Add close button
@@ -67,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 - [ ] If text is just a little bit above or below the button vertically, it will anchor to the top position when it should still be the side
 - [x] Reorient arrowhead so its angle matches a straight line from start point to end point. (Done w/ quadratic curve)
 - [x] Relative-size the arrow marker & stroke width based on viewport size. [Partially done. need to test on mobile device]
+- [ ] Need to dynamically size arrowhead and line stroke width based on length of line maybe. It looks weird when the line is short
 - [ ] Content needs to not scroll, which means scrolling elements into view.
 - [x] Handle resizing, orientation changes, and media query changes
 
