@@ -55,6 +55,7 @@ $buttonSize: 56px;
 
 .coachmark-text {
   font-size: 15vmin;
+  line-height: 15vmin;
   color: #fefefe;
   /* text-decoration: underline; */
   position: fixed;
@@ -78,6 +79,10 @@ $buttonSize: 56px;
   stroke: $color;
 }
 
+path.coachmark-line {
+  stroke-width: 1.25vmin;
+}
+
 .coachmark-close {
   z-index: 9999;
   background-color: $color;
@@ -88,7 +93,7 @@ $buttonSize: 56px;
   top: 0;
   right: 0;
   color: #fff;
-  margin: 16px;
+  margin: 5vmin;
   font-size: $buttonSize - 20px;
   line-height: $buttonSize;
   text-align: center;

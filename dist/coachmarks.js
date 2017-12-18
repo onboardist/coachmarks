@@ -1177,17 +1177,17 @@ exports.redrawAll = redrawAll;
 exports.draw = draw;
 exports.addText = addText;
 
-var _svgPath = __webpack_require__(60);
+var _euclideanDistance = __webpack_require__(60);
+
+var _euclideanDistance2 = _interopRequireDefault(_euclideanDistance);
+
+var _svgPath = __webpack_require__(62);
 
 var _svgPath2 = _interopRequireDefault(_svgPath);
 
 var _cache = __webpack_require__(15);
 
 var _cache2 = _interopRequireDefault(_cache);
-
-var _euclideanDistance = __webpack_require__(61);
-
-var _euclideanDistance2 = _interopRequireDefault(_euclideanDistance);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1315,43 +1315,21 @@ function arrow(from, to) {
   var fromRect = elementRect(from);
   var toRect = elementRect(to);
 
-  // NOTE: this seems backwards?
-  console.log('toRect', toRect, fromRect);
-
-  var toMiddle = middleOf(to);
-  var fromEdge = intersectionEdge({ x: toMiddle[0], y: toMiddle[1] }, fromRect);
-  var fromPos = middleOfEdge(to, fromEdge);
-
-  var fromMiddle = middleOf(from);
-  var toEdge = intersectionEdge({ x: fromMiddle[0], y: fromMiddle[1] }, toRect);
-  // const toPos = middleOfEdge(from, toEdge);
+  var fromPos = nearestEdgePoint(fromRect, toRect);
   var toPos = nearestEdgePoint(toRect, fromRect);
+  fromPos = nearestEdgePoint(fromPos, toRect);
+  toPos = nearestEdgePoint(toPos, fromRect);
 
-  // console.log(fromEdge, toEdge, fromPos, toPos);
-
-  // const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  // const recipS = (1 / s) * -1;
-
-  // const arrowDist = lineDist(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  var mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-
-  // const r = Math.sqrt(1 + (recipS ** recipS));
-  // let ctrlX = mid[0] + (arrowDist / r);
-  // let ctrlY = mid[1] + (arrowDist * recipS / r);
-  // const dir = dirToViewportMid(mid[0], mid[1]);
-
-  // ctrlX *= dir[0];
-  // ctrlY *= dir[1];
-
-  // console.log(recipS, arrowDist, mid, r, ctrlX, ctrlY);
-
+  /* NOTE: for curved linbe
+  // const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
   // const c1x = mid[0];
   // const c1y = toPos[1];
-  var c2x = fromPos[0];
-  var c2y = mid[1];
+  // const c2x = fromPos[0];
+  // const c2y = mid[1];
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
   // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
+  */
 
   var pathStr = (0, _svgPath2.default)().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
 
@@ -1363,7 +1341,6 @@ function arrow(from, to) {
   });
 
   path.setAttribute('d', pathStr);
-  // path.setAttribute('stroke', '#fff');
   path.setAttribute('class', 'coachmark-line');
   path.setAttribute('stroke-width', '5');
   path.setAttribute('fill', 'none');
@@ -1409,14 +1386,17 @@ function createCloseButton() {
 //   );
 // }
 
-function nearestEdgePoint(fromRect, toRect) {
+function nearestEdgePoint(from, toRect) {
   /*
     rect: {
       top, left, width, height
     }
   */
-  // Calc line from middle of from rectangle
-  var from = middleOf(fromRect);
+
+  // From is a rect, calc line from middle of rectangle
+  if (Object.prototype.hasOwnProperty.call(from, 'top')) {
+    from = middleOf(from);
+  }
 
   // Get list of point around toRect;
   var points = {
@@ -1434,7 +1414,6 @@ function nearestEdgePoint(fromRect, toRect) {
   var nearestName = '';
   (0, _keys2.default)(points).forEach(function (key) {
     var point = points[key];
-    // console.log(key, point);
     var dist = (0, _euclideanDistance2.default)(from, point);
     if (dist < nearest.dist) {
       nearest = { point: point, dist: dist };
@@ -1443,14 +1422,12 @@ function nearestEdgePoint(fromRect, toRect) {
   });
 
   nearestName = nearestName.toLowerCase();
-  console.log('nearest', nearestName);
   var point = nearest.point;
 
   if (nearestName.indexOf('top') !== -1) point[1] -= lineOffset;
   if (nearestName.indexOf('bottom') !== -1) point[1] += lineOffset;
   if (nearestName.indexOf('left') !== -1) point[0] -= lineOffset;
   if (nearestName.indexOf('right') !== -1) point[0] += lineOffset;
-  // if (nearestName.endsWith('middle')) point[0] += lineOffset;
 
   return point;
 }
@@ -1643,6 +1620,33 @@ module.exports = function (KEY, exec) {
 
 /***/ }),
 /* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
+
+var distanceSquared = __webpack_require__(61)
+
+module.exports = function (a, b) {
+  return Math.sqrt(distanceSquared(a,b))
+}
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports) {
+
+module.exports = function (a, b) {
+  var sum = 0
+  var n
+  for (n = 0; n < a.length; n++) {
+    sum += Math.pow(a[n] - b[n], 2)
+  }
+  return sum
+}
+
+
+/***/ }),
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -1891,33 +1895,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
-
-var distanceSquared = __webpack_require__(62)
-
-module.exports = function (a, b) {
-  return Math.sqrt(distanceSquared(a,b))
-}
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = function (a, b) {
-  var sum = 0
-  var n
-  for (n = 0; n < a.length; n++) {
-    sum += Math.pow(a[n] - b[n], 2)
-  }
-  return sum
-}
-
-
-/***/ }),
 /* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1957,7 +1934,7 @@ exports = module.exports = __webpack_require__(65)(undefined);
 
 
 // module
-exports.push([module.i, ".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text {\n  font-size: 15vmin;\n  color: #fefefe;\n  /* text-decoration: underline; */\n  position: fixed;\n  top: 134;\n  left: 596px;\n  text-shadow: 2px 2px #333;\n  /*margin: 20px;*/\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line {\n  stroke: #A7CC6B; }\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: #A7CC6B;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 16px;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n", ""]);
+exports.push([module.i, ".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text {\n  font-size: 15vmin;\n  line-height: 15vmin;\n  color: #fefefe;\n  /* text-decoration: underline; */\n  position: fixed;\n  top: 134;\n  left: 596px;\n  text-shadow: 2px 2px #333;\n  /*margin: 20px;*/\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line {\n  stroke: #A7CC6B; }\n\npath.coachmark-line {\n  stroke-width: 1.25vmin; }\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: #A7CC6B;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n", ""]);
 
 // exports
 
@@ -2524,7 +2501,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = injectSVG;
 
 // <svg width="0" height="0" xmlns="http://www.w3.org/2000/svg">
-var content = '\n  <defs>\n    <filter id="coachmark-chalk" x="0" y="0" height="5000px" width="5000px" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">\n      <feTurbulence baseFrequency="0.133" seed="500" result="result1" numOctaves="1" type="turbulence"/>\n      <feOffset result="result2" dx="0" dy="0"/>\n      <feDisplacementMap scale="5" yChannelSelector="G" in2="result1" xChannelSelector="R" in="SourceGraphic"/>\n      <feGaussianBlur stdDeviation="0.5"/>\n    </filter>\n    <marker id="arrow" class="coachmark-line" markerWidth="10" markerHeight="8" refX="9.5" refY="4.5" orient="auto" markerUnits="strokeWidth">\n      <!--<path d="M0,0 L0,6 L9,3 z" stroke="#fff" fill="#fff" />-->\n      <!--<polyline points="-2,-2 0,0 -2,2" stroke="#fff" fill="none" vector-effect="non-scaling-stroke" />-->\n      <polyline points="1 1, 9 5, 1 7" fill="none" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto">\n      <path d="M 0 0 L 10 5 L 0 10 z" />\n    </marker>\n  </defs>\n';
+var content = '\n  <defs>\n    <filter id="coachmark-chalk" x="0" y="0" height="5000px" width="5000px" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">\n      <feTurbulence baseFrequency="0.133" seed="500" result="result1" numOctaves="1" type="turbulence"/>\n      <feOffset result="result2" dx="0" dy="0"/>\n      <feDisplacementMap scale="5" yChannelSelector="G" in2="result1" xChannelSelector="R" in="SourceGraphic"/>\n      <feGaussianBlur stdDeviation="0.5"/>\n    </filter>\n    <marker id="arrow" class="coachmark-line" markerWidth="10" markerHeight="8" refX="9.5" refY="4.5" orient="auto" markerUnits="strokeWidth">\n      <!--<path d="M0,0 L0,6 L9,3 z" stroke="#fff" fill="#fff" />-->\n      <!--<polyline points="-2,-2 0,0 -2,2" stroke="#fff" fill="none" vector-effect="non-scaling-stroke" />-->\n\n      <!-- <polyline points="1 1, 9 5, 1 7" fill="none" /> -->\n      <polyline points="1 1.5, 10 4.5, 2 7" fill="none" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto">\n      <path d="M 0 0 L 10 5 L 0 10 z" />\n    </marker>\n  </defs>\n';
 // </svg>
 
 function injectSVG() {

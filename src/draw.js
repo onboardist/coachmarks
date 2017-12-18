@@ -1,8 +1,8 @@
 'use strict';
 
+import distance from 'euclidean-distance';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
-import distance from 'euclidean-distance';
 
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
@@ -116,43 +116,21 @@ function arrow(from, to) {
   const fromRect = elementRect(from);
   const toRect = elementRect(to);
 
-  // NOTE: this seems backwards?
-  console.log('toRect', toRect, fromRect);
+  let fromPos = nearestEdgePoint(fromRect, toRect);
+  let toPos = nearestEdgePoint(toRect, fromRect);
+  fromPos = nearestEdgePoint(fromPos, toRect);
+  toPos = nearestEdgePoint(toPos, fromRect);
 
-  const toMiddle = middleOf(to);
-  const fromEdge = intersectionEdge({ x: toMiddle[0], y: toMiddle[1] }, fromRect);
-  const fromPos = middleOfEdge(to, fromEdge);
-
-  const fromMiddle = middleOf(from);
-  const toEdge = intersectionEdge({ x: fromMiddle[0], y: fromMiddle[1] }, toRect);
-  // const toPos = middleOfEdge(from, toEdge);
-  const toPos = nearestEdgePoint(toRect, fromRect);
-
-  // console.log(fromEdge, toEdge, fromPos, toPos);
-
-  // const s = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  // const recipS = (1 / s) * -1;
-
-  // const arrowDist = lineDist(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-
-  // const r = Math.sqrt(1 + (recipS ** recipS));
-  // let ctrlX = mid[0] + (arrowDist / r);
-  // let ctrlY = mid[1] + (arrowDist * recipS / r);
-  // const dir = dirToViewportMid(mid[0], mid[1]);
-
-  // ctrlX *= dir[0];
-  // ctrlY *= dir[1];
-
-  // console.log(recipS, arrowDist, mid, r, ctrlX, ctrlY);
-
+  /* NOTE: for curved linbe
+  // const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
   // const c1x = mid[0];
   // const c1y = toPos[1];
-  const c2x = fromPos[0];
-  const c2y = mid[1];
+  // const c2x = fromPos[0];
+  // const c2y = mid[1];
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
   // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
+  */
 
   const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
 
@@ -160,7 +138,6 @@ function arrow(from, to) {
   const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));
 
   path.setAttribute('d', pathStr);
-  // path.setAttribute('stroke', '#fff');
   path.setAttribute('class', 'coachmark-line');
   path.setAttribute('stroke-width', '5');
   path.setAttribute('fill', 'none');
@@ -202,14 +179,17 @@ function createCloseButton() {
 //   );
 // }
 
-function nearestEdgePoint(fromRect, toRect) {
+function nearestEdgePoint(from, toRect) {
   /*
     rect: {
       top, left, width, height
     }
   */
-  // Calc line from middle of from rectangle
-  const from = middleOf(fromRect);
+
+  // From is a rect, calc line from middle of rectangle
+  if (Object.prototype.hasOwnProperty.call(from, 'top')) {
+    from = middleOf(from);
+  }
 
   // Get list of point around toRect;
   const points = {
@@ -227,7 +207,6 @@ function nearestEdgePoint(fromRect, toRect) {
   let nearestName = '';
   Object.keys(points).forEach(key => {
     const point = points[key];
-    // console.log(key, point);
     const dist = distance(from, point);
     if (dist < nearest.dist) {
       nearest = { point, dist };
@@ -236,14 +215,12 @@ function nearestEdgePoint(fromRect, toRect) {
   });
 
   nearestName = nearestName.toLowerCase();
-  console.log('nearest', nearestName);
   const point = nearest.point;
 
   if (nearestName.indexOf('top') !== -1) point[1] -= lineOffset;
   if (nearestName.indexOf('bottom') !== -1) point[1] += lineOffset;
   if (nearestName.indexOf('left') !== -1) point[0] -= lineOffset;
   if (nearestName.indexOf('right') !== -1) point[0] += lineOffset;
-  // if (nearestName.endsWith('middle')) point[0] += lineOffset;
 
   return point;
 }
