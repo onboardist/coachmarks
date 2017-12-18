@@ -37,6 +37,7 @@
     "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.7.2",
     "nyc": "^11.1.0",
+    "raw-loader": "^0.5.1",
     "rollup": "^0.50.0",
     "rollup-plugin-uglify": "^2.0.1",
     "sass-loader": "^6.0.6",

@@ -14,7 +14,10 @@ export function clear() {
   // debugger;
   elmNames.forEach(name => {
     const node = cache(name);
-    if (node instanceof Node) node.remove();
+    if (node instanceof Node) {
+      node.remove();
+      cache.remove(name);
+    }
   });
 }
 
