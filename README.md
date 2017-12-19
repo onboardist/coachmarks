@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
   - Principles:
     * Favor vertical positioning, centered horizontally
 
+- [ ] Try favoring anchoring line to middle edge and then reposition to closer corner if it's closer. This may still not work the best.
+- [ ] Set up CI tests on api/ *NOTE*: ava is failing on trying to import scss file. Will need to precompile somehow. Or maybe test with cypress?
 - [ ] Add transition(s) for showing/hiding overlay
 - [ ] Text might be a bit too big?
 - [x] Append CSS to page from inside module
@@ -78,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Ideas
 
+* Enable https://greenkeeper.io on project
 * Embeddable SVG icons. Use Noun Project api to embed icons in coachmarks.
   * ^ or use font awesome. FA 5 uses SVGs
   * Or maybe flaticon.com
