@@ -7,11 +7,15 @@
   "browser": "dist/coachmarks.js",
   "scripts": {
     "build.old": "webpack && NODE_ENV=prod webpack",
+    "dev.old": "webpack-dev-server",
+
     "build": "rollup -c",
-    "clean": "rimraf generated/* dist/*",
+    "dev": "DEV=1 rollup -cw",
+
+    "clean": "rimraf dist/*",
     "test": "webpack && xo && ava",
     "watch": "npm run test -- --watch",
-    "dev": "webpack-dev-server",
+
     "build:watch": "onchange src/** -- webpack",
     "toc": "doctoc README.md --github",
     "debug": "node --inspect node_modules/ava/profile.js",
@@ -47,6 +51,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-postcss": "^0.5.5",
     "rollup-plugin-scss": "^0.4.0",
+    "rollup-plugin-serve": "^0.4.2",
     "rollup-plugin-string": "^2.0.2",
     "rollup-plugin-uglify": "^2.0.1",
     "sass-loader": "^6.0.6",

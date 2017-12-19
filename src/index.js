@@ -6,7 +6,7 @@ import injectSVG from './inject-svg';
 // Run on module load
 init();
 
-module.exports = {
+export default {
   // Add a coachmark
   add(name, config = {}) {
     if (!(typeof name === 'string')) {

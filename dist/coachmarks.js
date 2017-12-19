@@ -1,7 +1,7 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(factory());
+	(global.coachmarks = factory());
 }(this, (function () { 'use strict';
 
 function cache(...args) {
@@ -82,10 +82,6 @@ var squared = function (a, b) {
   }
   return sum
 };
-
-// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
-
-
 
 var euclideanDistance = function (a, b) {
   return Math.sqrt(squared(a,b))
@@ -344,9 +340,6 @@ var svgPath = createCommonjsModule(function (module, exports) {
 
 'use strict';
 
-// TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
-
-// Spacing between line and node
 const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
@@ -710,14 +703,13 @@ function injectSVG() {
   s.setAttribute('width', 0);
   s.setAttribute('height', 0);
   s.innerHTML = svg;
-  document.body.appendChild(s);
+  document.body.prepend(s);
   return s;
 }
 
-// Run on module load
 init();
 
-module.exports = {
+var index = {
   // Add a coachmark
   add(name, config = {}) {
     if (!(typeof name === 'string')) {
@@ -758,6 +750,8 @@ function addListeners() {
     });
   });
 }
+
+return index;
 
 })));
 //# sourceMappingURL=coachmarks.js.map
