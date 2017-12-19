@@ -1,0 +1,1 @@
+{"dependencies":[{"name":"./squared","loc":{"line":3,"column":30}}],"generated":{"js":"// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions\n\nvar distanceSquared = require('./squared')\n\nmodule.exports = function (a, b) {\n  return Math.sqrt(distanceSquared(a,b))\n}\n"},"hash":"efae9d2ed1d46de653d8ca8d91615255"}

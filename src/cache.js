@@ -1,5 +1,4 @@
-
-function cache(...args) {
+export default function cache(...args) {
   return cache.addOrGet(...args);
 }
 
@@ -68,5 +67,3 @@ cache.allArray = () => {
 
   return elms;
 };
-
-module.exports = cache;
