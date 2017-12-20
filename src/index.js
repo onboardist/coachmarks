@@ -41,10 +41,4 @@ function addListeners() {
       redrawAll();
     });
   });
-
-  window.addEventListener('resize', () => {
-    requestAnimationFrame(() => {
-      redrawAll();
-    });
-  });
 }

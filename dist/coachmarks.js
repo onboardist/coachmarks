@@ -1,3 +1,4 @@
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -99,10 +100,6 @@ var squared = function (a, b) {
   }
   return sum
 };
-
-// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
-
-
 
 var euclideanDistance = function (a, b) {
   return Math.sqrt(squared(a,b))
@@ -361,9 +358,6 @@ var svgPath = createCommonjsModule(function (module, exports) {
 
 'use strict';
 
-// TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
-
-// Spacing between line and node
 const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
@@ -719,12 +713,10 @@ function injectSVG() {
   s.setAttribute('width', 0);
   s.setAttribute('height', 0);
   s.innerHTML = svg;
-  document.body.prepend(s);
+  document.body.insertBefore(s, document.body.firstChild);
   return s;
 }
 
-// import injectCSS from './inject-css';
-// Run on module load
 init();
 
 var index = {
@@ -756,12 +748,6 @@ function init() {
 }
 
 function addListeners() {
-  window.addEventListener('resize', () => {
-    requestAnimationFrame(() => {
-      redrawAll();
-    });
-  });
-
   window.addEventListener('resize', () => {
     requestAnimationFrame(() => {
       redrawAll();

@@ -6,23 +6,26 @@
   "main": "dist/coachmarks.js",
   "browser": "dist/coachmarks.js",
   "scripts": {
-    "build.old": "webpack && NODE_ENV=prod webpack",
-    "dev.old": "webpack-dev-server",
     "build": "rollup -c",
-    "dev": "DEV=1 rollup -cw",
+    "dev": "DEV=1 npm-run-all -l -p build:watch test:watch",
     "clean": "rimraf dist/*",
-    "test": "webpack && xo && ava",
-    "watch": "npm run test -- --watch",
-    "build:watch": "onchange src/** -- webpack",
+    "test:watch": "cypress open",
+    "test": "wait-on http://localhost:10002/ && cypress run",
+    "test:ci": "DEV=1 npm run build & npm run test",
+    "build:watch": "rollup -cw",
     "toc": "doctoc README.md --github",
     "debug": "node --inspect node_modules/ava/profile.js",
     "cover": "nyc ava && nyc report",
     "version": "npm run toc",
-    "prepublishOnly": "build",
-    "cypress": "cypress open"
+    "prepublishOnly": "build"
   },
   "author": "Brian Hann",
   "license": "GPL-3.0",
+  "dependencies": {
+    "euclidean-distance": "^1.0.0",
+    "lodash": "^4.17.4",
+    "path-svg": "^0.2.1"
+  },
   "devDependencies": {
     "ava": "^0.22.0",
     "babel-cli": "^6.26.0",
@@ -32,19 +35,17 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
-    "browser-env": "^3.2.4",
-    "css-loader": "^0.28.7",
-    "cypress": "^1.3.0",
+    "cypress": "1.4.0",
     "doctoc": "^1.3.0",
     "eslint": "^4.5.0",
     "eslint-config-xo-space": "^0.16.0",
-    "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.7.2",
+    "npm-run-all": "^4.1.2",
     "nyc": "^11.1.0",
-    "raw-loader": "^0.5.1",
     "rollup": "^0.50.0",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-filesize": "^1.5.0",
+    "rollup-plugin-livereload": "^0.6.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-postcss": "^0.5.5",
     "rollup-plugin-sass": "^0.5.3",
@@ -52,14 +53,10 @@
     "rollup-plugin-serve": "^0.4.2",
     "rollup-plugin-string": "^2.0.2",
     "rollup-plugin-uglify": "^2.0.1",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.1",
+    "tiny-lr": "^1.0.5",
     "uglify-es": "^3.2.2",
     "uglify-js": "^3.1.3",
-    "uglifyjs-webpack-plugin": "^1.0.0-beta.3",
-    "webpack": "^3.7.1",
-    "webpack-bundle-analyzer": "^2.9.1",
-    "webpack-dev-server": "^2.9.1",
+    "wait-on": "^2.0.2",
     "xo": "^0.18.2"
   },
   "xo": {
@@ -142,11 +139,5 @@
       "babel-register",
       "./test/helpers/setup-browser-env.js"
     ]
-  },
-  "dependencies": {
-    "euclidean-distance": "^1.0.0",
-    "iselement": "^1.1.4",
-    "lodash": "^4.17.4",
-    "path-svg": "^0.2.1"
   }
 }

@@ -2,7 +2,7 @@ import { merge } from 'lodash';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
-import scss from 'rollup-plugin-scss';
+import livereload from 'rollup-plugin-livereload';
 import serve from 'rollup-plugin-serve';
 import string from 'rollup-plugin-string';
 import uglify from 'rollup-plugin-uglify';
@@ -49,8 +49,12 @@ export default [
   merge({}, config, {
     plugins: [
       process.env.DEV ? serve({
-        open: true,
+        open: false,
         contentBase: ['test', 'dist'],
+        port: 10002,
+      }) : undefined,
+      process.env.DEV ? livereload({
+        watch: ['src', 'dist'],
       }) : undefined,
     ],
   }),

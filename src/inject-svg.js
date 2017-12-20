@@ -6,6 +6,6 @@ export default function injectSVG() {
   s.setAttribute('width', 0);
   s.setAttribute('height', 0);
   s.innerHTML = svg;
-  document.body.prepend(s);
+  document.body.insertBefore(s, document.body.firstChild);
   return s;
 }

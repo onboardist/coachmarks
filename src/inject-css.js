@@ -4,6 +4,6 @@ export default function injectCSS() {
   const style = document.createElement('style');
   style.setAttribute('type', 'text/css');
   style.innerHTML = css;
-  document.body.prepend(style);
+  document.body.insertBefore(style, document.body.firstChild);
   return style;
 }
