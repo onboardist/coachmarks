@@ -4,6 +4,23 @@
 	(global.coachmarks = factory());
 }(this, (function () { 'use strict';
 
+function ___$insertStyle(css) {
+  if (!css) {
+    return;
+  }
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  var style = document.createElement('style');
+
+  style.setAttribute('type', 'text/css');
+  style.innerHTML = css;
+  document.head.appendChild(style);
+
+  return css;
+}
+
 function cache(...args) {
   return cache.addOrGet(...args);
 }
@@ -82,6 +99,10 @@ var squared = function (a, b) {
   }
   return sum
 };
+
+// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
+
+
 
 var euclideanDistance = function (a, b) {
   return Math.sqrt(squared(a,b))
@@ -340,6 +361,9 @@ var svgPath = createCommonjsModule(function (module, exports) {
 
 'use strict';
 
+// TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
+
+// Spacing between line and node
 const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
@@ -685,15 +709,7 @@ function intersectionEdge(point, rect) {
 }
 */
 
-var css = "$color: #A7CC6B;\n$buttonSize: 56px;\n\n.coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100;\n}\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0;\n}\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%;\n}\n\n.coachmark-left {\n  left: 0;\n}\n\n.coachmark-right {\n  right: 0;\n}\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%;\n}\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/\n}\n\n.coachmark-text {\n  font-size: 15vmin;\n  line-height: 15vmin;\n  color: #fefefe;\n  position: fixed;\n  top: 134;\n  left: 596px;\n  text-shadow: 2px 2px #333;\n  z-index: 2;\n}\n\n.coachmark-svg {\n  position: fixed;\n  top:0;\n  left:0;\n  height:100%;\n  width:100%;\n  z-index: 1;\n}\n\n.coachmark-line {\n  stroke: $color;\n}\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n}\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: $color;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: $buttonSize - 20px;\n  line-height: $buttonSize;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2)\n}\n";
-
-function injectCSS() {
-  const style = document.createElement('style');
-  style.setAttribute('type', 'text/css');
-  style.innerHTML = css;
-  document.body.prepend(style);
-  return style;
-}
+___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text {\n  font-size: 15vmin;\n  line-height: 15vmin;\n  color: #fefefe;\n  position: fixed;\n  top: 134;\n  left: 596px;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line {\n  stroke: #A7CC6B; }\n\npath.coachmark-line {\n  stroke-width: 1vmin; }\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: #A7CC6B;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n");
 
 var svg = "  <defs>\n    <filter id=\"coachmark-chalk\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\" color-interpolation-filters=\"sRGB\" filterUnits=\"userSpaceOnUse\">\n      <feTurbulence baseFrequency=\"0.133\" seed=\"500\" result=\"result1\" numOctaves=\"1\" type=\"turbulence\"/>\n      <feOffset result=\"result2\" dx=\"0\" dy=\"0\"/>\n      <feDisplacementMap scale=\"5\" yChannelSelector=\"G\" in2=\"result1\" xChannelSelector=\"R\" in=\"SourceGraphic\"/>\n      <feGaussianBlur stdDeviation=\"0.5\"/>\n    </filter>\n    <marker id=\"arrow\" class=\"coachmark-line\" markerWidth=\"10\" markerHeight=\"8\" refX=\"9.5\" refY=\"4.5\" orient=\"auto\" markerUnits=\"strokeWidth\">\n      <!--<path d=\"M0,0 L0,6 L9,3 z\" stroke=\"#fff\" fill=\"#fff\" />-->\n      <!--<polyline points=\"-2,-2 0,0 -2,2\" stroke=\"#fff\" fill=\"none\" vector-effect=\"non-scaling-stroke\" />-->\n\n      <!-- <polyline points=\"1 1, 9 5, 1 7\" fill=\"none\" /> -->\n      <polyline points=\"1 1.5, 10 4.5, 2 7\" fill=\"none\" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"3\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto\">\n      <path d=\"M 0 0 L 10 5 L 0 10 z\" />\n    </marker>\n  </defs>\n";
 
@@ -707,6 +723,8 @@ function injectSVG() {
   return s;
 }
 
+// import injectCSS from './inject-css';
+// Run on module load
 init();
 
 var index = {
@@ -731,7 +749,7 @@ var index = {
 
 function init() {
   document.addEventListener('DOMContentLoaded', () => {
-    injectCSS();
+    // injectCSS();
     injectSVG();
     addListeners();
   });

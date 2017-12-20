@@ -6,6 +6,7 @@ import scss from 'rollup-plugin-scss';
 import serve from 'rollup-plugin-serve';
 import string from 'rollup-plugin-string';
 import uglify from 'rollup-plugin-uglify';
+import sass from 'rollup-plugin-sass';
 import { minify } from 'uglify-es';
 import pkg from './package.json';
 
@@ -30,8 +31,11 @@ const config = {
     //   extensions: ['.css', '.sss'],  // default value
     // // parser: sugarss
     // }),
-    scss({
-      output: false,
+    // scss({
+    //   output: false,
+    // }),
+    sass({
+      insert: true,
     }),
     // postcss(),
     string({
