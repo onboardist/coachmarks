@@ -11,6 +11,7 @@
     "clean": "rimraf dist/*",
     "test:watch": "cypress open",
     "test": "cypress run",
+    "test:record": "cypress run --record",
     "test:ci": "./cypress/test_ci.sh",
     "build:watch": "rollup -cw",
     "toc": "doctoc README.md --github",
