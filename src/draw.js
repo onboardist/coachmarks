@@ -194,6 +194,7 @@ function arrow(from, to) {
   path.setAttribute('fill', 'none');
   path.setAttribute('filter', 'url(#coachmark-chalk)');
   path.setAttribute('marker-end', 'url(#arrow)');
+  path.setAttribute('stroke-dasharray', '50, 15');
 
   if (!path.parentNode) {
     svg.appendChild(path);

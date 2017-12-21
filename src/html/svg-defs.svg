@@ -17,4 +17,27 @@
     <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto">
       <path d="M 0 0 L 10 5 L 0 10 z" />
     </marker>
+
+    <filter id="coachmark-drop-shadow" x="0" y="0" height="5000px" width="5000px">
+       <feOffset result="offOut" in="SourceAlpha" dx="0" dy="5" />
+       <feGaussianBlur result="blurOut" in="offOut" stdDeviation="3" />
+       <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+
+    <filter id="test-filter">
+      <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="BEVEL_10" />
+      <feConvolveMatrix order="3,3" kernelMatrix=
+   "1 0 0
+   0 1 0
+   0 0 1" in="BEVEL_10" result="BEVEL_20" />
+      <feOffset dx="10" dy="10" in="BEVEL_20" result="BEVEL_30"/>
+      <feComposite operator="out" in="BEVEL_20" in2="BEVEL_10" result="BEVEL_30"/>
+      <feFlood flood-color="#fff" result="COLOR-red" />
+      <feComposite in="COLOR-red" in2="BEVEL_30" operator="in" result="BEVEL_40" />
+
+      <feMerge result="BEVEL_50">
+         <feMergeNode in="BEVEL_40" />
+         <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
   </defs>
