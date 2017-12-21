@@ -53,13 +53,21 @@ $buttonSize: 56px;
   /*box-shadow: 0 0 120px 50px #fff;*/
 }
 
+.coachmark-text-container {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5vmin;
+}
+
 .coachmark-text {
   font-size: 15vmin;
   line-height: 15vmin;
   color: #fefefe;
-  position: fixed;
-  top: 134;
-  left: 596px;
+  // position: fixed;
+  // top: 134;
+  // left: 596px;
   text-shadow: 2px 2px #333;
   z-index: 2;
 }

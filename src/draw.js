@@ -8,7 +8,7 @@ import cache from './cache';
 
 // Spacing between line and node
 const lineOffset = 20;
-const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
+const elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
 export function clear() {
   hideAll();
@@ -107,11 +107,33 @@ function coach(mark) {
 }
 
 export function addText(textStr) {
-  const text = cache.default('text', () => {
-    const text = document.createElement('div');
-    document.body.appendChild(text);
-    return text;
-  });
+  const text = cache.default('text', () => document.createElement('div'));
+
+  const elm = cache('elm');
+  if (!elm) throw new Error('Could not get element from cache');
+
+  const [box1, box2] = splitScreen();
+
+  // See if the element is in box1 or box2;
+  let elmMiddle = middleOf(elm);
+  elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
+
+  let box;
+  if (rectContains(elmMiddle, box1)) {
+    box = box2;
+  } else {
+    box = box1;
+  }
+
+  const textContainer = cache.default('textContainer', () => document.createElement('div'));
+  textContainer.className = 'coachmark-text-container';
+  textContainer.style.top = box.top;
+  textContainer.style.left = box.left;
+  textContainer.style.width = box.width;
+  textContainer.style.height = box.height;
+
+  textContainer.appendChild(text);
+  document.body.appendChild(textContainer);
 
   text.className = 'coachmark-text draggable-source';
   // const ref = (text.innerText || text.textContent);
@@ -242,6 +264,54 @@ function middleOf(node) {
   }
 
   return [rect.left + (rect.width / 2), rect.top + (rect.height / 2)];
+}
+
+function rectContains({ x, y }, { left, top, width, height }) {
+  console.log(arguments);
+  console.log(x, y, left, top, width, height);
+  return left <= x && x <= left + width &&
+         top <= y && y <= top + height;
+}
+
+function splitScreen() {
+  const w = document.body.offsetWidth;
+  const h = document.body.offsetHeight;
+
+  let box1;
+  let box2;
+
+  // Split vertically
+  if (w > h) {
+    const boxWidth = Math.floor(w / 2);
+    box1 = {
+      top: 0,
+      left: 0,
+      height: h,
+      width: boxWidth,
+    };
+    box2 = {
+      top: 0,
+      left: boxWidth,
+      height: h,
+      width: w - boxWidth,
+    };
+  } else {
+    const boxHeight = Math.floor(h / 2);
+    box1 = {
+      top: 0,
+      left: 0,
+      height: boxHeight,
+      width: w,
+    };
+    box2 = {
+      top: boxHeight,
+      left: 0,
+      height: h - boxHeight,
+      width: w,
+    };
+  }
+
+  return [box1, box2];
 }
 
 /* NOTE: not in use currently
