@@ -101,6 +101,10 @@ var squared = function (a, b) {
   return sum
 };
 
+// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
+
+
+
 var euclideanDistance = function (a, b) {
   return Math.sqrt(squared(a,b))
 };
@@ -358,6 +362,9 @@ var svgPath = createCommonjsModule(function (module, exports) {
 
 'use strict';
 
+// TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
+
+// Spacing between line and node
 const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
@@ -717,6 +724,8 @@ function injectSVG() {
   return s;
 }
 
+// import injectCSS from './inject-css';
+// Run on module load
 init();
 
 var index = {

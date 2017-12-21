@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 # Notes
 
 * I think quadratic curve looks better than cubic, probably due to how I'm calculating stuff but still
-* style-loader+css-loader works, but size is ~5kb bigger than just using my inject-css.js
 
 # Todo
 
+- [ ] Get tests to run in CI mode
 - [ ] BUG: Redraw on DOM event is redrawing when coachmark is not even being shown. Need a flag to toggle in the config/cache.
 - [x] BUG: click to show mark not drawing right
 
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
     * Favor vertical positioning, centered horizontally
 
 - [ ] Try favoring anchoring line to middle edge and then reposition to closer corner if it's closer. This may still not work the best.
-- [ ] Set up CI tests on api/ *NOTE*: ava is failing on trying to import scss file. Will need to precompile somehow. Or maybe test with cypress?
 - [ ] Add transition(s) for showing/hiding overlay
 - [ ] Text might be a bit too big?
 - [x] Append CSS to page from inside module
