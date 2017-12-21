@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 # Notes
 
 * I think quadratic curve looks better than cubic, probably due to how I'm calculating stuff but still
-* style-loader+css-loader works, but size is ~5kb bigger than just using my inject-css.js
 
 # Todo
 
+- [ ] Get tests to run in CI mode
 - [ ] BUG: Redraw on DOM event is redrawing when coachmark is not even being shown. Need a flag to toggle in the config/cache.
 - [x] BUG: click to show mark not drawing right
 
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   - Principles:
     * Favor vertical positioning, centered horizontally
 
+- [ ] Try favoring anchoring line to middle edge and then reposition to closer corner if it's closer. This may still not work the best.
 - [ ] Add transition(s) for showing/hiding overlay
 - [ ] Text might be a bit too big?
 - [x] Append CSS to page from inside module
@@ -78,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Ideas
 
+* Enable https://greenkeeper.io on project
 * Embeddable SVG icons. Use Noun Project api to embed icons in coachmarks.
   * ^ or use font awesome. FA 5 uses SVGs
   * Or maybe flaticon.com

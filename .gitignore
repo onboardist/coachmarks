@@ -58,3 +58,6 @@ typings/
 .env
 
 dist/index.html
+
+cypress/videos/
+cypress/screenshots/
