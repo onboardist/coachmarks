@@ -1,6 +1,7 @@
 'use strict';
 
 import distance from 'euclidean-distance';
+import polar from 'array-polar';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
 
@@ -147,23 +148,42 @@ function arrow(from, to) {
   const fromRect = elementRect(from);
   const toRect = elementRect(to);
 
-  let fromPos = nearestEdgePoint(fromRect, toRect);
+  let fromPos = nearestEdgePoint(fromRect, toRect, { useCorners: false });
   let toPos = nearestEdgePoint(toRect, fromRect);
   fromPos = nearestEdgePoint(fromPos, toRect);
   toPos = nearestEdgePoint(toPos, fromRect);
 
-  /* NOTE: for curved linbe
-  // const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  // const c1x = mid[0];
-  // const c1y = toPos[1];
+  // NOTE: for curved line
+  const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
+  // let c1x = mid[0];
+  // let c1y = toPos[1];
   // const c2x = fromPos[0];
   // const c2y = mid[1];
+
+  // Find point, 50% of segment length away from midPoint
+  const dist = lineDist(fromPos[0], fromPos[1], toPos[0], toPos[1]);
+  // const vMid = viewportMid();
+  const coords = polar([fromPos[0], fromPos[1], toPos[0], toPos[1]], [fromPos[0], fromPos[1]]);
+  // const midCoords = polar([fromPos[0], fromPos[1], mid[0], mid[1]], [fromPos[0], fromPos[1]]);
+  const angle = coords[3];
+  let deg = angle * 180 / Math.PI;
+  deg = deg < 0 ? deg + 360 : deg;
+  const degPerp = deg - 90;
+  const degPerpRad = degPerp * Math.PI / 180;
+  const newCoords = polar.cartesian([0, Math.PI, dist * 0.33, degPerpRad]);
+  const midCtrl = [mid[0] + newCoords[2], mid[1] + newCoords[3]];
+
+  // const sl = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
+  // const recip = -1 / sl;
+  // console.log('SLOPE', sl, recip);
+
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
   // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
-  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c2x, c2y, toPos[0], toPos[1]).str();
-  */
 
-  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
+  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c1x, c1y, toPos[0], toPos[1]).str();
+  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(midCtrl[0], midCtrl[1], toPos[0], toPos[1]).str();
+
+  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
 
   const svg = cache.default('svg', () => createSVG());
   const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));
@@ -210,7 +230,7 @@ function createCloseButton() {
 //   );
 // }
 
-function nearestEdgePoint(from, toRect) {
+function nearestEdgePoint(from, toRect, { useCorners } = {}) {
   /*
     rect: {
       top, left, width, height
@@ -234,6 +254,12 @@ function nearestEdgePoint(from, toRect) {
     leftBottom: [toRect.left, toRect.top + toRect.height],
     leftMiddle: [toRect.left, toRect.top + (toRect.height / 2)],
   };
+
+  if (useCorners === false) {
+    Object.keys(points).forEach(key => {
+      if (key.toLowerCase().indexOf('middle') === -1) delete points[key];
+    });
+  }
 
   let nearest = { point: [0, 0], dist: Infinity };
   let nearestName = '';
@@ -267,8 +293,6 @@ function middleOf(node) {
 }
 
 function rectContains({ x, y }, { left, top, width, height }) {
-  console.log(arguments);
-  console.log(x, y, left, top, width, height);
   return left <= x && x <= left + width &&
          top <= y && y <= top + height;
 }
@@ -366,26 +390,24 @@ function elementRect(node, offsetParent) {
   };
 }
 
-/* NOTE: not in use currently
 function midPoint(x1, y1, x2, y2) {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
-*/
 
-// function lineDist(x1, y1, x2, y2) {
-//   return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
-// }
-//
+function lineDist(x1, y1, x2, y2) {
+  return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
+}
+
 // function slope(x1, y1, x2, y2) {
 //   return (y2 - y1) / (x2 - x1);
 // }
-//
-// function viewportMid() {
-//   return [
-//     Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 2,
-//     Math.max(document.documentElement.clientHeight, window.innerHeight || 0) / 2,
-//   ];
-// }
+
+function viewportMid() {
+  return [
+    Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 2,
+    Math.max(document.documentElement.clientHeight, window.innerHeight || 0) / 2,
+  ];
+}
 
 // function dirToViewportMid(pos) {
 //   const mid = viewportMid();

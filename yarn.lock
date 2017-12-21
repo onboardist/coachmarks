@@ -284,6 +284,10 @@ array-map@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/array-map/-/array-map-0.0.0.tgz#88a2bab73d1cf7bcd5c1b118a003f66f665fa662"
 
+array-polar@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/array-polar/-/array-polar-1.0.1.tgz#4eb280413e9ed0c74f520f1f8d0ceb5d59aa93dd"
+
 array-reduce@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/array-reduce/-/array-reduce-0.0.0.tgz#173899d3ffd1c7d9383e4479525dbe278cab5f2b"
