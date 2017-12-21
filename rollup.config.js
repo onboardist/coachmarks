@@ -49,12 +49,12 @@ export default [
   merge({}, config, {
     plugins: [
       process.env.DEV ? serve({
-        open: false,
+        open: true,
         contentBase: ['test', 'dist'],
         port: 10002,
       }) : undefined,
       process.env.DEV ? livereload({
-        watch: ['src', 'dist'],
+        watch: ['dist'], // src
       }) : undefined,
     ],
   }),

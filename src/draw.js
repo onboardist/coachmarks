@@ -11,7 +11,8 @@ const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
 export function clear() {
-  // debugger;
+  hideAll();
+
   elmNames.forEach(name => {
     const node = cache(name);
     if (node instanceof Node) {
@@ -22,19 +23,24 @@ export function clear() {
 }
 
 export function redrawAll() {
-  const all = cache.all();
-
-  Object.keys(all).forEach(key => {
+  Object.keys(cache.all()).forEach(key => {
     const item = cache(key);
     if (!(item instanceof Node)) {
-      draw(key);
+      if (item.showing) draw(key);
     }
+  });
+}
+
+function hideAll() {
+  Object.values(cache.all()).forEach(val => {
+    if (val.showing) val.showing = false;
   });
 }
 
 export function draw(name) {
   const mark = cache(name);
   if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
+  mark.showing = true;
 
   const coached = coach(mark);
   const text = addText(mark.text);

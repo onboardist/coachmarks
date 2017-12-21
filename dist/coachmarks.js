@@ -58,7 +58,7 @@ cache.add = (name, obj) => {
 
 cache.remove = name => {
   cache.init();
-  if (name) cache.cache[name] = undefined;
+  if (name) delete cache.cache[name];
 };
 
 cache.clear = () => {
@@ -100,10 +100,6 @@ var squared = function (a, b) {
   }
   return sum
 };
-
-// http://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions
-
-
 
 var euclideanDistance = function (a, b) {
   return Math.sqrt(squared(a,b))
@@ -369,7 +365,8 @@ const lineOffset = 20;
 const elmNames = ['text', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
 function clear() {
-  // debugger;
+  hideAll();
+
   elmNames.forEach(name => {
     const node = cache(name);
     if (node instanceof Node) {
@@ -380,19 +377,24 @@ function clear() {
 }
 
 function redrawAll() {
-  const all = cache.all();
-
-  Object.keys(all).forEach(key => {
+  Object.keys(cache.all()).forEach(key => {
     const item = cache(key);
     if (!(item instanceof Node)) {
-      draw(key);
+      if (item.showing) draw(key);
     }
+  });
+}
+
+function hideAll() {
+  Object.values(cache.all()).forEach(val => {
+    if (val.showing) val.showing = false;
   });
 }
 
 function draw(name) {
   const mark = cache(name);
   if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
+  mark.showing = true;
 
   const coached = coach(mark);
   const text = addText(mark.text);
@@ -724,8 +726,6 @@ function injectSVG() {
   return s;
 }
 
-// import injectCSS from './inject-css';
-// Run on module load
 init();
 
 var index = {

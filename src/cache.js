@@ -34,7 +34,7 @@ cache.add = (name, obj) => {
 
 cache.remove = name => {
   cache.init();
-  if (name) cache.cache[name] = undefined;
+  if (name) delete cache.cache[name];
 };
 
 cache.clear = () => {

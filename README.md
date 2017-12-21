@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Todo
 
-- [ ] Get tests to run in CI mode
-- [ ] BUG: Redraw on DOM event is redrawing when coachmark is not even being shown. Need a flag to toggle in the config/cache.
+- [x] Get tests to run in CI mode
+- [x] BUG: Redraw on DOM event is redrawing when coachmark is not even being shown. Need a flag to toggle in the config/cache.
 - [x] BUG: click to show mark not drawing right
 
 - [ ] Dynamically position text relative to target. Should be on opposite side of screen. Maybe break screen into sections (halves / quadrants) and put
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   - Principles:
     * Favor vertical positioning, centered horizontally
 
+- [ ] Make sure JS is transpiling with Rollup. Can probably remove a lot of babel dependencies.
 - [ ] Try favoring anchoring line to middle edge and then reposition to closer corner if it's closer. This may still not work the best.
 - [ ] Add transition(s) for showing/hiding overlay
 - [ ] Text might be a bit too big?
