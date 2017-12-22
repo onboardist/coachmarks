@@ -148,10 +148,12 @@ function arrow(from, to) {
   const fromRect = elementRect(from);
   const toRect = elementRect(to);
 
-  let fromPos = nearestEdgePoint(fromRect, toRect, { useCorners: false });
-  let toPos = nearestEdgePoint(toRect, fromRect);
-  fromPos = nearestEdgePoint(fromPos, toRect);
-  toPos = nearestEdgePoint(toPos, fromRect);
+  // let fromPos = nearestEdgePoint(fromRect, toRect, { useCorners: false });
+  // let toPos = nearestEdgePoint(toRect, fromRect, { useCorners: false });
+  // fromPos = nearestEdgePoint(fromPos, toRect);
+  // toPos = nearestEdgePoint(toPos, fromRect);
+  const fromPos = arrowPoints(fromRect, toRect);
+  const toPos = arrowPoints(toRect, fromRect);
 
   // NOTE: for curved line
   const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
@@ -181,9 +183,17 @@ function arrow(from, to) {
   // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
 
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c1x, c1y, toPos[0], toPos[1]).str();
+
+  // NOTE: This is a nice smooth quadratic bezier curve
   const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(midCtrl[0], midCtrl[1], toPos[0], toPos[1]).str();
 
   // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
+
+  // Bezier S-Curve
+  // const dx = toPos[0] - fromPos[0];
+  // const dy = toPos[1] - fromPos[1];
+  // pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(fromPos[0] + (dx * 0.33), fromPos[1], fromPos[0] + (dx * 0.67), toPos[1], toPos[0], toPos[1]).str();
+  // End Bezier S-Curve
 
   const svg = cache.default('svg', () => createSVG());
   const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));
@@ -231,7 +241,23 @@ function createCloseButton() {
 //   );
 // }
 
-function nearestEdgePoint(from, toRect, { useCorners } = {}) {
+function arrowPoints(from, to, opts = {}) {
+  // From is a rect, calc line from middle of rectangle
+  // const fromPt = middleOf(from);
+  // const toPt = middleOf(to);
+
+  const nearestFrom = nearestEdgePoint(from, to);
+  const nearestTo = nearestEdgePoint(to, from);
+
+  const dx = nearestTo[0] - nearestFrom[0];
+  const dy = nearestTo[1] - nearestFrom[1];
+
+  opts.favor = (dx > dy) ? 'x' : 'y';
+
+  return nearestEdgePoint(nearestFrom, to, opts);
+}
+
+function nearestEdgePoint(from, toRect, { useCorners, favor } = {}) {
   /*
     rect: {
       top, left, width, height
@@ -259,6 +285,18 @@ function nearestEdgePoint(from, toRect, { useCorners } = {}) {
   if (useCorners === false) {
     Object.keys(points).forEach(key => {
       if (key.toLowerCase().indexOf('middle') === -1) delete points[key];
+    });
+  }
+
+  if (favor && favor === 'x') {
+    // Remove top/bottom edges
+    Object.keys(points).forEach(key => {
+      if (/left|right/i.test(key)) delete points[key];
+    });
+  } else if (favor && favor === 'y') {
+    // Remove left/right edges
+    Object.keys(points).forEach(key => {
+      if (/top|bottom/i.test(key)) delete points[key];
     });
   }
 

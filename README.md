@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Todo
 
+- [ ] Use y-axis side anchors if y difference is greater than x in start/end point difference, use x axis side anchors if x difference is greater
+      than y in start/end point difference.
+- [ ] Figure out how to curve line so arrowhead makes sense positionally
 - [x] Get tests to run in CI mode
 - [x] BUG: Redraw on DOM event is redrawing when coachmark is not even being shown. Need a flag to toggle in the config/cache.
 - [x] BUG: click to show mark not drawing right
