@@ -81,12 +81,13 @@ $buttonSize: 56px;
   z-index: 1;
 }
 
-.coachmark-line {
+.coachmark-line, .leader-line-line-path {
   stroke: $color;
 }
 
 path.coachmark-line {
   stroke-width: 1vmin;
+  stroke-linecap: round;
 }
 
 .coachmark-close {

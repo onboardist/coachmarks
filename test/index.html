@@ -3,8 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.8/interact.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.3/lib/draggable.bundle.js"></script>
     <script src="/coachmarks.js"></script>
-    <style>
+    <style type="text/css">
       body {
         padding: 20px;
       }
@@ -19,8 +20,9 @@
     <p>Including scorpion hence one less before far dragonfly ouch abhorrently that far rewound that angelfish howled forward much and man-of-war onto onto one because outsold some then and gosh dachshund hamster much wow kookaburra some spelled excruciatingly
       some hello and jeez woodchuck the.</p>
 
-    <button class="btn btn-lg btn-primary draggable-source" id="btn">Foo Bar Baz</button>
+    <button class="btn btn-lg btn-primary" id="btn">Foo Bar Baz</button>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
@@ -33,6 +35,11 @@
         }, 1000);
 
         document.querySelector('#btn').addEventListener('click', () => coachmarks.show('test'));
+
+        // window.draggable = new Draggable.Draggable(document.querySelector('body'), {
+        //   draggable: 'button',
+        // });
+        // draggable.on('drag:move', (event) => dragMoveListener(event));
       });
 
       // var drag = new Draggable.Draggable([document.body]);
@@ -54,22 +61,25 @@
         }
       });
 
+      // var drake = dragula([document.querySelector('body')], {
+      //   moves: (el, source, handle, sibling) => {
+      //     return ~el.className.indexOf('draggable-source');
+      //   },
+      //   copy: false,
+      // });
+      // drake.on('drag', dragMoveListener);
+
       function dragMoveListener (event) {
-        const rect = elementRect(event.target);
+        const target = event.target;
 
-        // console.log(rect);
+        const rect = elementRect(target);
+        // console.log('target', target);
 
-        var target = event.target,
-            // keep the dragged position in the data-x/data-y attributes
-            x = (parseFloat(target.getAttribute('data-x'), 10) || parseFloat(rect.left, 10) || 0) + event.dx,
+        // keep the dragged position in the data-x/data-y attributes
+        var x = (parseFloat(target.getAttribute('data-x'), 10) || parseFloat(rect.left, 10) || 0) + event.dx,
             y = (parseFloat(target.getAttribute('data-y'), 10) || parseFloat(rect.top, 10) || 0) + event.dy;
 
-        // translate the element
-        // target.style.webkitTransform =
-        // target.style.transform =
-        //   'translate(' + x + 'px, ' + y + 'px)';
-        //
-        // // update the posiion attributes
+
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
 

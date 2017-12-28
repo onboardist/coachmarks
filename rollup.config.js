@@ -1,8 +1,10 @@
+import path from 'path';
 import { merge } from 'lodash';
-import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
+import legacy from 'rollup-plugin-legacy';
 import livereload from 'rollup-plugin-livereload';
+import resolve from 'rollup-plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import string from 'rollup-plugin-string';
 import uglify from 'rollup-plugin-uglify';
@@ -19,8 +21,15 @@ const config = {
   name: 'coachmarks',
   sourcemap: true,
   plugins: [
-    resolve(), // so Rollup can find `ms`
-    commonjs(), // so Rollup can convert `ms` to an ES module
+    resolve({ browser: true }),
+    commonjs({
+      // namedExports: {
+      //   'node_modules/leader-line/leader-line.min.js': ['LeaderLine'],
+      // },
+    }),
+    legacy({
+      'node_modules/leader-line/leader-line.min.js': 'LeaderLine',
+    }),
     // postcss({
     //   plugins: [
     //   // cssnext(),

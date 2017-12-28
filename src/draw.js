@@ -2,6 +2,7 @@
 
 import distance from 'euclidean-distance';
 import polar from 'array-polar';
+import LeaderLine from 'leader-line';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
 
@@ -45,7 +46,16 @@ export function draw(name) {
 
   const coached = coach(mark);
   const text = addText(mark.text);
-  arrow(coached, text);
+
+  if (!coached.ownerDocument) return;
+  if (!text.ownerDocument) return;
+
+  if (coached.compareDocumentPosition(coached.ownerDocument) & Node.DOCUMENT_POSITION_DISCONNECTED) return;
+  if (text.compareDocumentPosition(text.ownerDocument) & Node.DOCUMENT_POSITION_DISCONNECTED) return;
+  if (coached.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_DISCONNECTED) return;
+
+  // arrow(coached, text);
+  leaderLine(text, coached);
 }
 
 function coach(mark) {
@@ -143,6 +153,20 @@ export function addText(textStr) {
   return text;
 }
 
+function leaderLine(from, to) {
+  let line = cache.get('leaderLine');
+  if (line) {
+    line.remove();
+  }
+
+  line = new LeaderLine(from, to);
+  cache.set('leaderLine', line);
+
+  // window.line = line;
+  line.path = 'fluid';
+  line.position();
+}
+
 // Draw arrow from one node to another
 function arrow(from, to) {
   const fromRect = elementRect(from);
@@ -172,7 +196,7 @@ function arrow(from, to) {
   deg = deg < 0 ? deg + 360 : deg;
   const degPerp = deg - 90;
   const degPerpRad = degPerp * Math.PI / 180;
-  const newCoords = polar.cartesian([0, Math.PI, dist * 0.33, degPerpRad]);
+  const newCoords = polar.cartesian([0, Math.PI, dist * 0.2, degPerpRad]);
   const midCtrl = [mid[0] + newCoords[2], mid[1] + newCoords[3]];
 
   // const sl = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
@@ -204,7 +228,8 @@ function arrow(from, to) {
   path.setAttribute('fill', 'none');
   path.setAttribute('filter', 'url(#coachmark-chalk)');
   path.setAttribute('marker-end', 'url(#arrow)');
-  path.setAttribute('stroke-dasharray', '50, 15');
+  // path.setAttribute('stroke-dasharray', '50, 15');
+  path.setAttribute('stroke-linecap', 'round');
 
   if (!path.parentNode) {
     svg.appendChild(path);

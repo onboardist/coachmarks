@@ -31,6 +31,7 @@ cache.add = (name, obj) => {
   cache.cache[name] = obj;
   return obj;
 };
+cache.set = cache.add;
 
 cache.remove = name => {
   cache.init();
