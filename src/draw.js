@@ -6,6 +6,8 @@ import LeaderLine from 'leader-line';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
 
+const COLOR = '#A7CC6B';
+
 // TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
 
 // Spacing between line and node
@@ -22,6 +24,12 @@ export function clear() {
       cache.remove(name);
     }
   });
+
+  const l = cache.get('leaderLine');
+  if (l) {
+    l.remove();
+    cache.remove('leaderLine');
+  }
 }
 
 export function redrawAll() {
@@ -46,13 +54,6 @@ export function draw(name) {
 
   const coached = coach(mark);
   const text = addText(mark.text);
-
-  if (!coached.ownerDocument) return;
-  if (!text.ownerDocument) return;
-
-  if (coached.compareDocumentPosition(coached.ownerDocument) & Node.DOCUMENT_POSITION_DISCONNECTED) return;
-  if (text.compareDocumentPosition(text.ownerDocument) & Node.DOCUMENT_POSITION_DISCONNECTED) return;
-  if (coached.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_DISCONNECTED) return;
 
   // arrow(coached, text);
   leaderLine(text, coached);
@@ -159,10 +160,18 @@ function leaderLine(from, to) {
     line.remove();
   }
 
-  line = new LeaderLine(from, to);
+  line = new LeaderLine(
+    // from, to,
+    LeaderLine.areaAnchor(from, { color: 'transparency' }),
+    LeaderLine.areaAnchor(to, { color: 'transparency' }),
+    {
+      endPlugColor: COLOR,
+      startPlugColor: COLOR,
+    }
+  );
   cache.set('leaderLine', line);
 
-  // window.line = line;
+  window.line = line;
   line.path = 'fluid';
   line.position();
 }
