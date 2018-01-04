@@ -1,4 +1,4 @@
-$color: #A7CC6B;
+$color: #B4C5E4;
 $buttonSize: 56px;
 
 .coachmark {
@@ -83,6 +83,8 @@ $buttonSize: 56px;
 
 .coachmark-line, .leader-line-line-path {
   stroke: $color;
+  stroke-width: 1vmin;
+  stroke-linecap: round;
 }
 
 path.coachmark-line {
@@ -106,4 +108,14 @@ path.coachmark-line {
   text-align: center;
   cursor: pointer;
   box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2)
+}
+
+/* Override Leader-Line Settings */
+.leader-line-plugs-face {
+  marker-end: url(#arrow) !important;
+  stroke-width: 1px;
+}
+
+.leader-line path {
+  filter: 'url(#coachmark-chalk)';
 }

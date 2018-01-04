@@ -3,12 +3,11 @@
 import distance from 'euclidean-distance';
 import polar from 'array-polar';
 import LeaderLine from 'leader-line';
+import raf from 'raf';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
 
-const COLOR = '#A7CC6B';
-
-// TODO: for positioning choose biggest delta between x and y, it will be one of two (i.e. bottom or left), so choose the one that's the largest delta from the other point's (maybe)
+const COLOR = '#B4C5E4';
 
 // Spacing between line and node
 const lineOffset = 20;
@@ -33,11 +32,13 @@ export function clear() {
 }
 
 export function redrawAll() {
-  Object.keys(cache.all()).forEach(key => {
-    const item = cache(key);
-    if (!(item instanceof Node)) {
-      if (item.showing) draw(key);
-    }
+  raf(() => {
+    Object.keys(cache.all()).forEach(key => {
+      const item = cache(key);
+      if (!(item instanceof Node)) {
+        if (item.showing) draw(key);
+      }
+    });
   });
 }
 
@@ -167,13 +168,22 @@ function leaderLine(from, to) {
     {
       endPlugColor: COLOR,
       startPlugColor: COLOR,
-    }
+      // endPlug: 'arrow2',
+      endPlugSize: 0.5,
+      // markerEnd: 'url(#coachmark-arrow)',
+    },
   );
   cache.set('leaderLine', line);
 
   window.line = line;
-  line.path = 'fluid';
+  line.path = 'magnet'; // magnet, fluid, arc, straight, grid
   line.position();
+
+  // Put filter on lines after they've been drawn
+  const lines = document.querySelectorAll('.leader-line-line-path');
+  Array.prototype.forEach.call(lines, line => {
+    line.setAttribute('filter', 'url(#coachmark-chalk)');
+  });
 }
 
 // Draw arrow from one node to another
