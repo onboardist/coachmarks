@@ -11,6 +11,8 @@ export default class flow {
   next(name) {
     name = clean(name);
     this.flow.push(name);
+
+    return this;
   }
 
   getNext(name) {

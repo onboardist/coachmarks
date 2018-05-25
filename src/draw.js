@@ -45,7 +45,7 @@ export function redrawAll() {
 
 function hideAll() {
   Object.values(cache.all()).forEach(val => {
-    if (val.showing) val.showing = false;
+    if (val && val.showing) val.showing = false;
   });
 }
 
@@ -53,7 +53,11 @@ export function draw(name) {
   if (name.indexOf('mark.') !== 0) name = `mark.${name}`;
 
   const mark = cache(name);
-  if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
+  if (!mark) {
+    console.error(`Coachmark with name '${name}' not found`);
+    return;
+  }
+
   mark.showing = true;
   mark.name = name;
 
@@ -65,23 +69,33 @@ export function draw(name) {
 }
 
 function coach(mark) {
-  if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
+  if (!mark) {
+    console.error(`No mark specified`);
+    return;
+  }
 
   const elm = document.querySelector(mark.target);
+  if (!elm) {
+    console.error(`Couldn't find element '${mark.target}' for mark ${mark.name}`);
+    return;
+  }
+
   cache.set('elm', elm);
 
   // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
 
   // elm.style.position = 'absolute';
-  elm.style['z-index'] = 102;
+  // elm.style['z-index'] = 102;
 
   const borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
   // borderRadius = parseInt(borderRadius, 10);
 
-  const top = elm.offsetTop;
-  const left = elm.offsetLeft;
-  const width = elm.offsetWidth;
-  const height = elm.offsetHeight;
+  const rect = elm.getBoundingClientRect();
+
+  const top = rect.top;
+  const left = rect.left;
+  const width = rect.width;
+  const height = rect.height;
   const right = left + width;
   const bottom = top + height;
 
@@ -142,10 +156,10 @@ export function flow(name) {
 }
 
 export function addText(textStr) {
-  const text = cache.default('text', () => document.createElement('div'));
-
   const elm = cache('elm');
-  if (!elm) throw new Error('Could not get element from cache');
+  if (!elm) return;
+
+  const text = cache.default('text', () => document.createElement('div'));
 
   const [box1, box2] = splitScreen();
 
@@ -162,10 +176,10 @@ export function addText(textStr) {
 
   const textContainer = cache.default('textContainer', () => document.createElement('div'));
   textContainer.className = 'coachmark-text-container';
-  textContainer.style.top = box.top;
-  textContainer.style.left = box.left;
-  textContainer.style.width = box.width;
-  textContainer.style.height = box.height;
+  textContainer.style.top = box.top + 'px';
+  textContainer.style.left = box.left + 'px';
+  textContainer.style.width = box.width + 'px';
+  textContainer.style.height = box.height + 'px';
 
   textContainer.appendChild(text);
   document.body.appendChild(textContainer);
@@ -178,6 +192,8 @@ export function addText(textStr) {
 }
 
 function leaderLine(from, to) {
+  if (!from || !to) return;
+
   let line = cache.get('leaderLine');
   if (line) {
     line.remove();
@@ -294,14 +310,17 @@ function createActionButton(mark) {
   let icon = 'X';
   let action = clear;
 
-  if (mark.flow) {
-    const next = mark.flow.getNext(mark.name);
+  let flow = cache('flow');
+  if (mark.flow) flow = cache.set('flow', mark.flow);
+
+  if (flow) {
+    const next = flow.getNext(mark.name);
     if (next) {
       icon = nextButtonHTML();
       action = () => {
         draw(next);
       };
-    }
+    } else cache.remove('flow');
   }
 
   const close = cache.default('actionButton', () => document.createElement('div'));

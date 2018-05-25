@@ -7,7 +7,7 @@ import injectSVG from './inject-svg';
 // Run on module load
 init();
 
-window.CoachmarkCache = cache.cache;
+window.CoachmarkCache = cache;
 
 export default {
   // Add a coachmark
@@ -15,6 +15,11 @@ export default {
     if (!(typeof name === 'string')) {
       config = name;
       name = Math.random().toString(36).substr(2);
+    }
+
+    if (!config.text) {
+      console.log('No text specified');
+      return;
     }
 
     cache(`mark.${name}`, config);

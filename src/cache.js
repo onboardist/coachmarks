@@ -12,7 +12,7 @@ cache.init = () => {
 };
 
 cache.addOrGet = (name, obj) => {
-  cache.init();
+  // cache.init();
   if (typeof obj === 'undefined') {
     // Get
     return cache.get(name);
@@ -25,24 +25,24 @@ cache.addOrGet = (name, obj) => {
 };
 
 cache.get = name => {
-  cache.init();
+  // cache.init();
   return cache.cache[name];
 };
 
 cache.add = (name, obj) => {
-  cache.init();
+  // cache.init();
   cache.cache[name] = obj;
   return obj;
 };
 cache.set = cache.add;
 
 cache.remove = name => {
-  cache.init();
+  // cache.init();
   if (name) delete cache.cache[name];
 };
 
 cache.clear = () => {
-  cache.init();
+  // cache.init();
   for (const c of cache.cache) {
     cache.cache[c] = undefined;
   }
@@ -56,14 +56,14 @@ cache.default = (name, defaultFn) => {
 };
 
 cache.all = () => {
-  cache.init();
+  // cache.init();
   return cache.cache;
 };
 
 cache.allArray = () => {
-  cache.init();
+  // cache.init();
   const elms = [];
-  for (const key in cache) {
+  for (const key in cache.cache) {
     if (Object.prototype.hasOwnProperty.call(cache.cache, key)) {
       elms.push({ key: cache.cache[key] });
     }

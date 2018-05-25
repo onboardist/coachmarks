@@ -114,7 +114,8 @@ path.coachmark-line {
   line-height: floor($buttonSize - ($buttonBorderSize * 2 * .75));
   text-align: center;
   cursor: pointer;
-  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2)
+  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);
+  font-family: sans-serif;
 }
 
 .coachmark-next-button {
