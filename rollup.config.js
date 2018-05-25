@@ -63,7 +63,7 @@ export default [
   merge({}, config, {
     plugins: [
       process.env.DEV ? serve({
-        open: true,
+        open: false,
         contentBase: ['test', 'dist'],
         port: 10002,
       }) : undefined,

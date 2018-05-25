@@ -1,1 +1,0 @@
-{"dependencies":[],"generated":{"js":"module.exports = function (a, b) {\n  var sum = 0\n  var n\n  for (n = 0; n < a.length; n++) {\n    sum += Math.pow(a[n] - b[n], 2)\n  }\n  return sum\n}\n"},"hash":"b058a2f1207326aec1fa02991bed7262"}

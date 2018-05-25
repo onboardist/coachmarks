@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Todo
 
+- [ ] Remove extraneous packages that are no longer needed now that we're doing leader-line for arrows
 - [x] Change to hand-drawn font
 - [ ] Set up "flow" of coachmarks, so one gets displayed after the other
   - [ ] Make close button a "next" arrow if there's a flow

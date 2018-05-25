@@ -1,1 +1,0 @@
-{"dependencies":[{"name":"./squared","loc":{"line":3,"column":30}}],"generated":{"js":"var r=require(\"./squared\");module.exports=function(e,t){return Math.sqrt(r(e,t))};"},"hash":"f0d244e441f3bb57b7b8f85dda3d5a86"}
