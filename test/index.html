@@ -20,7 +20,8 @@
     <p>Including scorpion hence one less before far dragonfly ouch abhorrently that far rewound that angelfish howled forward much and man-of-war onto onto one because outsold some then and gosh dachshund hamster much wow kookaburra some spelled excruciatingly
       some hello and jeez woodchuck the.</p>
 
-    <button class="btn btn-lg btn-primary" id="btn">Foo Bar Baz</button>
+    <button class="btn btn-lg btn-primary" id="btn">First Button</button>
+    <button class="btn btn-lg btn-danger" id="second-btn">Second Button</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
     <script>
@@ -30,6 +31,13 @@
             target: '#btn',
             text: 'This is some text!',
           });
+
+          coachmarks.add('second-btn', {
+            target: '#second-btn',
+            text: 'You clicked the second button, alrighty then?',
+          });
+
+          coachmarks.flow('test').next('second-btn');
 
           coachmarks.show('test');
         }, 1000);

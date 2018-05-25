@@ -12,7 +12,7 @@ const COLOR = '#fff';
 
 // Spacing between line and node
 const lineOffset = 20;
-const elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
+const elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'actionButton', 'svg', 'path'];
 
 export function clear() {
   hideAll();
@@ -55,6 +55,7 @@ export function draw(name) {
   const mark = cache(name);
   if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
   mark.showing = true;
+  mark.name = name;
 
   const coached = coach(mark);
   const text = addText(mark.text);
@@ -68,9 +69,9 @@ function coach(mark) {
 
   const elm = cache.default('elm', () => document.querySelector(mark.target));
 
-  if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
+  // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
 
-  elm.style.position = 'absolute';
+  // elm.style.position = 'absolute';
   elm.style['z-index'] = 102;
 
   const borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
@@ -111,9 +112,9 @@ function coach(mark) {
   glow.style['border-radius'] = borderRadius;
   glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
-  const close = createCloseButton();
+  const actionBtn = createActionButton(mark);
 
-  [coachTop, coachLeft, coachRight, coachBottom, glow, close].forEach(c => {
+  [coachTop, coachLeft, coachRight, coachBottom, glow, actionBtn].forEach(c => {
     if (!c.parentNode) {
       document.body.appendChild(c);
     }
@@ -133,7 +134,10 @@ export function flow(name) {
 
   if (!mark) throw new Error(`Could not find coachmark named '${name}'. Make sure you create it before building a flow with it`);
 
-  return new Flow(name);
+  const f = new Flow(name);
+  mark.flow = f;
+
+  return f;
 }
 
 export function addText(textStr) {
@@ -285,12 +289,40 @@ function createSVG() {
   return svg;
 }
 
-function createCloseButton() {
-  const close = cache.default('closeButton', () => document.createElement('div'));
-  close.setAttribute('class', 'coachmark-close');
-  close.innerHTML = 'X';
-  close.addEventListener('click', () => clear());
+function createActionButton(mark) {
+  let icon = 'X';
+  let action = clear;
+
+  if (mark.flow) {
+    const next = mark.flow.getNext(mark.name);
+    if (next) {
+      icon = nextButtonHTML();
+      action = () => {
+        draw(next);
+      };
+    }
+  }
+
+  const close = cache.default('actionButton', () => document.createElement('div'));
+  close.setAttribute('class', 'coachmark-action-btn');
+  close.innerHTML = icon;
+  close.addEventListener('click', () => {
+    action();
+  });
+
   return close;
+}
+
+function nextButtonHTML() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); // ok
+  svg.setAttribute('class', 'coachmark-next-button');
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('transform', 'scale(0.065), translate(100, 140)');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('xlink:href', '#right-arrow');
+  g.appendChild(use);
+  svg.appendChild(g);
+  return svg.outerHTML;
 }
 
 /* Calculations Methods */

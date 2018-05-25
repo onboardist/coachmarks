@@ -27,6 +27,7 @@ export default {
   cache: () => cache.cache,
   draw,
   redrawAll,
+  flow,
 };
 
 function init() {
