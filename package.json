@@ -1,6 +1,6 @@
 {
   "name": "coachmarks",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "On-board new users to your app and introduce new features with SVG sketches (coachmarks)",
   "source": "src/index.js",
   "main": "dist/coachmarks.js",
@@ -18,7 +18,7 @@
     "debug": "node --inspect node_modules/ava/profile.js",
     "cover": "nyc ava && nyc report",
     "version": "npm run toc",
-    "prepublishOnly": "build"
+    "prepublishOnly": "npm run build"
   },
   "author": "Brian Hann",
   "license": "GPL-3.0",
