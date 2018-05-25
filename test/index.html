@@ -20,16 +20,29 @@
     <p>Including scorpion hence one less before far dragonfly ouch abhorrently that far rewound that angelfish howled forward much and man-of-war onto onto one because outsold some then and gosh dachshund hamster much wow kookaburra some spelled excruciatingly
       some hello and jeez woodchuck the.</p>
 
+    <button class="btn btn-lg btn-primary" id="single-btn">Single Button</button>
+
+    <br>
+    <br>
+    <br>
+
     <button class="btn btn-lg btn-primary" id="btn">First Button</button>
+    <br>
+    <br>
     <button class="btn btn-lg btn-danger" id="second-btn">Second Button</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
+          coachmarks.add('single', {
+            target: '#single-btn',
+            text: 'You clicked a single button',
+          });
+
           coachmarks.add('test', {
             target: '#btn',
-            text: 'This is some text!',
+            text: 'You started a flow!',
           });
 
           coachmarks.add('second-btn', {
@@ -39,10 +52,11 @@
 
           coachmarks.flow('test').next('second-btn');
 
-          coachmarks.show('test');
+          coachmarks.show('single');
         }, 1000);
 
         document.querySelector('#btn').addEventListener('click', () => coachmarks.show('test'));
+        document.querySelector('#single-btn').addEventListener('click', () => coachmarks.show('single'));
 
         // window.draggable = new Draggable.Draggable(document.querySelector('body'), {
         //   draggable: 'button',

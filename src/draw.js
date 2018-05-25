@@ -67,7 +67,8 @@ export function draw(name) {
 function coach(mark) {
   if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
 
-  const elm = cache.default('elm', () => document.querySelector(mark.target));
+  const elm = document.querySelector(mark.target);
+  cache.set('elm', elm);
 
   // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
 

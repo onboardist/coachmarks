@@ -786,9 +786,8 @@ function draw(name) {
 function coach(mark) {
   if (!mark) throw new Error('Coachmark with name \'' + name + '\' not found');
 
-  var elm = cache.default('elm', function () {
-    return document.querySelector(mark.target);
-  });
+  var elm = document.querySelector(mark.target);
+  cache.set('elm', elm);
 
   // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
 

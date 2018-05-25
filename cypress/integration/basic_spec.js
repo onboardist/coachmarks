@@ -22,7 +22,7 @@ describe('Basic mark', () => {
 
   it('re-opens on button click', () => {
     cy.get('body').click();
-    cy.get('#btn').click();
+    cy.get('#single-btn').click();
 
     cy.get('.coachmark-text').should('exist');
     cy.get('.coachmark-action-btn').should('be.visible');
