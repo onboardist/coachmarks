@@ -36,6 +36,15 @@ coachmarks.add('start-button', {
   content: 'Click this button to get started!'.
 });
 
+coachmarks.add('create-user-button', {
+  target: '#create-user-button',
+  content: 'Click here to create a new user'
+});
+
+// Create flows that chain of an initial coachmark and show ones after that
+coachmarks.flow('start-button')
+.next('create-user-button');
+
 document.addEventListener('DOMContentLoaded', () => {
   coachmarks.show('start-button');
 });
@@ -47,6 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Todo
 
+- [x] Change to hand-drawn font
+- [x] Click anywhere to close coachmark+overlay or move on to next one
+- [ ] Set up "flow" of coachmarks, so one gets displayed after the other
 - [ ] Fix positioning of arrow line
   Principles:
     * Line should start and end at the points closest from the center of one rectangle to the nearest edge of the other rectangle, BUT favoring edge

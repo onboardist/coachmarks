@@ -470,7 +470,7 @@ var svgPath = createCommonjsModule(function (module, exports) {
 
 'use strict';
 
-const COLOR = '#B4C5E4';
+const COLOR = '#fff';
 
 const elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'closeButton', 'svg', 'path'];
 
@@ -569,12 +569,17 @@ function coach(mark) {
   glow.style['border-radius'] = borderRadius;
   glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
-  const close = createCloseButton();
+  // TODO: not using the close button atm b/c we close on click anywhere
+  // const close = createCloseButton();
 
-  [coachTop, coachLeft, coachRight, coachBottom, glow, close].forEach(c => {
+  [coachTop, coachLeft, coachRight, coachBottom, glow].forEach(c => { // , close
     if (!c.parentNode) {
       document.body.appendChild(c);
     }
+  });
+
+  setTimeout(() => {
+    document.addEventListener('click', clear, { once: true });
   });
 
   return elm;
@@ -643,16 +648,9 @@ function leaderLine(from, to) {
   // Put filter on lines after they've been drawn
   const lines = document.querySelectorAll('.leader-line-line-path');
   Array.prototype.forEach.call(lines, line => {
-    line.setAttribute('filter', 'url(#coachmark-chalk)');
+    // TODO: I've disabled the chalk roughness for now, until I can find a way to make the text rough as well
+    // line.setAttribute('filter', 'url(#coachmark-chalk)');
   });
-}
-
-function createCloseButton() {
-  const close = cache.default('closeButton', () => document.createElement('div'));
-  close.setAttribute('class', 'coachmark-close');
-  close.innerHTML = 'X';
-  close.addEventListener('click', () => clear());
-  return close;
 }
 
 function middleOf(node) {
@@ -805,9 +803,17 @@ function intersectionEdge(point, rect) {
 }
 */
 
-___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #B4C5E4;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-close {\n  z-index: 9999;\n  background-color: #B4C5E4;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrow) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n");
+___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Indie Flower', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-close {\n  z-index: 9999;\n  border-radius: 50%;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 56px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2); }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
 
-var svg = "  <defs>\n    <filter id=\"coachmark-chalk\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\" color-interpolation-filters=\"sRGB\" filterUnits=\"userSpaceOnUse\">\n      <feTurbulence baseFrequency=\"0.133\" seed=\"500\" result=\"result1\" numOctaves=\"1\" type=\"turbulence\"/>\n      <feOffset result=\"result2\" dx=\"0\" dy=\"0\"/>\n      <feDisplacementMap scale=\"5\" yChannelSelector=\"G\" in2=\"result1\" xChannelSelector=\"R\" in=\"SourceGraphic\"/>\n      <feGaussianBlur stdDeviation=\"0.5\"/>\n    </filter>\n    <filter id=\"coachmark-chalk-rough\" filterUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n      <feTurbulence baseFrequency=\"0.2\" numOctaves=\"3\" type=\"fractalNoise\" />\n      <feDisplacementMap  scale=\"8\"  xChannelSelector=\"R\" in=\"SourceGraphic\" />\n    </filter>\n    <marker id=\"arrow\" class=\"coachmark-line\" markerWidth=\"500\" markerHeight=\"800\" refX=\"9.5\" refY=\"4.5\" orient=\"auto\" overflow=\"visible\" markerUnits=\"userSpaceOnUse\">\n      <!--<path d=\"M0,0 L0,6 L9,3 z\" stroke=\"#fff\" fill=\"#fff\" />-->\n      <!--<polyline points=\"-2,-2 0,0 -2,2\" stroke=\"#fff\" fill=\"none\" vector-effect=\"non-scaling-stroke\" />-->\n\n      <!-- <polyline points=\"1 1, 9 5, 1 7\" fill=\"none\" /> -->\n      <polyline points=\"1 1.5, 10 4.5, 2 7\" fill=\"none\" stroke-linecap=\"round\" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <!-- <marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"3\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto\">\n      <path d=\"M 0 0 L 10 5 L 0 10 z\" />\n    </marker> -->\n\n    <filter id=\"coachmark-drop-shadow\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n       <feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\"0\" dy=\"5\" />\n       <feGaussianBlur result=\"blurOut\" in=\"offOut\" stdDeviation=\"3\" />\n       <feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\" />\n    </filter>\n\n    <filter id=\"test-filter\">\n      <feMorphology operator=\"dilate\" radius=\"4\" in=\"SourceAlpha\" result=\"BEVEL_10\" />\n      <feConvolveMatrix order=\"3,3\" kernelMatrix=\n   \"1 0 0\n   0 1 0\n   0 0 1\" in=\"BEVEL_10\" result=\"BEVEL_20\" />\n      <feOffset dx=\"10\" dy=\"10\" in=\"BEVEL_20\" result=\"BEVEL_30\"/>\n      <feComposite operator=\"out\" in=\"BEVEL_20\" in2=\"BEVEL_10\" result=\"BEVEL_30\"/>\n      <feFlood flood-color=\"#fff\" result=\"COLOR-red\" />\n      <feComposite in=\"COLOR-red\" in2=\"BEVEL_30\" operator=\"in\" result=\"BEVEL_40\" />\n\n      <feMerge result=\"BEVEL_50\">\n         <feMergeNode in=\"BEVEL_40\" />\n         <feMergeNode in=\"SourceGraphic\" />\n      </feMerge>\n    </filter>\n  </defs>\n";
+function injectFonts() {
+  const link = document.createElement('link');
+  link.setAttribute('rel', 'stylesheet');
+  link.setAttribute('href', 'https://fonts.googleapis.com/css?family=Indie+Flower');
+  document.head.appendChild(link);
+  return link;
+}
+
+var svg = "  <defs>\n    <filter id=\"coachmark-chalk\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\" color-interpolation-filters=\"sRGB\" filterUnits=\"userSpaceOnUse\">\n      <feTurbulence baseFrequency=\"0.133\" seed=\"500\" result=\"result1\" numOctaves=\"1\" type=\"turbulence\"/>\n      <feOffset result=\"result2\" dx=\"0\" dy=\"0\"/>\n      <feDisplacementMap scale=\"5\" yChannelSelector=\"G\" in2=\"result1\" xChannelSelector=\"R\" in=\"SourceGraphic\"/>\n      <feGaussianBlur stdDeviation=\"0.5\"/>\n    </filter>\n    <filter id=\"coachmark-chalk-rough\" filterUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n      <feTurbulence baseFrequency=\"0.2\" numOctaves=\"3\" type=\"fractalNoise\" />\n      <feDisplacementMap  scale=\"8\"  xChannelSelector=\"R\" in=\"SourceGraphic\" />\n    </filter>\n    <marker id=\"arrow\" class=\"coachmark-line\" markerWidth=\"500\" markerHeight=\"800\" refX=\"9.5\" refY=\"4.5\" orient=\"auto\" overflow=\"visible\" markerUnits=\"userSpaceOnUse\">\n      <!--<path d=\"M0,0 L0,6 L9,3 z\" stroke=\"#fff\" fill=\"#fff\" />-->\n      <!--<polyline points=\"-2,-2 0,0 -2,2\" stroke=\"#fff\" fill=\"none\" vector-effect=\"non-scaling-stroke\" />-->\n\n      <!-- <polyline points=\"1 1, 9 5, 1 7\" fill=\"none\" /> -->\n      <polyline points=\"1 1.5, 10 4.5, 2 7\" fill=\"none\" stroke-linecap=\"round\" />\n    </marker>\n\n    <marker id=\"arrowhead0\" viewBox=\"0 0 60 60\" refX=\"50\" refY=\"30\" markerUnits=\"strokeWidth\" markerWidth=\"8\" markerHeight=\"10\" orient=\"auto\" overflow=\"visible\">\n      <path d=\"M 0 0 L 60 30 L 0 60\" fill=\"none\" class=\"coachmark-marker\" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <!-- <marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"3\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto\">\n      <path d=\"M 0 0 L 10 5 L 0 10 z\" />\n    </marker> -->\n\n    <filter id=\"coachmark-drop-shadow\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n       <feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\"0\" dy=\"5\" />\n       <feGaussianBlur result=\"blurOut\" in=\"offOut\" stdDeviation=\"3\" />\n       <feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\" />\n    </filter>\n\n    <filter id=\"test-filter\">\n      <feMorphology operator=\"dilate\" radius=\"4\" in=\"SourceAlpha\" result=\"BEVEL_10\" />\n      <feConvolveMatrix order=\"3,3\" kernelMatrix=\n   \"1 0 0\n   0 1 0\n   0 0 1\" in=\"BEVEL_10\" result=\"BEVEL_20\" />\n      <feOffset dx=\"10\" dy=\"10\" in=\"BEVEL_20\" result=\"BEVEL_30\"/>\n      <feComposite operator=\"out\" in=\"BEVEL_20\" in2=\"BEVEL_10\" result=\"BEVEL_30\"/>\n      <feFlood flood-color=\"#fff\" result=\"COLOR-red\" />\n      <feComposite in=\"COLOR-red\" in2=\"BEVEL_30\" operator=\"in\" result=\"BEVEL_40\" />\n\n      <feMerge result=\"BEVEL_50\">\n         <feMergeNode in=\"BEVEL_40\" />\n         <feMergeNode in=\"SourceGraphic\" />\n      </feMerge>\n    </filter>\n  </defs>\n";
 
 function injectSVG() {
   const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -844,6 +850,7 @@ var index = {
 function init() {
   document.addEventListener('DOMContentLoaded', () => {
     // injectCSS();
+    injectFonts();
     injectSVG();
     addListeners();
   });

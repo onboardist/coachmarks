@@ -1,6 +1,6 @@
 import cache from './cache';
 import { clear, draw, redrawAll } from './draw';
-// import injectCSS from './inject-css';
+import { injectFonts } from './inject-css';
 import css from './css/main.scss'; /* eslint no-unused-vars: 0 */
 import injectSVG from './inject-svg';
 
@@ -30,6 +30,7 @@ export default {
 function init() {
   document.addEventListener('DOMContentLoaded', () => {
     // injectCSS();
+    injectFonts();
     injectSVG();
     addListeners();
   });

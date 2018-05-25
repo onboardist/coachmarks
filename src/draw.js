@@ -7,7 +7,7 @@ import raf from 'raf';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
 
-const COLOR = '#B4C5E4';
+const COLOR = '#fff';
 
 // Spacing between line and node
 const lineOffset = 20;
@@ -108,12 +108,17 @@ function coach(mark) {
   glow.style['border-radius'] = borderRadius;
   glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
-  const close = createCloseButton();
+  // TODO: not using the close button atm b/c we close on click anywhere
+  // const close = createCloseButton();
 
-  [coachTop, coachLeft, coachRight, coachBottom, glow, close].forEach(c => {
+  [coachTop, coachLeft, coachRight, coachBottom, glow].forEach(c => { // , close
     if (!c.parentNode) {
       document.body.appendChild(c);
     }
+  });
+
+  setTimeout(() => {
+    document.addEventListener('click', clear, { once: true });
   });
 
   return elm;
@@ -182,7 +187,8 @@ function leaderLine(from, to) {
   // Put filter on lines after they've been drawn
   const lines = document.querySelectorAll('.leader-line-line-path');
   Array.prototype.forEach.call(lines, line => {
-    line.setAttribute('filter', 'url(#coachmark-chalk)');
+    // TODO: I've disabled the chalk roughness for now, until I can find a way to make the text rough as well
+    // line.setAttribute('filter', 'url(#coachmark-chalk)');
   });
 }
 
