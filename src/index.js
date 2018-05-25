@@ -1,11 +1,13 @@
 import cache from './cache';
-import { clear, draw, redrawAll } from './draw';
+import { clear, draw, redrawAll, flow } from './draw';
 import { injectFonts } from './inject-css';
 import css from './css/main.scss'; /* eslint no-unused-vars: 0 */
 import injectSVG from './inject-svg';
 
 // Run on module load
 init();
+
+window.CoachmarkCache = cache.cache;
 
 export default {
   // Add a coachmark
@@ -15,7 +17,7 @@ export default {
       name = Math.random().toString(36).substr(2);
     }
 
-    cache(name, config);
+    cache(`mark.${name}`, config);
   },
   // Show a coachmark given a name
   show(name) {

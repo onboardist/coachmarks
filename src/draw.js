@@ -6,6 +6,7 @@ import LeaderLine from 'leader-line';
 import raf from 'raf';
 import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
+import { default as Flow } from './flow';
 
 const COLOR = '#fff';
 
@@ -49,6 +50,8 @@ function hideAll() {
 }
 
 export function draw(name) {
+  if (name.indexOf('mark.') !== 0) name = `mark.${name}`;
+
   const mark = cache(name);
   if (!mark) throw new Error(`Coachmark with name '${name}' not found`);
   mark.showing = true;
@@ -108,20 +111,29 @@ function coach(mark) {
   glow.style['border-radius'] = borderRadius;
   glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
-  // TODO: not using the close button atm b/c we close on click anywhere
-  // const close = createCloseButton();
+  const close = createCloseButton();
 
-  [coachTop, coachLeft, coachRight, coachBottom, glow].forEach(c => { // , close
+  [coachTop, coachLeft, coachRight, coachBottom, glow, close].forEach(c => {
     if (!c.parentNode) {
       document.body.appendChild(c);
     }
   });
 
-  setTimeout(() => {
-    document.addEventListener('click', clear, { once: true });
-  });
+  // TODO: Make this a setting, to close on click anywhere
+  // setTimeout(() => {
+  //   document.addEventListener('click', clear, { once: true });
+  // });
 
   return elm;
+}
+
+// TODO
+export function flow(name) {
+  const mark = cache(`mark.${name}`);
+
+  if (!mark) throw new Error(`Could not find coachmark named '${name}'. Make sure you create it before building a flow with it`);
+
+  return new Flow(name);
 }
 
 export function addText(textStr) {

@@ -57,8 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
 # Todo
 
 - [x] Change to hand-drawn font
-- [x] Click anywhere to close coachmark+overlay or move on to next one
 - [ ] Set up "flow" of coachmarks, so one gets displayed after the other
+  - [ ] Make close button a "next" arrow if there's a flow
+- [ ] Make sure JS is transpiling with Rollup. Can probably remove a lot of babel dependencies.
+  - Looks like it isn't, because tests fail on cypress headless with what appears to be a JS-related error (lambda function?). Lambdas aren't being
+    transpiled
+- [ ] Make close button more readable. Probably an SVG where the text/icon is transparent and the background is a white circle?
 - [ ] Fix positioning of arrow line
   Principles:
     * Line should start and end at the points closest from the center of one rectangle to the nearest edge of the other rectangle, BUT favoring edge
@@ -78,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
   - Principles:
     * Favor vertical positioning, centered horizontally (NOTE: not done)
 - [ ] Need to test positioning with multiple monitors and on Windows too
-- [ ] Make sure JS is transpiling with Rollup. Can probably remove a lot of babel dependencies.
 - [ ] Try favoring anchoring line to middle edge and then reposition to closer corner if it's closer. This may still not work the best.
 - [ ] Add transition(s) for showing/hiding overlay
 - [ ] Text might be a bit too big?

@@ -1,11 +1,14 @@
-export default function cache(...args) {
+function cache(...args) {
   return cache.addOrGet(...args);
 }
+cache.cache = {};
+
+export default cache;
 
 cache.init = () => {
-  if (!cache.cache) {
-    cache.cache = {};
-  }
+  // if (!cache.cache) {
+  //   cache.cache = {};
+  // }
 };
 
 cache.addOrGet = (name, obj) => {

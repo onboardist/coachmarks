@@ -1,5 +1,5 @@
-import path from 'path';
 import { merge } from 'lodash';
+import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
 import legacy from 'rollup-plugin-legacy';
@@ -9,6 +9,7 @@ import serve from 'rollup-plugin-serve';
 import string from 'rollup-plugin-string';
 import uglify from 'rollup-plugin-uglify';
 import sass from 'rollup-plugin-sass';
+import rollupAnalyzer from 'rollup-analyzer-plugin';
 import { minify } from 'uglify-es';
 import pkg from './package.json';
 
@@ -50,7 +51,11 @@ const config = {
     string({
       include: 'src/**/*.{svg,html}',
     }),
+    babel({
+      exclude: 'node_modules/**',
+    }),
     filesize(),
+    rollupAnalyzer({ limit: 5 }),
   ],
 };
 

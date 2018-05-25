@@ -1,4 +1,13 @@
 {
-  "presets": ["es2015", "es2017"],
-  "plugins": ["transform-runtime"]
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    "external-helpers"
+  ]
 }
