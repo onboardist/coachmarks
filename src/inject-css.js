@@ -11,7 +11,7 @@ export default function injectCSS() {
 export function injectFonts() {
   const link = document.createElement('link');
   link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('href', 'https://fonts.googleapis.com/css?family=Indie+Flower');
+  link.setAttribute('href', 'https://fonts.googleapis.com/css?family==Short+Stack');
   document.head.appendChild(link);
   return link;
 }
