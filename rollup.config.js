@@ -9,7 +9,8 @@ import serve from 'rollup-plugin-serve';
 import string from 'rollup-plugin-string';
 import uglify from 'rollup-plugin-uglify';
 import sass from 'rollup-plugin-sass';
-import rollupAnalyzer from 'rollup-analyzer-plugin';
+import svelte from 'rollup-plugin-svelte';
+// import rollupAnalyzer from 'rollup-analyzer-plugin';
 import { minify } from 'uglify-es';
 import pkg from './package.json';
 
@@ -48,14 +49,17 @@ const config = {
       insert: true,
     }),
     // postcss(),
+    svelte({
+      include: 'src/components/**/*.html',
+    }),
     string({
-      include: 'src/**/*.{svg,html}',
+      include: 'src/**/*.svg', // {svg,html}
     }),
     babel({
       exclude: 'node_modules/**',
     }),
     filesize(),
-    rollupAnalyzer({ limit: 5 }),
+    // rollupAnalyzer({ limit: 5 }),
   ],
 };
 

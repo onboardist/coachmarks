@@ -1,3 +1,4 @@
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -168,7 +169,7 @@ var performanceNow = createCommonjsModule(function (module) {
 
 }).call(commonjsGlobal);
 
-
+//# sourceMappingURL=performance-now.js.map
 });
 
 var root = typeof window === 'undefined' ? commonjsGlobal : window;
@@ -735,6 +736,7 @@ var flow$1 = function () {
 
 var COLOR = '#fff';
 
+// Spacing between line and node
 var elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'actionButton', 'svg', 'path'];
 
 function clear() {
@@ -964,6 +966,7 @@ function leaderLine(from, to) {
   });
 }
 
+// Draw arrow from one node to another
 function createActionButton(mark) {
   var icon = 'X';
   var action = clear;
@@ -1004,6 +1007,16 @@ function nextButtonHTML() {
   svg.appendChild(g);
   return svg.outerHTML;
 }
+
+/* Calculations Methods */
+
+// function dist(pt1, pt2) {
+//   return Math.sqrt(
+//     Math.pow(pt2[0] - pt1[0], 2)
+//     *
+//     Math.pow(pt2[1] - pt1[1], 2)
+//   );
+// }
 
 function middleOf(node) {
   var rect = node;
@@ -1116,53 +1129,12 @@ function elementRect(node, offsetParent) {
   };
 }
 
-// function dirToViewportMid(pos) {
-//   const mid = viewportMid();
-//   return [
-//     pos[0] > mid[0] ? -1 : 1,
-//     pos[1] > mid[1] ? -1 : 1,
-//   ];
-// }
-
-/* NOTE: not in use currently
-function intersectionEdge(point, rect) {
-  const slope = (rect.top - point.y) / (rect.left - point.x);
-  const hsw = slope * rect.width / 2;
-  const hsh = (rect.height / 2) / slope;
-  const hh = rect.height / 2;
-  const hw = rect.width / 2;
-  // const TOPLEFT = {x: rect.x - hw, y: rect.y + hh};
-  // const BOTTOMLEFT = {x: rect.x - hw, y: rect.y - hh};
-  // const BOTTOMRIGHT = {x: rect.x + hw, y: rect.y - hh};
-  // const TOPRIGHT = {x: rect.x + hw, y: rect.y + hh};
-  if (-hh <= hsw && hsw <= hh) {
-      // line intersects
-    if (rect.left >= point.x) {
-          // right edge;
-      return 'right'; // [TOPRIGHT, BOTTOMRIGHT];
-    } else if (rect.left < point.x) {
-          // left edge
-      return 'left'; // [TOPLEFT, BOTTOMLEFT];
-    }
-  }
-  if (-hw <= hsh && hsh <= hw) {
-    if (rect.top < point.y) {
-          // top edge
-      return 'top'; // [TOPLEFT, TOPRIGHT];
-    } else if (rect.top > point.y) {
-          // bottom edge
-      return 'bottom'; // [BOTTOMLEFT, BOTTOMRIGHT];
-    }
-  }
-}
-*/
-
-___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Indie Flower', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-action-btn {\n  z-index: 9999;\n  border-radius: 50%;\n  border: 3px solid #fff;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 51px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);\n  font-family: sans-serif; }\n\n.coachmark-next-button use {\n  fill: #fff; }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
+___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Short Stack', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-action-btn {\n  z-index: 9999;\n  border-radius: 50%;\n  border: 3px solid #fff;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 51px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);\n  font-family: sans-serif; }\n\n.coachmark-next-button use {\n  fill: #fff; }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
 
 function injectFonts() {
   var link = document.createElement('link');
   link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('href', 'https://fonts.googleapis.com/css?family=Indie+Flower');
+  link.setAttribute('href', 'https://fonts.googleapis.com/css?family=Short+Stack');
   document.head.appendChild(link);
   return link;
 }
@@ -1178,6 +1150,277 @@ function injectSVG() {
   document.body.insertBefore(s, document.body.firstChild);
   return s;
 }
+
+function noop() {}
+
+function assign(tar, src) {
+	for (var k in src) tar[k] = src[k];
+	return tar;
+}
+
+function appendNode(node, target) {
+	target.appendChild(node);
+}
+
+function insertNode(node, target, anchor) {
+	target.insertBefore(node, anchor);
+}
+
+function detachNode(node) {
+	node.parentNode.removeChild(node);
+}
+
+function createElement(name) {
+	return document.createElement(name);
+}
+
+function createText(data) {
+	return document.createTextNode(data);
+}
+
+function blankObject() {
+	return Object.create(null);
+}
+
+function destroy(detach) {
+	this.destroy = noop;
+	this.fire('destroy');
+	this.set = noop;
+
+	this._fragment.d(detach !== false);
+	this._fragment = null;
+	this._state = {};
+}
+
+function _differs(a, b) {
+	return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+}
+
+function fire(eventName, data) {
+	var handlers =
+		eventName in this._handlers && this._handlers[eventName].slice();
+	if (!handlers) return;
+
+	for (var i = 0; i < handlers.length; i += 1) {
+		var handler = handlers[i];
+
+		if (!handler.__calling) {
+			handler.__calling = true;
+			handler.call(this, data);
+			handler.__calling = false;
+		}
+	}
+}
+
+function get$1() {
+	return this._state;
+}
+
+function init$1(component, options) {
+	component._handlers = blankObject();
+	component._bind = options._bind;
+
+	component.options = options;
+	component.root = options.root || component;
+	component.store = component.root.store || options.store;
+}
+
+function on(eventName, handler) {
+	var handlers = this._handlers[eventName] || (this._handlers[eventName] = []);
+	handlers.push(handler);
+
+	return {
+		cancel: function() {
+			var index = handlers.indexOf(handler);
+			if (~index) handlers.splice(index, 1);
+		}
+	};
+}
+
+function set$1(newState) {
+	this._set(assign({}, newState));
+	if (this.root._lock) return;
+	this.root._lock = true;
+	callAll(this.root._beforecreate);
+	callAll(this.root._oncreate);
+	callAll(this.root._aftercreate);
+	this.root._lock = false;
+}
+
+function _set(newState) {
+	var oldState = this._state,
+		changed = {},
+		dirty = false;
+
+	for (var key in newState) {
+		if (this._differs(newState[key], oldState[key])) changed[key] = dirty = true;
+	}
+	if (!dirty) return;
+
+	this._state = assign(assign({}, oldState), newState);
+	this._recompute(changed, this._state);
+	if (this._bind) this._bind(changed, this._state);
+
+	if (this._fragment) {
+		this.fire("state", { changed: changed, current: this._state, previous: oldState });
+		this._fragment.p(changed, this._state);
+		this.fire("update", { changed: changed, current: this._state, previous: oldState });
+	}
+}
+
+function callAll(fns) {
+	while (fns && fns.length) fns.shift()();
+}
+
+function _mount(target, anchor) {
+	this._fragment[this._fragment.i ? 'i' : 'm'](target, anchor || null);
+}
+
+var proto = {
+	destroy,
+	get: get$1,
+	fire,
+	on,
+	set: set$1,
+	_recompute: noop,
+	_set,
+	_mount,
+	_differs
+};
+
+/* src/components/Overlay.html generated by Svelte v2.7.0 */
+function data() {
+	return {
+		shown: false
+	};
+}
+
+var methods = {
+	show: function show(element) {
+		var rect = elm.getBoundingClientRect();
+
+		var top = rect.top;
+		var left = rect.left;
+		var width = rect.width;
+		var height = rect.height;
+		var right = left + width;
+		var bottom = top + height;
+
+		this.refs.top.style.height = top + 'px';
+		this.refs.left.style.top = top + 'px';
+		this.refs.right.style.top = this.refs.left.style.top;
+		this.refs.left.style.height = height + 'px';
+		this.refs.right.style.height = this.refs.left.style.height;
+		this.refs.left.style.width = left + 'px';
+		this.refs.right.style.left = right + 'px';
+		this.refs.bottom.style.top = bottom + 'px';
+
+		this.set({ shown: true });
+	},
+	hide: function hide() {
+		this.set({ shown: false });
+	}
+};
+
+function add_css() {
+	var style = createElement("style");
+	style.id = 'svelte-1u07vpg-style';
+	style.textContent = ".hidden.svelte-1u07vpg{display:none}.coachmark-top.svelte-1u07vpg,.coachmark-left.svelte-1u07vpg,.coachmark-right.svelte-1u07vpg,.coachmark-bottom.svelte-1u07vpg{position:fixed;background:#000;opacity:0.66;margin:0;padding:0}.coachmark-top.svelte-1u07vpg{top:0;left:0;right:0;width:100%}.coachmark-left.svelte-1u07vpg{left:0}.coachmark-right.svelte-1u07vpg{right:0}.coachmark-bottom.svelte-1u07vpg{bottom:0;left:0;right:0;width:100%}";
+	appendNode(style, document.head);
+}
+
+function create_main_fragment(component, ctx) {
+	var div, div_class_value, text, div_1, text_1, div_2, text_2, div_3;
+
+	return {
+		c: function c() {
+			div = createElement("div");
+			text = createText("\n");
+			div_1 = createElement("div");
+			text_1 = createText("\n");
+			div_2 = createElement("div");
+			text_2 = createText("\n");
+			div_3 = createElement("div");
+			div.className = div_class_value = "coachmark-top " + (ctx.shown ? 'hidden' : '') + " svelte-1u07vpg";
+			div_1.className = "coachmark-right svelte-1u07vpg";
+			div_2.className = "coachmark-bottom svelte-1u07vpg";
+			div_3.className = "coachmark-left svelte-1u07vpg";
+		},
+		m: function m(target, anchor) {
+			insertNode(div, target, anchor);
+			component.refs.top = div;
+			insertNode(text, target, anchor);
+			insertNode(div_1, target, anchor);
+			component.refs.right = div_1;
+			insertNode(text_1, target, anchor);
+			insertNode(div_2, target, anchor);
+			component.refs.bottom = div_2;
+			insertNode(text_2, target, anchor);
+			insertNode(div_3, target, anchor);
+			component.refs.left = div_3;
+		},
+		p: function p(changed, ctx) {
+			if (changed.shown && div_class_value !== (div_class_value = "coachmark-top " + (ctx.shown ? 'hidden' : '') + " svelte-1u07vpg")) {
+				div.className = div_class_value;
+			}
+		},
+		d: function d(detach) {
+			if (detach) {
+				detachNode(div);
+			}
+
+			if (component.refs.top === div) component.refs.top = null;
+			if (detach) {
+				detachNode(text);
+				detachNode(div_1);
+			}
+
+			if (component.refs.right === div_1) component.refs.right = null;
+			if (detach) {
+				detachNode(text_1);
+				detachNode(div_2);
+			}
+
+			if (component.refs.bottom === div_2) component.refs.bottom = null;
+			if (detach) {
+				detachNode(text_2);
+				detachNode(div_3);
+			}
+
+			if (component.refs.left === div_3) component.refs.left = null;
+		}
+	};
+}
+
+function Overlay(options) {
+	init$1(this, options);
+	this.refs = {};
+	this._state = assign(data(), options.data);
+	this._intro = true;
+
+	if (!document.getElementById("svelte-1u07vpg-style")) add_css();
+
+	this._fragment = create_main_fragment(this, this._state);
+
+	if (options.target) {
+		this._fragment.c();
+		this._mount(options.target, options.anchor);
+	}
+}
+
+assign(Overlay.prototype, proto);
+assign(Overlay.prototype, methods);
+
+console.log(Overlay);
+
+document.addEventListener('DOMContentLoaded', function () {
+  var overlay = new Overlay({
+    target: document.querySelector('body'),
+    data: { name: 'world' }
+  });
+
+  console.log('overlay', overlay);
+});
 
 // Run on module load
 init();

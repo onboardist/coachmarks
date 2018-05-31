@@ -1,0 +1,79 @@
+<div ref:top class="coachmark-top { shown ? 'hidden' : '' }"></div>
+<div ref:right class="coachmark-right"></div>
+<div ref:bottom class="coachmark-bottom"></div>
+<div ref:left class="coachmark-left"></div>
+
+<style>
+  .hidden {
+    display: none;
+  }
+
+  .coachmark-top,
+  .coachmark-left,
+  .coachmark-right,
+  .coachmark-bottom {
+    position: fixed;
+    background: #000;
+    opacity: 0.66;
+    margin: 0;
+    padding: 0;
+  }
+
+  .coachmark-top {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+
+  .coachmark-left {
+    left: 0;
+  }
+
+  .coachmark-right {
+    right: 0;
+  }
+
+  .coachmark-bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+</style>
+
+<script>
+export default {
+  data() {
+    return {
+      shown: false
+    }
+  },
+  methods: {
+    show(element) {
+      const rect = elm.getBoundingClientRect();
+
+      const top = rect.top;
+      const left = rect.left;
+      const width = rect.width;
+      const height = rect.height;
+      const right = left + width;
+      const bottom = top + height;
+
+      this.refs.top.style.height = top + 'px';
+      this.refs.left.style.top = top + 'px';
+      this.refs.right.style.top = this.refs.left.style.top;
+      this.refs.left.style.height = height + 'px';
+      this.refs.right.style.height = this.refs.left.style.height;
+      this.refs.left.style.width = left + 'px';
+      this.refs.right.style.left = right + 'px';
+      this.refs.bottom.style.top = bottom + 'px';
+
+      this.set({ shown: true });
+    },
+    hide() {
+      this.set({ shown: false });
+    },
+  }
+}
+</script>
