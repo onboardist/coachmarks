@@ -1,10 +1,7 @@
 'use strict';
 
-import distance from 'euclidean-distance';
-import polar from 'array-polar';
 import LeaderLine from 'leader-line';
 import raf from 'raf';
-import SvgPath from 'path-svg/svg-path';
 import cache from './cache';
 import { default as Flow } from './flow';
 
@@ -225,79 +222,6 @@ function leaderLine(from, to) {
   });
 }
 
-// Draw arrow from one node to another
-function arrow(from, to) {
-  const fromRect = elementRect(from);
-  const toRect = elementRect(to);
-
-  // let fromPos = nearestEdgePoint(fromRect, toRect, { useCorners: false });
-  // let toPos = nearestEdgePoint(toRect, fromRect, { useCorners: false });
-  // fromPos = nearestEdgePoint(fromPos, toRect);
-  // toPos = nearestEdgePoint(toPos, fromRect);
-  const fromPos = arrowPoints(fromRect, toRect);
-  const toPos = arrowPoints(toRect, fromRect);
-
-  // NOTE: for curved line
-  const mid = midPoint(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  // let c1x = mid[0];
-  // let c1y = toPos[1];
-  // const c2x = fromPos[0];
-  // const c2y = mid[1];
-
-  // Find point, 50% of segment length away from midPoint
-  const dist = lineDist(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  // const vMid = viewportMid();
-  const coords = polar([fromPos[0], fromPos[1], toPos[0], toPos[1]], [fromPos[0], fromPos[1]]);
-  // const midCoords = polar([fromPos[0], fromPos[1], mid[0], mid[1]], [fromPos[0], fromPos[1]]);
-  const angle = coords[3];
-  let deg = angle * 180 / Math.PI;
-  deg = deg < 0 ? deg + 360 : deg;
-  const degPerp = deg - 90;
-  const degPerpRad = degPerp * Math.PI / 180;
-  const newCoords = polar.cartesian([0, Math.PI, dist * 0.2, degPerpRad]);
-  const midCtrl = [mid[0] + newCoords[2], mid[1] + newCoords[3]];
-
-  // const sl = slope(fromPos[0], fromPos[1], toPos[0], toPos[1]);
-  // const recip = -1 / sl;
-  // console.log('SLOPE', sl, recip);
-
-  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(c2x, c2y, c1x, c1y, toPos[0], toPos[1]).str();
-  // NOTE: quadratic curve using these args looks better. Also arrowhead orients right
-
-  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(c1x, c1y, toPos[0], toPos[1]).str();
-
-  // NOTE: This is a nice smooth quadratic bezier curve
-  const pathStr = SvgPath().M(fromPos[0], fromPos[1]).Q(midCtrl[0], midCtrl[1], toPos[0], toPos[1]).str();
-
-  // const pathStr = SvgPath().M(fromPos[0], fromPos[1]).L(toPos[0], toPos[1]).str();
-
-  // Bezier S-Curve
-  // const dx = toPos[0] - fromPos[0];
-  // const dy = toPos[1] - fromPos[1];
-  // pathStr = SvgPath().M(fromPos[0], fromPos[1]).C(fromPos[0] + (dx * 0.33), fromPos[1], fromPos[0] + (dx * 0.67), toPos[1], toPos[0], toPos[1]).str();
-  // End Bezier S-Curve
-
-  const svg = cache.default('svg', () => createSVG());
-  const path = cache.default('path', () => document.createElementNS('http://www.w3.org/2000/svg', 'path'));
-
-  path.setAttribute('d', pathStr);
-  path.setAttribute('class', 'coachmark-line');
-  path.setAttribute('stroke-width', '5');
-  path.setAttribute('fill', 'none');
-  path.setAttribute('filter', 'url(#coachmark-chalk)');
-  path.setAttribute('marker-end', 'url(#arrow)');
-  // path.setAttribute('stroke-dasharray', '50, 15');
-  path.setAttribute('stroke-linecap', 'round');
-
-  if (!path.parentNode) {
-    svg.appendChild(path);
-  }
-
-  if (!svg.parentNode) {
-    document.body.insertBefore(svg, document.body.firstChild);
-  }
-}
-
 function createSVG() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('height', '100%');
@@ -346,95 +270,6 @@ function nextButtonHTML() {
 }
 
 /* Calculations Methods */
-
-// function dist(pt1, pt2) {
-//   return Math.sqrt(
-//     Math.pow(pt2[0] - pt1[0], 2)
-//     *
-//     Math.pow(pt2[1] - pt1[1], 2)
-//   );
-// }
-
-function arrowPoints(from, to, opts = {}) {
-  // From is a rect, calc line from middle of rectangle
-  // const fromPt = middleOf(from);
-  // const toPt = middleOf(to);
-
-  const nearestFrom = nearestEdgePoint(from, to);
-  const nearestTo = nearestEdgePoint(to, from);
-
-  const dx = nearestTo[0] - nearestFrom[0];
-  const dy = nearestTo[1] - nearestFrom[1];
-
-  opts.favor = (dx > dy) ? 'x' : 'y';
-
-  return nearestEdgePoint(nearestFrom, to, opts);
-}
-
-function nearestEdgePoint(from, toRect, { useCorners, favor } = {}) {
-  /*
-    rect: {
-      top, left, width, height
-    }
-  */
-
-  // From is a rect, calc line from middle of rectangle
-  if (Object.prototype.hasOwnProperty.call(from, 'top')) {
-    from = middleOf(from);
-  }
-
-  // NOTE: overall I think snapping to middle only actually looks a bit better, assuming that we calculated the edges properly
-  // Get list of point around toRect;
-  const points = {
-    leftTop: [toRect.left, toRect.top],
-    middleTop: [toRect.left + (toRect.width / 2), toRect.top],
-    rightTop: [toRect.left + toRect.width, toRect.top],
-    rightMiddle: [toRect.left + toRect.width, toRect.top + (toRect.height / 2)],
-    rightBottom: [toRect.left + toRect.width, toRect.top + toRect.height],
-    middleBottom: [toRect.left + (toRect.width / 2), toRect.top + toRect.height],
-    leftBottom: [toRect.left, toRect.top + toRect.height],
-    leftMiddle: [toRect.left, toRect.top + (toRect.height / 2)],
-  };
-
-  if (useCorners === false) {
-    Object.keys(points).forEach(key => {
-      if (key.toLowerCase().indexOf('middle') === -1) delete points[key];
-    });
-  }
-
-  if (favor && favor === 'x') {
-    // Remove top/bottom edges
-    Object.keys(points).forEach(key => {
-      if (/left|right/i.test(key)) delete points[key];
-    });
-  } else if (favor && favor === 'y') {
-    // Remove left/right edges
-    Object.keys(points).forEach(key => {
-      if (/top|bottom/i.test(key)) delete points[key];
-    });
-  }
-
-  let nearest = { point: [0, 0], dist: Infinity };
-  let nearestName = '';
-  Object.keys(points).forEach(key => {
-    const point = points[key];
-    const dist = distance(from, point);
-    if (dist < nearest.dist) {
-      nearest = { point, dist };
-      nearestName = key;
-    }
-  });
-
-  nearestName = nearestName.toLowerCase();
-  const point = nearest.point;
-
-  if (nearestName.indexOf('top') !== -1) point[1] -= lineOffset;
-  if (nearestName.indexOf('bottom') !== -1) point[1] += lineOffset;
-  if (nearestName.indexOf('left') !== -1) point[0] -= lineOffset;
-  if (nearestName.indexOf('right') !== -1) point[0] += lineOffset;
-
-  return point;
-}
 
 function middleOf(node) {
   let rect = node;
@@ -542,33 +377,6 @@ function elementRect(node, offsetParent) {
     height: rect.height,
   };
 }
-
-function midPoint(x1, y1, x2, y2) {
-  return [(x1 + x2) / 2, (y1 + y2) / 2];
-}
-
-function lineDist(x1, y1, x2, y2) {
-  return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
-}
-
-// function slope(x1, y1, x2, y2) {
-//   return (y2 - y1) / (x2 - x1);
-// }
-
-function viewportMid() {
-  return [
-    Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 2,
-    Math.max(document.documentElement.clientHeight, window.innerHeight || 0) / 2,
-  ];
-}
-
-// function dirToViewportMid(pos) {
-//   const mid = viewportMid();
-//   return [
-//     pos[0] > mid[0] ? -1 : 1,
-//     pos[1] > mid[1] ? -1 : 1,
-//   ];
-// }
 
 /* NOTE: not in use currently
 function intersectionEdge(point, rect) {

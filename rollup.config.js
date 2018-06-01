@@ -18,40 +18,21 @@ import pkg from './package.json';
 const config = {
   input: 'src/index.js',
   output: {
-    file: pkg.browser,
+    file: pkg.main,
     format: 'umd',
   },
   name: 'coachmarks',
   sourcemap: true,
   plugins: [
     resolve({ browser: true }),
-    commonjs({
-      // namedExports: {
-      //   'node_modules/leader-line/leader-line.min.js': ['LeaderLine'],
-      // },
-    }),
+    commonjs(),
     legacy({
       'node_modules/leader-line/leader-line.min.js': 'LeaderLine',
     }),
-    // postcss({
-    //   plugins: [
-    //   // cssnext(),
-    //   // yourPostcssPlugin()
-    //   ],
-    // // sourceMap: false, // default value
-    // // extract: false, // default value
-    //   extensions: ['.css', '.sss'],  // default value
-    // // parser: sugarss
-    // }),
-    // scss({
-    //   output: false,
-    // }),
     sass({
       insert: true,
     }),
-    // postcss(),
     svelte({
-      // include: 'src/components/**/*.html',
       preprocess: {
         style: ({ content, attributes }) => {
           if (attributes.lang !== 'less') return;
@@ -62,7 +43,7 @@ const config = {
       },
     }),
     string({
-      include: 'src/**/*.svg', // {svg,html}
+      include: 'src/**/*.svg',
     }),
     babel({
       exclude: 'node_modules/**',
@@ -81,17 +62,31 @@ export default [
         port: 10002,
       }) : undefined,
       process.env.DEV ? livereload({
-        watch: ['dist'], // src
+        watch: ['dist'],
       }) : undefined,
     ],
   }),
+  // Minified version
   merge({}, config, {
     output: {
-      file: 'dist/coachmarks.min.js',
+      file: 'dist/coachmarks.umd.min.js',
       format: 'umd',
     },
     plugins: [
       uglify({ sourceMap: true }, minify),
     ],
+  }),
+  // Module
+  merge({}, config, {
+    // NOTE: this externalizes leader-line, which won't work because it exports a global variable that has to be loaded with a special loader
+    // external: Object.keys(pkg.dependencies).concat(['path-svg/svg-path']),
+    external: [
+      'lodash',
+      'raf',
+    ],
+    output: {
+      file: pkg.module,
+      format: 'es',
+    },
   }),
 ];
