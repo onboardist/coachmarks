@@ -5,6 +5,7 @@ import filesize from 'rollup-plugin-filesize';
 import legacy from 'rollup-plugin-legacy';
 import livereload from 'rollup-plugin-livereload';
 import resolve from 'rollup-plugin-node-resolve';
+import less from 'less';
 import serve from 'rollup-plugin-serve';
 import string from 'rollup-plugin-string';
 import uglify from 'rollup-plugin-uglify';
@@ -50,7 +51,15 @@ const config = {
     }),
     // postcss(),
     svelte({
-      include: 'src/components/**/*.html',
+      // include: 'src/components/**/*.html',
+      preprocess: {
+        style: ({ content, attributes }) => {
+          if (attributes.lang !== 'less') return;
+
+          return less.render(content)
+          .then(output => ({ code: output.css, map: output.map }));
+        },
+      },
     }),
     string({
       include: 'src/**/*.svg', // {svg,html}

@@ -1,17 +1,22 @@
-<div ref:top class="coachmark-top { shown ? 'hidden' : '' }"></div>
-<div ref:right class="coachmark-right"></div>
-<div ref:bottom class="coachmark-bottom"></div>
-<div ref:left class="coachmark-left"></div>
+<div ref:top class="top { shown ? 'shown' : '' }"></div>
+<div ref:right class="right { shown ? 'shown' : '' }"></div>
+<div ref:bottom class="bottom { shown ? 'shown' : '' }"></div>
+<div ref:left class="left { shown ? 'shown' : '' }"></div>
+<div ref:glow class="glow { shown ? 'shown' : '' }"></div>
 
-<style>
-  .hidden {
+<style lang="less">
+  .overlay {
     display: none;
+
+    &.shown {
+      display: block;
+    }
   }
 
-  .coachmark-top,
-  .coachmark-left,
-  .coachmark-right,
-  .coachmark-bottom {
+  .top,
+  .left,
+  .right,
+  .bottom {
     position: fixed;
     background: #000;
     opacity: 0.66;
@@ -19,26 +24,30 @@
     padding: 0;
   }
 
-  .coachmark-top {
+  .top {
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
   }
 
-  .coachmark-left {
+  .left {
     left: 0;
   }
 
-  .coachmark-right {
+  .right {
     right: 0;
   }
 
-  .coachmark-bottom {
+  .bottom {
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
+  }
+
+  .glow {
+    position: absolute;
   }
 </style>
 
@@ -50,9 +59,10 @@ export default {
     }
   },
   methods: {
-    show(element) {
+    show(elm) {
       const rect = elm.getBoundingClientRect();
 
+      // Overlay
       const top = rect.top;
       const left = rect.left;
       const width = rect.width;
@@ -68,6 +78,16 @@ export default {
       this.refs.left.style.width = left + 'px';
       this.refs.right.style.left = right + 'px';
       this.refs.bottom.style.top = bottom + 'px';
+
+      // Glow
+      const borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
+      const glow = this.refs.glow;
+      glow.style.top = (top) + 'px';
+      glow.style.left = (left) + 'px';
+      glow.style.width = (width) + 'px';
+      glow.style.height = (height) + 'px';
+      glow.style['border-radius'] = borderRadius;
+      glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
 
       this.set({ shown: true });
     },

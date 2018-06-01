@@ -3,17 +3,14 @@ import { clear, draw, redrawAll, flow } from './draw';
 import { injectFonts } from './inject-css';
 import css from './css/main.scss'; /* eslint no-unused-vars: 0 */
 import injectSVG from './inject-svg';
-import Overlay from './components/Overlay.html';
-
-console.log(Overlay);
+import Overlay from './components/Overlay.svelte';
 
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = new Overlay({
     target: document.querySelector('body'),
-    data: { name: 'world' },
   });
 
-  console.log('overlay', overlay);
+  overlay.show(document.querySelector('button'));
 });
 
 // Run on module load
