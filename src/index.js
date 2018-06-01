@@ -18,9 +18,9 @@ init();
 
 window.CoachmarkCache = cache;
 
-export default {
+export default class Coachmark {
   // Add a coachmark
-  add(name, config = {}) {
+  static add(name, config = {}) {
     if (!(typeof name === 'string')) {
       config = name;
       name = Math.random().toString(36).substr(2);
@@ -32,17 +32,34 @@ export default {
     }
 
     cache(`mark.${name}`, config);
-  },
+  }
+
+  add() {
+    return Coachmark.add.apply(null, arguments);
+  }
+
   // Show a coachmark given a name
-  show(name) {
+  static show(name) {
     clear();
     draw(name);
-  },
-  cache: () => cache.cache,
-  draw,
-  redrawAll,
-  flow,
-};
+  }
+
+  static cache() {
+    return cache.cache;
+  }
+
+  static draw() {
+    return draw.apply(null, arguments);
+  }
+
+  static redrawAll() {
+    return redrawAll.apply(null, arguments);
+  }
+
+  static flow() {
+    return flow.apply(null, arguments);
+  }
+}
 
 function init() {
   document.addEventListener('DOMContentLoaded', () => {

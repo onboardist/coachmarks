@@ -1463,37 +1463,67 @@ init();
 
 window.CoachmarkCache = cache;
 
-var index = {
-  // Add a coachmark
-  add: function add(name) {
-    var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+var Coachmark = function () {
+  function Coachmark() {
+    classCallCheck(this, Coachmark);
+  }
 
-    if (!(typeof name === 'string')) {
-      config = name;
-      name = Math.random().toString(36).substr(2);
+  createClass(Coachmark, [{
+    key: 'add',
+    value: function add() {
+      return Coachmark.add.apply(null, arguments);
     }
 
-    if (!config.text) {
-      console.log('No text specified');
-      return;
+    // Show a coachmark given a name
+
+  }], [{
+    key: 'add',
+
+    // Add a coachmark
+    value: function add(name) {
+      var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      if (!(typeof name === 'string')) {
+        config = name;
+        name = Math.random().toString(36).substr(2);
+      }
+
+      if (!config.text) {
+        console.log('No text specified');
+        return;
+      }
+
+      cache('mark.' + name, config);
     }
-
-    cache('mark.' + name, config);
-  },
-
-  // Show a coachmark given a name
-  show: function show(name) {
-    clear();
-    draw(name);
-  },
-
-  cache: function cache$$1() {
-    return cache.cache;
-  },
-  draw: draw,
-  redrawAll: redrawAll,
-  flow: flow
-};
+  }, {
+    key: 'show',
+    value: function show(name) {
+      clear();
+      draw(name);
+    }
+  }, {
+    key: 'cache',
+    value: function cache$$1() {
+      return cache.cache;
+    }
+  }, {
+    key: 'draw',
+    value: function draw$$1() {
+      return draw.apply(null, arguments);
+    }
+  }, {
+    key: 'redrawAll',
+    value: function redrawAll$$1() {
+      return redrawAll.apply(null, arguments);
+    }
+  }, {
+    key: 'flow',
+    value: function flow$$1() {
+      return flow.apply(null, arguments);
+    }
+  }]);
+  return Coachmark;
+}();
 
 function init() {
   document.addEventListener('DOMContentLoaded', function () {
@@ -1512,7 +1542,7 @@ function addListeners() {
   });
 }
 
-return index;
+return Coachmark;
 
 })));
 //# sourceMappingURL=coachmarks.js.map
