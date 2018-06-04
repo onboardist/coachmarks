@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 # Todo
 
 - [ ] Clean up readme
+- [ ] Make `coachmarks.show()` return a promise
 - [x] Remove extraneous packages that are no longer needed now that we're doing leader-line for arrows
 - [x] Change to hand-drawn font
 - [x] Set up "flow" of coachmarks, so one gets displayed after the other

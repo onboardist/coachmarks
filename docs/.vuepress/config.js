@@ -4,7 +4,7 @@ module.exports = {
 
   base: '/coachmarks/',
   head: [
-    ['script', { src: 'https://rawgit.com/onboardist/coachmarks/1.3.0/dist/coachmarks.min.js'} ]
+    ['script', { src: 'https://cdn.rawgit.com/onboardist/coachmarks/v1.3.0/dist/coachmarks.umd.min.js'} ]
   ],
 
   themeConfig: {
