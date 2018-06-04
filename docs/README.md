@@ -11,4 +11,5 @@ features:
 - title: Integrates
   details: Integrates easily with all other Onboardist tools.
 footer: GPLv3 Licensed | Copyright © 2018-present Brian Hann | Curved arrow by Andres Vrant from the Noun Project
+pageClass: myhome
 ---

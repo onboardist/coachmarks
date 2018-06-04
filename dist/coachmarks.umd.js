@@ -1,3 +1,4 @@
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -911,6 +912,20 @@ function splitScreen() {
   return [box1, box2];
 }
 
+function elementRect(node, offsetParent) {
+  if (offsetParent === true) offsetParent = node.offsetParent;
+
+  var rect = node.getBoundingClientRect();
+  var prect = offsetParent ? offsetParent.getBoundingClientRect() : { left: 0, top: 0 };
+
+  return {
+    left: rect.left - prect.left,
+    top: rect.top - prect.top,
+    width: rect.width,
+    height: rect.height
+  };
+}
+
 function middleOfNode(node) {
   var rect = node;
   if (node instanceof Node) {
@@ -1013,6 +1028,7 @@ function data$2() {
 
 var methods$2 = {
 	show: function show(elm) {
+		// TODO: refactor use to elementRect() function which is in Text.svelte
 		var rect = elm.getBoundingClientRect();
 
 		// Overlay
@@ -1333,7 +1349,43 @@ function leaderLine(from, to) {
   });
 }
 
+/* Calculations Methods */
 
+/* NOTE: not in use currently
+function middleOfEdge(node, edge) {
+  const rect = elementRect(node);
+
+  const width = rect.width;
+  const height = rect.height;
+  const middleX = rect.width / 2;
+  const middleY = rect.height / 2;
+  let x = rect.left + middleX;
+  let y = rect.top + middleY;
+
+  switch (edge) {
+    case 'top':
+      x = rect.left + middleX;
+      y = rect.top - lineOffset;
+      break;
+    case 'right':
+      x = rect.left + width + lineOffset;
+      y = rect.top + middleY;
+      break;
+    case 'bottom':
+      x = rect.left + middleX;
+      y = rect.top + height + lineOffset;
+      break;
+    case 'left':
+      x = rect.left - lineOffset;
+      y = rect.top + middleY;
+      break;
+    default:
+      // do nothing
+  }
+
+  return [x, y];
+}
+*/
 
 /* NOTE: not in use currently
 function intersectionEdge(point, rect) {
