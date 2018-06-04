@@ -4,6 +4,7 @@ import LeaderLine from 'leader-line';
 import raf from 'raf';
 import cache from './cache';
 import { default as Flow } from './flow';
+import ActionButton from './components/ActionButton.svelte';
 import Text from './components/Text.svelte';
 import Overlay from './components/Overlay.svelte';
 
@@ -87,16 +88,19 @@ function coach(mark) {
 
   cache.set('elm', elm);
 
-  const overlay = cache.default('overlay', () => new Overlay({ target: document.querySelector('body') }));
+  const body = document.querySelector('body');
+  const overlay = cache.default('overlay', () => new Overlay({ target: body }));
   overlay.show(elm);
 
-  const actionBtn = createActionButton(mark);
+  // const actionBtn = createActionButton(mark);
+  // document.body.appendChild(actionBtn);
 
-  [actionBtn].forEach(c => {
-    if (!c.parentNode) {
-      document.body.appendChild(c);
-    }
-  });
+  const actionBtn = cache.default('actionBtn', () => new ActionButton({
+    target: body,
+  }));
+  actionBtn.set({ coachmark: mark });
+  actionBtn.on('clear', clear);
+  // actionBtn.on('next')
 
   // TODO: Make this a setting, to close on click anywhere
   // setTimeout(() => {
