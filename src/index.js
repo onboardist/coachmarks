@@ -1,3 +1,4 @@
+import raf from 'raf';
 import cache from './cache';
 import { clear, draw, redrawAll, flow } from './draw';
 import { injectFonts } from './inject-css';
@@ -72,7 +73,7 @@ function init() {
 
 function addListeners() {
   window.addEventListener('resize', () => {
-    requestAnimationFrame(() => {
+    raf(() => {
       redrawAll();
     });
   });

@@ -510,16 +510,19 @@ var methods = {
   },
   getTextElement: function getTextElement() {
     return this.refs.text;
+  },
+  position: function position() {
+    var box = chooseRenderBox(this.options.data.target);
+
+    this.refs.container.style.top = box.top + 'px';
+    this.refs.container.style.left = box.left + 'px';
+    this.refs.container.style.width = box.width + 'px';
+    this.refs.container.style.height = box.height + 'px';
   }
 };
 
 function oncreate() {
-  var box = chooseRenderBox(this.options.data.target);
-
-  this.refs.container.style.top = box.top + 'px';
-  this.refs.container.style.left = box.left + 'px';
-  this.refs.container.style.width = box.width + 'px';
-  this.refs.container.style.height = box.height + 'px';
+  this.position();
 }
 
 function chooseRenderBox(elm) {
@@ -675,7 +678,6 @@ assign(Text.prototype, methods);
 
 var COLOR = '#fff';
 
-// Spacing between line and node
 var elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'actionButton', 'svg', 'path'];
 
 function clear() {
@@ -731,11 +733,13 @@ function draw(name) {
   mark.showing = true;
   mark.name = name;
 
-  var coached = coach(mark);
-  var text = addText(mark.text);
+  raf(function () {
+    var coached = coach(mark);
+    var text = addText(mark.text);
 
-  // arrow(coached, text);
-  leaderLine(text.getTextElement(), coached);
+    // arrow(coached, text);
+    leaderLine(text.getTextElement(), coached);
+  });
 }
 
 function coach(mark) {
@@ -848,6 +852,7 @@ function addText(textStr) {
     });
   });
   text.set({ text: textStr });
+  text.position();
 
   return text;
 
@@ -887,18 +892,12 @@ function leaderLine(from, to) {
   if (!from || !to) return;
 
   var line = cache.get('leaderLine');
-  if (line) {
-    line.remove();
-  }
+  if (line) line.remove();
 
-  line = new LeaderLine(
-  // from, to,
-  LeaderLine.areaAnchor(from, { color: 'transparency' }), LeaderLine.areaAnchor(to, { color: 'transparency' }), {
+  line = new LeaderLine(LeaderLine.areaAnchor(from, { color: 'transparency' }), LeaderLine.areaAnchor(to, { color: 'transparency' }), {
     endPlugColor: COLOR,
     startPlugColor: COLOR,
-    // endPlug: 'arrow2',
     endPlugSize: 0.5
-    // markerEnd: 'url(#coachmark-arrow)',
   });
   cache.set('leaderLine', line);
 
@@ -936,9 +935,9 @@ function createActionButton(mark) {
   });
   close.setAttribute('class', 'coachmark-action-btn');
   close.innerHTML = icon;
-  close.addEventListener('click', function () {
-    action();
-  });
+  if (close.listener) close.removeEventListener('click', close.listener);
+  close.addEventListener('click', action);
+  close.listener = action;
 
   return close;
 }
@@ -954,44 +953,6 @@ function nextButtonHTML() {
   svg.appendChild(g);
   return svg.outerHTML;
 }
-
-/* Calculations Methods */
-
-/* NOTE: not in use currently
-function middleOfEdge(node, edge) {
-  const rect = elementRect(node);
-
-  const width = rect.width;
-  const height = rect.height;
-  const middleX = rect.width / 2;
-  const middleY = rect.height / 2;
-  let x = rect.left + middleX;
-  let y = rect.top + middleY;
-
-  switch (edge) {
-    case 'top':
-      x = rect.left + middleX;
-      y = rect.top - lineOffset;
-      break;
-    case 'right':
-      x = rect.left + width + lineOffset;
-      y = rect.top + middleY;
-      break;
-    case 'bottom':
-      x = rect.left + middleX;
-      y = rect.top + height + lineOffset;
-      break;
-    case 'left':
-      x = rect.left - lineOffset;
-      y = rect.top + middleY;
-      break;
-    default:
-      // do nothing
-  }
-
-  return [x, y];
-}
-*/
 
 
 
@@ -1028,7 +989,7 @@ function intersectionEdge(point, rect) {
 }
 */
 
-___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Short Stack', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-action-btn {\n  z-index: 9999;\n  border-radius: 50%;\n  border: 3px solid #fff;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 51px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);\n  font-family: sans-serif; }\n\n.coachmark-next-button use {\n  fill: #fff; }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
+___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Short Stack', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-action-btn {\n  z-index: 9999;\n  border-radius: 50%;\n  border: 3px solid #fff;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 51px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);\n  font-family: sans-serif; }\n\n.coachmark-next-button use {\n  fill: #fff; }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line {\n  z-index: 10000; }\n  .leader-line path {\n    filter: 'url(#coachmark-chalk)'; }\n\n.leader-line {\n  position: fixed; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
 
 function injectFonts() {
   var link = document.createElement('link');
@@ -1289,7 +1250,7 @@ function init() {
 
 function addListeners() {
   window.addEventListener('resize', function () {
-    requestAnimationFrame(function () {
+    raf(function () {
       redrawAll();
     });
   });

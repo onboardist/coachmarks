@@ -170,6 +170,7 @@ export function addText(textStr) {
     },
   }));
   text.set({ text: textStr });
+  text.position();
 
   return text;
 
@@ -254,9 +255,9 @@ function createActionButton(mark) {
   const close = cache.default('actionButton', () => document.createElement('div'));
   close.setAttribute('class', 'coachmark-action-btn');
   close.innerHTML = icon;
-  close.addEventListener('click', () => {
-    action();
-  });
+  if (close.listener) close.removeEventListener('click', close.listener);
+  close.addEventListener('click', action);
+  close.listener = action;
 
   return close;
 }

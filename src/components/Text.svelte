@@ -30,12 +30,7 @@ export default {
     }
   },
   oncreate() {
-    const box = chooseRenderBox(this.options.data.target);
-
-    this.refs.container.style.top = box.top + 'px';
-    this.refs.container.style.left = box.left + 'px';
-    this.refs.container.style.width = box.width + 'px';
-    this.refs.container.style.height = box.height + 'px';
+    this.position();
   },
   methods: {
     getElement() {
@@ -43,6 +38,14 @@ export default {
     },
     getTextElement() {
       return this.refs.text;
+    },
+    position() {
+      const box = chooseRenderBox(this.options.data.target);
+
+      this.refs.container.style.top = box.top + 'px';
+      this.refs.container.style.left = box.left + 'px';
+      this.refs.container.style.width = box.width + 'px';
+      this.refs.container.style.height = box.height + 'px';
     }
   }
 }
