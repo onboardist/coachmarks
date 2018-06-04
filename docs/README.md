@@ -5,7 +5,7 @@ actionText: Try It!
 actionLink: /
 features:
 - title: Do-One-Thing-Well
-  details:
+  details: Coachmarks gives you an API to render helpful text and arrows that point to elements on your page. That's it; no cruft.
 - title: Vanilla JS
   details: Built with Svelte.js so everything is compiled into straight JavaScript. Use it in every framework, or no framework!
 - title: Integrates

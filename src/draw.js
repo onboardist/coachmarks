@@ -205,22 +205,6 @@ function middleOfEdge(node, edge) {
 }
 */
 
-function elementRect(node, offsetParent) {
-  if (offsetParent === true) offsetParent = node.offsetParent;
-
-  const rect = node.getBoundingClientRect();
-  const prect = offsetParent ?
-    offsetParent.getBoundingClientRect() :
-    { left: 0, top: 0 };
-
-  return {
-    left: rect.left - prect.left,
-    top: rect.top - prect.top,
-    width: rect.width,
-    height: rect.height,
-  };
-}
-
 /* NOTE: not in use currently
 function intersectionEdge(point, rect) {
   const slope = (rect.top - point.y) / (rect.left - point.x);

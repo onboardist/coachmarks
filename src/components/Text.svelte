@@ -102,6 +102,22 @@ function splitScreen() {
   return [box1, box2];
 }
 
+function elementRect(node, offsetParent) {
+  if (offsetParent === true) offsetParent = node.offsetParent;
+
+  const rect = node.getBoundingClientRect();
+  const prect = offsetParent ?
+    offsetParent.getBoundingClientRect() :
+    { left: 0, top: 0 };
+
+  return {
+    left: rect.left - prect.left,
+    top: rect.top - prect.top,
+    width: rect.width,
+    height: rect.height,
+  };
+}
+
 function middleOfNode(node) {
   let rect = node;
   if (node instanceof Node) {

@@ -60,6 +60,7 @@ export default {
   },
   methods: {
     show(elm) {
+      // TODO: refactor use to elementRect() function which is in Text.svelte
       const rect = elm.getBoundingClientRect();
 
       // Overlay
