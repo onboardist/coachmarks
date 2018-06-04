@@ -17,8 +17,12 @@ export function clear() {
 
   elmNames.forEach(name => {
     const node = cache(name);
-    if (node instanceof Node) {
+    if (!node) return;
+    if (node instanceof Node) { // regular node
       node.remove();
+      cache.remove(name);
+    } else if (node.destroy) { // svelte.js node
+      node.destroy();
       cache.remove(name);
     }
   });
@@ -63,7 +67,7 @@ export function draw(name) {
   const text = addText(mark.text);
 
   // arrow(coached, text);
-  leaderLine(text.getElement(), coached);
+  leaderLine(text.getTextElement(), coached);
 }
 
 function coach(mark) {
@@ -164,8 +168,6 @@ export function addText(textStr) {
     },
   }));
   text.set({ text: textStr });
-
-  console.log('text root', text.root);
 
   return text;
 

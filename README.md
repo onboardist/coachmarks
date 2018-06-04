@@ -56,15 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 # Todo
 
-- [ ] Remove extraneous packages that are no longer needed now that we're doing leader-line for arrows
+- [ ] Clean up readme
+- [x] Remove extraneous packages that are no longer needed now that we're doing leader-line for arrows
 - [x] Change to hand-drawn font
-- [ ] Set up "flow" of coachmarks, so one gets displayed after the other
-  - [ ] Make close button a "next" arrow if there's a flow
-- [ ] Make sure JS is transpiling with Rollup. Can probably remove a lot of babel dependencies.
+- [x] Set up "flow" of coachmarks, so one gets displayed after the other
+  - [x] Make close button a "next" arrow if there's a flow
+- [x] Make sure JS is transpiling with Rollup. Can probably remove a lot of babel dependencies.
   - Looks like it isn't, because tests fail on cypress headless with what appears to be a JS-related error (lambda function?). Lambdas aren't being
     transpiled
-- [ ] Make close button more readable. Probably an SVG where the text/icon is transparent and the background is a white circle?
-- [ ] Fix positioning of arrow line
+- [x] Make close button more readable. Probably an SVG where the text/icon is transparent and the background is a white circle?
+- [x] Fix positioning of arrow line
   Principles:
     * Line should start and end at the points closest from the center of one rectangle to the nearest edge of the other rectangle, BUT favoring edge
       centers and possibly corners.

@@ -639,6 +639,9 @@ function data() {
 var methods = {
   getElement: function getElement() {
     return this.refs.container;
+  },
+  getTextElement: function getTextElement() {
+    return this.refs.text;
   }
 };
 
@@ -729,8 +732,8 @@ function rectContains(_ref, _ref2) {
 
 function add_css() {
   var style = createElement("style");
-  style.id = 'svelte-8syt1k-style';
-  style.textContent = ".text-container.svelte-8syt1k{position:fixed;display:flex;justify-content:center;align-items:center;padding:5vmin}.text.svelte-8syt1k{font-size:15vmin;font-family:'Short Stack', cursive;line-height:11vmin;color:#fefefe;text-shadow:2px 2px #333;z-index:2}";
+  style.id = 'svelte-i7z06s-style';
+  style.textContent = ".text-container.svelte-i7z06s{position:fixed;display:flex;justify-content:center;align-items:center;padding:5vmin}.text.svelte-i7z06s{font-size:11vmin;font-family:'Short Stack', cursive;line-height:11vmin;color:#fefefe;text-shadow:2px 2px #333;z-index:2}";
   appendNode(style, document.head);
 }
 
@@ -742,13 +745,14 @@ function create_main_fragment(component, ctx) {
       div = createElement("div");
       div_1 = createElement("div");
       text = createText(ctx.text);
-      div_1.className = "text svelte-8syt1k";
-      div.className = "text-container svelte-8syt1k";
+      div_1.className = "text svelte-i7z06s";
+      div.className = "text-container svelte-i7z06s";
     },
     m: function m(target, anchor) {
       insertNode(div, target, anchor);
       appendNode(div_1, div);
       appendNode(text, div_1);
+      component.refs.text = div_1;
       component.refs.container = div;
     },
     p: function p(changed, ctx) {
@@ -761,6 +765,7 @@ function create_main_fragment(component, ctx) {
         detachNode(div);
       }
 
+      if (component.refs.text === div_1) component.refs.text = null;
       if (component.refs.container === div) component.refs.container = null;
     }
   };
@@ -774,7 +779,7 @@ function Text(options) {
   this._state = assign(data(), options.data);
   this._intro = true;
 
-  if (!document.getElementById("svelte-8syt1k-style")) add_css();
+  if (!document.getElementById("svelte-i7z06s-style")) add_css();
 
   if (!options.root) {
     this._oncreate = [];
@@ -810,8 +815,14 @@ function clear() {
 
   elmNames.forEach(function (name) {
     var node = cache(name);
+    if (!node) return;
     if (node instanceof Node) {
+      // regular node
       node.remove();
+      cache.remove(name);
+    } else if (node.destroy) {
+      // svelte.js node
+      node.destroy();
       cache.remove(name);
     }
   });
@@ -856,7 +867,7 @@ function draw(name) {
   var text = addText(mark.text);
 
   // arrow(coached, text);
-  leaderLine(text.getElement(), coached);
+  leaderLine(text.getTextElement(), coached);
 }
 
 function coach(mark) {
@@ -969,8 +980,6 @@ function addText(textStr) {
     });
   });
   text.set({ text: textStr });
-
-  console.log('text root', text.root);
 
   return text;
 

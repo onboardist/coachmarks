@@ -1,5 +1,5 @@
 <div ref:container class="text-container">
-  <div class="text">{ text }</div>
+  <div ref:text class="text">{ text }</div>
 </div>
 
 <style lang="less">
@@ -12,8 +12,8 @@
 }
 
 .text {
-  font-size: 15vmin;
-  font-family: 'Short Stack', cursive;
+  font-size: 11vmin;
+  font-family: 'Short Stack', cursive; // TODO: dynamic
   line-height: 11vmin; // 11vmin looks better sometimes
   color: #fefefe;
   text-shadow: 2px 2px #333;
@@ -40,6 +40,9 @@ export default {
   methods: {
     getElement() {
       return this.refs.container;
+    },
+    getTextElement() {
+      return this.refs.text;
     }
   }
 }
