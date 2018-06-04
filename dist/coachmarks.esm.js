@@ -354,452 +354,15 @@ var flow$1 = function () {
   return flow;
 }();
 
-'use strict';
-
-var COLOR = '#fff';
-
-var elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'actionButton', 'svg', 'path'];
-
-function clear() {
-  hideAll();
-
-  elmNames.forEach(function (name) {
-    var node = cache(name);
-    if (node instanceof Node) {
-      node.remove();
-      cache.remove(name);
-    }
-  });
-
-  var l = cache.get('leaderLine');
-  if (l) {
-    l.remove();
-    cache.remove('leaderLine');
-  }
-}
-
-function redrawAll() {
-  raf(function () {
-    Object.keys(cache.all()).forEach(function (key) {
-      var item = cache(key);
-      if (!(item instanceof Node)) {
-        if (item.showing) draw(key);
-      }
-    });
-  });
-}
-
-function hideAll() {
-  Object.values(cache.all()).forEach(function (val) {
-    if (val && val.showing) val.showing = false;
-  });
-}
-
-function draw(name) {
-  if (name.indexOf('mark.') !== 0) name = 'mark.' + name;
-
-  var mark = cache(name);
-  if (!mark) {
-    console.error('Coachmark with name \'' + name + '\' not found');
-    return;
-  }
-
-  mark.showing = true;
-  mark.name = name;
-
-  var coached = coach(mark);
-  var text = addText(mark.text);
-
-  // arrow(coached, text);
-  leaderLine(text, coached);
-}
-
-function coach(mark) {
-  if (!mark) {
-    console.error('No mark specified');
-    return;
-  }
-
-  var elm = document.querySelector(mark.target);
-  if (!elm) {
-    console.error('Couldn\'t find element \'' + mark.target + '\' for mark ' + mark.name);
-    return;
-  }
-
-  cache.set('elm', elm);
-
-  // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
-
-  // elm.style.position = 'absolute';
-  // elm.style['z-index'] = 102;
-
-  var borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
-  // borderRadius = parseInt(borderRadius, 10);
-
-  var rect = elm.getBoundingClientRect();
-
-  var top = rect.top;
-  var left = rect.left;
-  var width = rect.width;
-  var height = rect.height;
-  var right = left + width;
-  var bottom = top + height;
-
-  var coachTop = cache.default('coachTop', function () {
-    return document.createElement('div');
-  });
-  coachTop.className = 'coachmark-top';
-  var coachLeft = cache.default('coachLeft', function () {
-    return document.createElement('div');
-  });
-  coachLeft.className = 'coachmark-left';
-  var coachRight = cache.default('coachRight', function () {
-    return document.createElement('div');
-  });
-  coachRight.className = 'coachmark-right';
-  var coachBottom = cache.default('coachBottom', function () {
-    return document.createElement('div');
-  });
-  coachBottom.className = 'coachmark-bottom';
-
-  coachTop.style.height = top + 'px';
-  coachLeft.style.top = top + 'px';
-  coachRight.style.top = coachLeft.style.top;
-  coachLeft.style.height = height + 'px';
-  coachRight.style.height = coachLeft.style.height;
-  coachLeft.style.width = left + 'px';
-  coachRight.style.left = right + 'px';
-  coachBottom.style.top = bottom + 'px';
-
-  var glow = cache.default('glow', function () {
-    return document.createElement('div');
-  });
-
-  glow.className = 'coachmark-glow';
-  glow.style.top = top + 'px';
-  glow.style.left = left + 'px';
-  glow.style.width = width + 'px';
-  glow.style.height = height + 'px';
-  glow.style['border-radius'] = borderRadius;
-  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
-
-  var actionBtn = createActionButton(mark);
-
-  [coachTop, coachLeft, coachRight, coachBottom, glow, actionBtn].forEach(function (c) {
-    if (!c.parentNode) {
-      document.body.appendChild(c);
-    }
-  });
-
-  // TODO: Make this a setting, to close on click anywhere
-  // setTimeout(() => {
-  //   document.addEventListener('click', clear, { once: true });
-  // });
-
-  return elm;
-}
-
-// TODO
-function flow(name) {
-  var mark = cache('mark.' + name);
-
-  if (!mark) throw new Error('Could not find coachmark named \'' + name + '\'. Make sure you create it before building a flow with it');
-
-  var f = new flow$1(name);
-  mark.flow = f;
-
-  return f;
-}
-
-function addText(textStr) {
-  var elm = cache('elm');
-  if (!elm) return;
-
-  var text = cache.default('text', function () {
-    return document.createElement('div');
-  });
-
-  var _splitScreen = splitScreen(),
-      _splitScreen2 = slicedToArray(_splitScreen, 2),
-      box1 = _splitScreen2[0],
-      box2 = _splitScreen2[1];
-
-  // See if the element is in box1 or box2;
-
-
-  var elmMiddle = middleOf(elm);
-  elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
-
-  var box = void 0;
-  if (rectContains(elmMiddle, box1)) {
-    box = box2;
-  } else {
-    box = box1;
-  }
-
-  var textContainer = cache.default('textContainer', function () {
-    return document.createElement('div');
-  });
-  textContainer.className = 'coachmark-text-container';
-  textContainer.style.top = box.top + 'px';
-  textContainer.style.left = box.left + 'px';
-  textContainer.style.width = box.width + 'px';
-  textContainer.style.height = box.height + 'px';
-
-  textContainer.appendChild(text);
-  document.body.appendChild(textContainer);
-
-  text.className = 'coachmark-text draggable-source';
-  // const ref = (text.innerText || text.textContent);
-  text.textContent = textStr;
-
-  return text;
-}
-
-function leaderLine(from, to) {
-  if (!from || !to) return;
-
-  var line = cache.get('leaderLine');
-  if (line) {
-    line.remove();
-  }
-
-  line = new LeaderLine(
-  // from, to,
-  LeaderLine.areaAnchor(from, { color: 'transparency' }), LeaderLine.areaAnchor(to, { color: 'transparency' }), {
-    endPlugColor: COLOR,
-    startPlugColor: COLOR,
-    // endPlug: 'arrow2',
-    endPlugSize: 0.5
-    // markerEnd: 'url(#coachmark-arrow)',
-  });
-  cache.set('leaderLine', line);
-
-  window.line = line;
-  line.path = 'magnet'; // magnet, fluid, arc, straight, grid
-  line.position();
-
-  // Put filter on lines after they've been drawn
-  var lines = document.querySelectorAll('.leader-line-line-path');
-  Array.prototype.forEach.call(lines, function (line) {
-    // TODO: I've disabled the chalk roughness for now, until I can find a way to make the text rough as well
-    // line.setAttribute('filter', 'url(#coachmark-chalk)');
-  });
-}
-
-function createActionButton(mark) {
-  var icon = 'X';
-  var action = clear;
-
-  var flow = cache('flow');
-  if (mark.flow) flow = cache.set('flow', mark.flow);
-
-  if (flow) {
-    var next = flow.getNext(mark.name);
-    if (next) {
-      icon = nextButtonHTML();
-      action = function action() {
-        draw(next);
-      };
-    } else cache.remove('flow');
-  }
-
-  var close = cache.default('actionButton', function () {
-    return document.createElement('div');
-  });
-  close.setAttribute('class', 'coachmark-action-btn');
-  close.innerHTML = icon;
-  close.addEventListener('click', function () {
-    action();
-  });
-
-  return close;
-}
-
-function nextButtonHTML() {
-  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); // ok
-  svg.setAttribute('class', 'coachmark-next-button');
-  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  g.setAttribute('transform', 'scale(0.065), translate(100, 140)');
-  var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-  use.setAttribute('xlink:href', '#right-arrow');
-  g.appendChild(use);
-  svg.appendChild(g);
-  return svg.outerHTML;
-}
-
-/* Calculations Methods */
-
-function middleOf(node) {
-  var rect = node;
-  if (node instanceof Node) {
-    rect = elementRect(node);
-  }
-
-  return [rect.left + rect.width / 2, rect.top + rect.height / 2];
-}
-
-function rectContains(_ref, _ref2) {
-  var x = _ref.x,
-      y = _ref.y;
-  var left = _ref2.left,
-      top = _ref2.top,
-      width = _ref2.width,
-      height = _ref2.height;
-
-  return left <= x && x <= left + width && top <= y && y <= top + height;
-}
-
-function splitScreen() {
-  var w = document.body.offsetWidth;
-  var h = document.body.offsetHeight;
-
-  var box1 = void 0;
-  var box2 = void 0;
-
-  // Split vertically
-  if (w > h) {
-    var boxWidth = Math.floor(w / 2);
-    box1 = {
-      top: 0,
-      left: 0,
-      height: h,
-      width: boxWidth
-    };
-    box2 = {
-      top: 0,
-      left: boxWidth,
-      height: h,
-      width: w - boxWidth
-    };
-  } else {
-    var boxHeight = Math.floor(h / 2);
-    box1 = {
-      top: 0,
-      left: 0,
-      height: boxHeight,
-      width: w
-    };
-    box2 = {
-      top: boxHeight,
-      left: 0,
-      height: h - boxHeight,
-      width: w
-    };
-  }
-
-  return [box1, box2];
-}
-
-/* NOTE: not in use currently
-function middleOfEdge(node, edge) {
-  const rect = elementRect(node);
-
-  const width = rect.width;
-  const height = rect.height;
-  const middleX = rect.width / 2;
-  const middleY = rect.height / 2;
-  let x = rect.left + middleX;
-  let y = rect.top + middleY;
-
-  switch (edge) {
-    case 'top':
-      x = rect.left + middleX;
-      y = rect.top - lineOffset;
-      break;
-    case 'right':
-      x = rect.left + width + lineOffset;
-      y = rect.top + middleY;
-      break;
-    case 'bottom':
-      x = rect.left + middleX;
-      y = rect.top + height + lineOffset;
-      break;
-    case 'left':
-      x = rect.left - lineOffset;
-      y = rect.top + middleY;
-      break;
-    default:
-      // do nothing
-  }
-
-  return [x, y];
-}
-*/
-
-function elementRect(node, offsetParent) {
-  if (offsetParent === true) offsetParent = node.offsetParent;
-
-  var rect = node.getBoundingClientRect();
-  var prect = offsetParent ? offsetParent.getBoundingClientRect() : { left: 0, top: 0 };
-
-  return {
-    left: rect.left - prect.left,
-    top: rect.top - prect.top,
-    width: rect.width,
-    height: rect.height
-  };
-}
-
-/* NOTE: not in use currently
-function intersectionEdge(point, rect) {
-  const slope = (rect.top - point.y) / (rect.left - point.x);
-  const hsw = slope * rect.width / 2;
-  const hsh = (rect.height / 2) / slope;
-  const hh = rect.height / 2;
-  const hw = rect.width / 2;
-  // const TOPLEFT = {x: rect.x - hw, y: rect.y + hh};
-  // const BOTTOMLEFT = {x: rect.x - hw, y: rect.y - hh};
-  // const BOTTOMRIGHT = {x: rect.x + hw, y: rect.y - hh};
-  // const TOPRIGHT = {x: rect.x + hw, y: rect.y + hh};
-  if (-hh <= hsw && hsw <= hh) {
-      // line intersects
-    if (rect.left >= point.x) {
-          // right edge;
-      return 'right'; // [TOPRIGHT, BOTTOMRIGHT];
-    } else if (rect.left < point.x) {
-          // left edge
-      return 'left'; // [TOPLEFT, BOTTOMLEFT];
-    }
-  }
-  if (-hw <= hsh && hsh <= hw) {
-    if (rect.top < point.y) {
-          // top edge
-      return 'top'; // [TOPLEFT, TOPRIGHT];
-    } else if (rect.top > point.y) {
-          // bottom edge
-      return 'bottom'; // [BOTTOMLEFT, BOTTOMRIGHT];
-    }
-  }
-}
-*/
-
-___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Short Stack', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-action-btn {\n  z-index: 9999;\n  border-radius: 50%;\n  border: 3px solid #fff;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 51px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);\n  font-family: sans-serif; }\n\n.coachmark-next-button use {\n  fill: #fff; }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
-
-function injectFonts() {
-  var link = document.createElement('link');
-  link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('href', 'https://fonts.googleapis.com/css?family=Short+Stack');
-  document.head.appendChild(link);
-  return link;
-}
-
-var svg = "  <defs>\n    <filter id=\"coachmark-chalk\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\" color-interpolation-filters=\"sRGB\" filterUnits=\"userSpaceOnUse\">\n      <feTurbulence baseFrequency=\"0.133\" seed=\"500\" result=\"result1\" numOctaves=\"1\" type=\"turbulence\"/>\n      <feOffset result=\"result2\" dx=\"0\" dy=\"0\"/>\n      <feDisplacementMap scale=\"5\" yChannelSelector=\"G\" in2=\"result1\" xChannelSelector=\"R\" in=\"SourceGraphic\"/>\n      <feGaussianBlur stdDeviation=\"0.5\"/>\n    </filter>\n    <filter id=\"coachmark-chalk-rough\" filterUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n      <feTurbulence baseFrequency=\"0.2\" numOctaves=\"3\" type=\"fractalNoise\" />\n      <feDisplacementMap  scale=\"8\"  xChannelSelector=\"R\" in=\"SourceGraphic\" />\n    </filter>\n    <marker id=\"arrow\" class=\"coachmark-line\" markerWidth=\"500\" markerHeight=\"800\" refX=\"9.5\" refY=\"4.5\" orient=\"auto\" overflow=\"visible\" markerUnits=\"userSpaceOnUse\">\n      <!--<path d=\"M0,0 L0,6 L9,3 z\" stroke=\"#fff\" fill=\"#fff\" />-->\n      <!--<polyline points=\"-2,-2 0,0 -2,2\" stroke=\"#fff\" fill=\"none\" vector-effect=\"non-scaling-stroke\" />-->\n\n      <!-- <polyline points=\"1 1, 9 5, 1 7\" fill=\"none\" /> -->\n      <polyline points=\"1 1.5, 10 4.5, 2 7\" fill=\"none\" stroke-linecap=\"round\" />\n    </marker>\n\n    <marker id=\"arrowhead0\" viewBox=\"0 0 60 60\" refX=\"50\" refY=\"30\" markerUnits=\"strokeWidth\" markerWidth=\"8\" markerHeight=\"10\" orient=\"auto\" overflow=\"visible\">\n      <path d=\"M 0 0 L 60 30 L 0 60\" fill=\"none\" class=\"coachmark-marker\" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <!-- <marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"3\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto\">\n      <path d=\"M 0 0 L 10 5 L 0 10 z\" />\n    </marker> -->\n\n    <filter id=\"coachmark-drop-shadow\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n       <feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\"0\" dy=\"5\" />\n       <feGaussianBlur result=\"blurOut\" in=\"offOut\" stdDeviation=\"3\" />\n       <feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\" />\n    </filter>\n\n    <filter id=\"test-filter\">\n      <feMorphology operator=\"dilate\" radius=\"4\" in=\"SourceAlpha\" result=\"BEVEL_10\" />\n      <feConvolveMatrix order=\"3,3\" kernelMatrix=\n   \"1 0 0\n   0 1 0\n   0 0 1\" in=\"BEVEL_10\" result=\"BEVEL_20\" />\n      <feOffset dx=\"10\" dy=\"10\" in=\"BEVEL_20\" result=\"BEVEL_30\"/>\n      <feComposite operator=\"out\" in=\"BEVEL_20\" in2=\"BEVEL_10\" result=\"BEVEL_30\"/>\n      <feFlood flood-color=\"#fff\" result=\"COLOR-red\" />\n      <feComposite in=\"COLOR-red\" in2=\"BEVEL_30\" operator=\"in\" result=\"BEVEL_40\" />\n\n      <feMerge result=\"BEVEL_50\">\n         <feMergeNode in=\"BEVEL_40\" />\n         <feMergeNode in=\"SourceGraphic\" />\n      </feMerge>\n    </filter>\n\n    <path id=\"right-arrow\" d=\"M 345.23509 500.5 L 594.16634 251.00371 L 344.26968 1.468574 L 205.81581 1.525764 L 397.12537 194.51019 L 0.49999607 194.58168 L 0.62293607 305.57099 L 399.73581 305.59147 L 206.36939 500.5 L 345.23509 500.5 z \"/>\n  </defs>\n";
-
-function injectSVG() {
-  var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  s.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  s.setAttribute('width', 0);
-  s.setAttribute('height', 0);
-  s.innerHTML = svg;
-  document.body.insertBefore(s, document.body.firstChild);
-  return s;
-}
-
 function noop() {}
 
 function assign(tar, src) {
 	for (var k in src) tar[k] = src[k];
+	return tar;
+}
+
+function assignTrue(tar, src) {
+	for (var k in src) tar[k] = 1;
 	return tar;
 }
 
@@ -933,14 +496,559 @@ var proto = {
 	_differs
 };
 
-/* src/components/Overlay.svelte generated by Svelte v2.7.0 */
+/* src/components/Text.svelte generated by Svelte v2.7.0 */
 function data() {
+  return {
+    text: '',
+    target: null
+  };
+}
+
+var methods = {
+  getElement: function getElement() {
+    return this.refs.container;
+  }
+};
+
+function oncreate() {
+  var box = chooseRenderBox(this.options.data.target);
+
+  this.refs.container.style.top = box.top + 'px';
+  this.refs.container.style.left = box.left + 'px';
+  this.refs.container.style.width = box.width + 'px';
+  this.refs.container.style.height = box.height + 'px';
+}
+
+function chooseRenderBox(elm) {
+  var _splitScreen = splitScreen(),
+      _splitScreen2 = slicedToArray(_splitScreen, 2),
+      box1 = _splitScreen2[0],
+      box2 = _splitScreen2[1];
+
+  // See if the element is in box1 or box2;
+
+
+  var elmMiddle = middleOfNode(elm);
+  elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
+
+  if (rectContains(elmMiddle, box1)) return box2;else return box1;
+}
+
+function splitScreen() {
+  var w = document.body.offsetWidth;
+  var h = document.body.offsetHeight;
+
+  var box1 = void 0;
+  var box2 = void 0;
+
+  // Split vertically
+  if (w > h) {
+    var boxWidth = Math.floor(w / 2);
+    box1 = {
+      top: 0,
+      left: 0,
+      height: h,
+      width: boxWidth
+    };
+    box2 = {
+      top: 0,
+      left: boxWidth,
+      height: h,
+      width: w - boxWidth
+    };
+  } else {
+    var boxHeight = Math.floor(h / 2);
+    box1 = {
+      top: 0,
+      left: 0,
+      height: boxHeight,
+      width: w
+    };
+    box2 = {
+      top: boxHeight,
+      left: 0,
+      height: h - boxHeight,
+      width: w
+    };
+  }
+
+  return [box1, box2];
+}
+
+function middleOfNode(node) {
+  var rect = node;
+  if (node instanceof Node) {
+    rect = elementRect(node);
+  }
+
+  return [rect.left + rect.width / 2, rect.top + rect.height / 2];
+}
+
+function rectContains(_ref, _ref2) {
+  var x = _ref.x,
+      y = _ref.y;
+  var left = _ref2.left,
+      top = _ref2.top,
+      width = _ref2.width,
+      height = _ref2.height;
+
+  return left <= x && x <= left + width && top <= y && y <= top + height;
+}
+
+function add_css() {
+  var style = createElement("style");
+  style.id = 'svelte-8syt1k-style';
+  style.textContent = ".text-container.svelte-8syt1k{position:fixed;display:flex;justify-content:center;align-items:center;padding:5vmin}.text.svelte-8syt1k{font-size:15vmin;font-family:'Short Stack', cursive;line-height:11vmin;color:#fefefe;text-shadow:2px 2px #333;z-index:2}";
+  appendNode(style, document.head);
+}
+
+function create_main_fragment(component, ctx) {
+  var div, div_1, text;
+
+  return {
+    c: function c() {
+      div = createElement("div");
+      div_1 = createElement("div");
+      text = createText(ctx.text);
+      div_1.className = "text svelte-8syt1k";
+      div.className = "text-container svelte-8syt1k";
+    },
+    m: function m(target, anchor) {
+      insertNode(div, target, anchor);
+      appendNode(div_1, div);
+      appendNode(text, div_1);
+      component.refs.container = div;
+    },
+    p: function p(changed, ctx) {
+      if (changed.text) {
+        text.data = ctx.text;
+      }
+    },
+    d: function d(detach) {
+      if (detach) {
+        detachNode(div);
+      }
+
+      if (component.refs.container === div) component.refs.container = null;
+    }
+  };
+}
+
+function Text(options) {
+  var _this = this;
+
+  init$1(this, options);
+  this.refs = {};
+  this._state = assign(data(), options.data);
+  this._intro = true;
+
+  if (!document.getElementById("svelte-8syt1k-style")) add_css();
+
+  if (!options.root) {
+    this._oncreate = [];
+  }
+
+  this._fragment = create_main_fragment(this, this._state);
+
+  this.root._oncreate.push(function () {
+    oncreate.call(_this);
+    _this.fire("update", { changed: assignTrue({}, _this._state), current: _this._state });
+  });
+
+  if (options.target) {
+    this._fragment.c();
+    this._mount(options.target, options.anchor);
+
+    callAll(this._oncreate);
+  }
+}
+
+assign(Text.prototype, proto);
+assign(Text.prototype, methods);
+
+'use strict';
+
+var COLOR = '#fff';
+
+// Spacing between line and node
+var elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'actionButton', 'svg', 'path'];
+
+function clear() {
+  hideAll();
+
+  elmNames.forEach(function (name) {
+    var node = cache(name);
+    if (node instanceof Node) {
+      node.remove();
+      cache.remove(name);
+    }
+  });
+
+  var l = cache.get('leaderLine');
+  if (l) {
+    l.remove();
+    cache.remove('leaderLine');
+  }
+}
+
+function redrawAll() {
+  raf(function () {
+    Object.keys(cache.all()).forEach(function (key) {
+      var item = cache(key);
+      if (!(item instanceof Node)) {
+        if (item.showing) draw(key);
+      }
+    });
+  });
+}
+
+function hideAll() {
+  Object.values(cache.all()).forEach(function (val) {
+    if (val && val.showing) val.showing = false;
+  });
+}
+
+function draw(name) {
+  if (name.indexOf('mark.') !== 0) name = 'mark.' + name;
+
+  var mark = cache(name);
+  if (!mark) {
+    console.error('Coachmark with name \'' + name + '\' not found');
+    return;
+  }
+
+  mark.showing = true;
+  mark.name = name;
+
+  var coached = coach(mark);
+  var text = addText(mark.text);
+
+  // arrow(coached, text);
+  leaderLine(text.getElement(), coached);
+}
+
+function coach(mark) {
+  if (!mark) {
+    console.error('No mark specified');
+    return;
+  }
+
+  var elm = document.querySelector(mark.target);
+  if (!elm) {
+    console.error('Couldn\'t find element \'' + mark.target + '\' for mark ' + mark.name);
+    return;
+  }
+
+  cache.set('elm', elm);
+
+  // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
+
+  // elm.style.position = 'absolute';
+  // elm.style['z-index'] = 102;
+
+  var borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
+  // borderRadius = parseInt(borderRadius, 10);
+
+  var rect = elm.getBoundingClientRect();
+
+  var top = rect.top;
+  var left = rect.left;
+  var width = rect.width;
+  var height = rect.height;
+  var right = left + width;
+  var bottom = top + height;
+
+  var coachTop = cache.default('coachTop', function () {
+    return document.createElement('div');
+  });
+  coachTop.className = 'coachmark-top';
+  var coachLeft = cache.default('coachLeft', function () {
+    return document.createElement('div');
+  });
+  coachLeft.className = 'coachmark-left';
+  var coachRight = cache.default('coachRight', function () {
+    return document.createElement('div');
+  });
+  coachRight.className = 'coachmark-right';
+  var coachBottom = cache.default('coachBottom', function () {
+    return document.createElement('div');
+  });
+  coachBottom.className = 'coachmark-bottom';
+
+  coachTop.style.height = top + 'px';
+  coachLeft.style.top = top + 'px';
+  coachRight.style.top = coachLeft.style.top;
+  coachLeft.style.height = height + 'px';
+  coachRight.style.height = coachLeft.style.height;
+  coachLeft.style.width = left + 'px';
+  coachRight.style.left = right + 'px';
+  coachBottom.style.top = bottom + 'px';
+
+  var glow = cache.default('glow', function () {
+    return document.createElement('div');
+  });
+
+  glow.className = 'coachmark-glow';
+  glow.style.top = top + 'px';
+  glow.style.left = left + 'px';
+  glow.style.width = width + 'px';
+  glow.style.height = height + 'px';
+  glow.style['border-radius'] = borderRadius;
+  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
+
+  var actionBtn = createActionButton(mark);
+
+  [coachTop, coachLeft, coachRight, coachBottom, glow, actionBtn].forEach(function (c) {
+    if (!c.parentNode) {
+      document.body.appendChild(c);
+    }
+  });
+
+  // TODO: Make this a setting, to close on click anywhere
+  // setTimeout(() => {
+  //   document.addEventListener('click', clear, { once: true });
+  // });
+
+  return elm;
+}
+
+// TODO
+function flow(name) {
+  var mark = cache('mark.' + name);
+
+  if (!mark) throw new Error('Could not find coachmark named \'' + name + '\'. Make sure you create it before building a flow with it');
+
+  var f = new flow$1(name);
+  mark.flow = f;
+
+  return f;
+}
+
+function addText(textStr) {
+  var elm = cache('elm');
+  if (!elm) return;
+
+  var text = cache.default('text', function () {
+    return new Text({
+      target: document.querySelector('body'),
+      data: {
+        target: elm
+      }
+    });
+  });
+  text.set({ text: textStr });
+
+  console.log('text root', text.root);
+
+  return text;
+
+  // const text = cache.default('text', () => document.createElement('div'));
+  //
+  // const [box1, box2] = splitScreen();
+  //
+  // // See if the element is in box1 or box2;
+  // let elmMiddle = middleOf(elm);
+  // elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
+  //
+  // let box;
+  // if (rectContains(elmMiddle, box1)) {
+  //   box = box2;
+  // } else {
+  //   box = box1;
+  // }
+  //
+  // const textContainer = cache.default('textContainer', () => document.createElement('div'));
+  // textContainer.className = 'coachmark-text-container';
+  // textContainer.style.top = box.top + 'px';
+  // textContainer.style.left = box.left + 'px';
+  // textContainer.style.width = box.width + 'px';
+  // textContainer.style.height = box.height + 'px';
+  //
+  // textContainer.appendChild(text);
+  // document.body.appendChild(textContainer);
+  //
+  // text.className = 'coachmark-text draggable-source';
+  // // const ref = (text.innerText || text.textContent);
+  // text.textContent = textStr;
+  //
+  // return text;
+}
+
+function leaderLine(from, to) {
+  if (!from || !to) return;
+
+  var line = cache.get('leaderLine');
+  if (line) {
+    line.remove();
+  }
+
+  line = new LeaderLine(
+  // from, to,
+  LeaderLine.areaAnchor(from, { color: 'transparency' }), LeaderLine.areaAnchor(to, { color: 'transparency' }), {
+    endPlugColor: COLOR,
+    startPlugColor: COLOR,
+    // endPlug: 'arrow2',
+    endPlugSize: 0.5
+    // markerEnd: 'url(#coachmark-arrow)',
+  });
+  cache.set('leaderLine', line);
+
+  window.line = line;
+  line.path = 'magnet'; // magnet, fluid, arc, straight, grid
+  line.position();
+
+  // Put filter on lines after they've been drawn
+  var lines = document.querySelectorAll('.leader-line-line-path');
+  Array.prototype.forEach.call(lines, function (line) {
+    // TODO: I've disabled the chalk roughness for now, until I can find a way to make the text rough as well
+    // line.setAttribute('filter', 'url(#coachmark-chalk)');
+  });
+}
+
+function createActionButton(mark) {
+  var icon = 'X';
+  var action = clear;
+
+  var flow = cache('flow');
+  if (mark.flow) flow = cache.set('flow', mark.flow);
+
+  if (flow) {
+    var next = flow.getNext(mark.name);
+    if (next) {
+      icon = nextButtonHTML();
+      action = function action() {
+        draw(next);
+      };
+    } else cache.remove('flow');
+  }
+
+  var close = cache.default('actionButton', function () {
+    return document.createElement('div');
+  });
+  close.setAttribute('class', 'coachmark-action-btn');
+  close.innerHTML = icon;
+  close.addEventListener('click', function () {
+    action();
+  });
+
+  return close;
+}
+
+function nextButtonHTML() {
+  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); // ok
+  svg.setAttribute('class', 'coachmark-next-button');
+  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('transform', 'scale(0.065), translate(100, 140)');
+  var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('xlink:href', '#right-arrow');
+  g.appendChild(use);
+  svg.appendChild(g);
+  return svg.outerHTML;
+}
+
+/* Calculations Methods */
+
+/* NOTE: not in use currently
+function middleOfEdge(node, edge) {
+  const rect = elementRect(node);
+
+  const width = rect.width;
+  const height = rect.height;
+  const middleX = rect.width / 2;
+  const middleY = rect.height / 2;
+  let x = rect.left + middleX;
+  let y = rect.top + middleY;
+
+  switch (edge) {
+    case 'top':
+      x = rect.left + middleX;
+      y = rect.top - lineOffset;
+      break;
+    case 'right':
+      x = rect.left + width + lineOffset;
+      y = rect.top + middleY;
+      break;
+    case 'bottom':
+      x = rect.left + middleX;
+      y = rect.top + height + lineOffset;
+      break;
+    case 'left':
+      x = rect.left - lineOffset;
+      y = rect.top + middleY;
+      break;
+    default:
+      // do nothing
+  }
+
+  return [x, y];
+}
+*/
+
+
+
+/* NOTE: not in use currently
+function intersectionEdge(point, rect) {
+  const slope = (rect.top - point.y) / (rect.left - point.x);
+  const hsw = slope * rect.width / 2;
+  const hsh = (rect.height / 2) / slope;
+  const hh = rect.height / 2;
+  const hw = rect.width / 2;
+  // const TOPLEFT = {x: rect.x - hw, y: rect.y + hh};
+  // const BOTTOMLEFT = {x: rect.x - hw, y: rect.y - hh};
+  // const BOTTOMRIGHT = {x: rect.x + hw, y: rect.y - hh};
+  // const TOPRIGHT = {x: rect.x + hw, y: rect.y + hh};
+  if (-hh <= hsw && hsw <= hh) {
+      // line intersects
+    if (rect.left >= point.x) {
+          // right edge;
+      return 'right'; // [TOPRIGHT, BOTTOMRIGHT];
+    } else if (rect.left < point.x) {
+          // left edge
+      return 'left'; // [TOPLEFT, BOTTOMLEFT];
+    }
+  }
+  if (-hw <= hsh && hsh <= hw) {
+    if (rect.top < point.y) {
+          // top edge
+      return 'top'; // [TOPLEFT, TOPRIGHT];
+    } else if (rect.top > point.y) {
+          // bottom edge
+      return 'bottom'; // [BOTTOMLEFT, BOTTOMRIGHT];
+    }
+  }
+}
+*/
+
+___$insertStyle(".coachmark {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  /*background: #000;*/\n  /*opacity: 0.60;*/\n  z-index: 100; }\n\n.coachmark-top,\n.coachmark-left,\n.coachmark-right,\n.coachmark-bottom {\n  position: fixed;\n  background: #000;\n  opacity: 0.66;\n  margin: 0;\n  padding: 0; }\n\n.coachmark-top {\n  top: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-left {\n  left: 0; }\n\n.coachmark-right {\n  right: 0; }\n\n.coachmark-bottom {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  width: 100%; }\n\n.coachmark-glow {\n  position: absolute;\n  /*z-index: 101;*/\n  /*box-shadow: 0 0 120px 50px #fff;*/ }\n\n.coachmark-text-container {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 5vmin; }\n\n.coachmark-text {\n  font-size: 15vmin;\n  font-family: 'Short Stack', cursive;\n  line-height: 15vmin;\n  color: #fefefe;\n  text-shadow: 2px 2px #333;\n  z-index: 2; }\n\n.coachmark-svg {\n  position: fixed;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  z-index: 1; }\n\n.coachmark-line, .leader-line-line-path {\n  stroke: #fff;\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\npath.coachmark-line {\n  stroke-width: 1vmin;\n  stroke-linecap: round; }\n\n.coachmark-action-btn {\n  z-index: 9999;\n  border-radius: 50%;\n  border: 3px solid #fff;\n  height: 56px;\n  width: 56px;\n  position: fixed;\n  top: 0;\n  right: 0;\n  color: #fff;\n  margin: 5vmin;\n  font-size: 36px;\n  line-height: 51px;\n  text-align: center;\n  cursor: pointer;\n  box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);\n  font-family: sans-serif; }\n\n.coachmark-next-button use {\n  fill: #fff; }\n\n/* Override Leader-Line Settings */\n.leader-line-plugs-face {\n  marker-end: url(#arrowhead0) !important;\n  stroke-width: 1px; }\n\n.leader-line path {\n  filter: 'url(#coachmark-chalk)'; }\n\npath.coachmark-marker {\n  stroke: #fff;\n  stroke-width: 1.33vmin;\n  stroke-linecap: round; }\n");
+
+function injectFonts() {
+  var link = document.createElement('link');
+  link.setAttribute('rel', 'stylesheet');
+  link.setAttribute('href', 'https://fonts.googleapis.com/css?family=Short+Stack');
+  document.head.appendChild(link);
+  return link;
+}
+
+var svg = "  <defs>\n    <filter id=\"coachmark-chalk\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\" color-interpolation-filters=\"sRGB\" filterUnits=\"userSpaceOnUse\">\n      <feTurbulence baseFrequency=\"0.133\" seed=\"500\" result=\"result1\" numOctaves=\"1\" type=\"turbulence\"/>\n      <feOffset result=\"result2\" dx=\"0\" dy=\"0\"/>\n      <feDisplacementMap scale=\"5\" yChannelSelector=\"G\" in2=\"result1\" xChannelSelector=\"R\" in=\"SourceGraphic\"/>\n      <feGaussianBlur stdDeviation=\"0.5\"/>\n    </filter>\n    <filter id=\"coachmark-chalk-rough\" filterUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n      <feTurbulence baseFrequency=\"0.2\" numOctaves=\"3\" type=\"fractalNoise\" />\n      <feDisplacementMap  scale=\"8\"  xChannelSelector=\"R\" in=\"SourceGraphic\" />\n    </filter>\n    <marker id=\"arrow\" class=\"coachmark-line\" markerWidth=\"500\" markerHeight=\"800\" refX=\"9.5\" refY=\"4.5\" orient=\"auto\" overflow=\"visible\" markerUnits=\"userSpaceOnUse\">\n      <!--<path d=\"M0,0 L0,6 L9,3 z\" stroke=\"#fff\" fill=\"#fff\" />-->\n      <!--<polyline points=\"-2,-2 0,0 -2,2\" stroke=\"#fff\" fill=\"none\" vector-effect=\"non-scaling-stroke\" />-->\n\n      <!-- <polyline points=\"1 1, 9 5, 1 7\" fill=\"none\" /> -->\n      <polyline points=\"1 1.5, 10 4.5, 2 7\" fill=\"none\" stroke-linecap=\"round\" />\n    </marker>\n\n    <marker id=\"arrowhead0\" viewBox=\"0 0 60 60\" refX=\"50\" refY=\"30\" markerUnits=\"strokeWidth\" markerWidth=\"8\" markerHeight=\"10\" orient=\"auto\" overflow=\"visible\">\n      <path d=\"M 0 0 L 60 30 L 0 60\" fill=\"none\" class=\"coachmark-marker\" />\n    </marker>\n\n    <!-- NOTE: arrowhead is not being used -->\n    <!-- <marker id=\"arrowhead\" viewBox=\"0 0 10 10\" refX=\"3\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto\">\n      <path d=\"M 0 0 L 10 5 L 0 10 z\" />\n    </marker> -->\n\n    <filter id=\"coachmark-drop-shadow\" x=\"0\" y=\"0\" height=\"5000px\" width=\"5000px\">\n       <feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\"0\" dy=\"5\" />\n       <feGaussianBlur result=\"blurOut\" in=\"offOut\" stdDeviation=\"3\" />\n       <feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\" />\n    </filter>\n\n    <filter id=\"test-filter\">\n      <feMorphology operator=\"dilate\" radius=\"4\" in=\"SourceAlpha\" result=\"BEVEL_10\" />\n      <feConvolveMatrix order=\"3,3\" kernelMatrix=\n   \"1 0 0\n   0 1 0\n   0 0 1\" in=\"BEVEL_10\" result=\"BEVEL_20\" />\n      <feOffset dx=\"10\" dy=\"10\" in=\"BEVEL_20\" result=\"BEVEL_30\"/>\n      <feComposite operator=\"out\" in=\"BEVEL_20\" in2=\"BEVEL_10\" result=\"BEVEL_30\"/>\n      <feFlood flood-color=\"#fff\" result=\"COLOR-red\" />\n      <feComposite in=\"COLOR-red\" in2=\"BEVEL_30\" operator=\"in\" result=\"BEVEL_40\" />\n\n      <feMerge result=\"BEVEL_50\">\n         <feMergeNode in=\"BEVEL_40\" />\n         <feMergeNode in=\"SourceGraphic\" />\n      </feMerge>\n    </filter>\n\n    <path id=\"right-arrow\" d=\"M 345.23509 500.5 L 594.16634 251.00371 L 344.26968 1.468574 L 205.81581 1.525764 L 397.12537 194.51019 L 0.49999607 194.58168 L 0.62293607 305.57099 L 399.73581 305.59147 L 206.36939 500.5 L 345.23509 500.5 z \"/>\n  </defs>\n";
+
+function injectSVG() {
+  var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  s.setAttribute('width', 0);
+  s.setAttribute('height', 0);
+  s.innerHTML = svg;
+  document.body.insertBefore(s, document.body.firstChild);
+  return s;
+}
+
+/* src/components/Overlay.svelte generated by Svelte v2.7.0 */
+function data$1() {
 	return {
 		shown: false
 	};
 }
 
-var methods = {
+var methods$1 = {
 	show: function show(elm) {
 		var rect = elm.getBoundingClientRect();
 
@@ -978,14 +1086,14 @@ var methods = {
 	}
 };
 
-function add_css() {
+function add_css$1() {
 	var style = createElement("style");
 	style.id = 'svelte-1msmuxp-style';
 	style.textContent = ".overlay.svelte-1msmuxp{display:none}.overlay.shown.svelte-1msmuxp{display:block}.top.svelte-1msmuxp,.left.svelte-1msmuxp,.right.svelte-1msmuxp,.bottom.svelte-1msmuxp{position:fixed;background:#000;opacity:0.66;margin:0;padding:0}.top.svelte-1msmuxp{top:0;left:0;right:0;width:100%}.left.svelte-1msmuxp{left:0}.right.svelte-1msmuxp{right:0}.bottom.svelte-1msmuxp{bottom:0;left:0;right:0;width:100%}.glow.svelte-1msmuxp{position:absolute}";
 	appendNode(style, document.head);
 }
 
-function create_main_fragment(component, ctx) {
+function create_main_fragment$1(component, ctx) {
 	var div, div_class_value, text, div_1, div_1_class_value, text_1, div_2, div_2_class_value, text_2, div_3, div_3_class_value, text_3, div_4, div_4_class_value;
 
 	return {
@@ -1079,12 +1187,12 @@ function create_main_fragment(component, ctx) {
 function Overlay(options) {
 	init$1(this, options);
 	this.refs = {};
-	this._state = assign(data(), options.data);
+	this._state = assign(data$1(), options.data);
 	this._intro = true;
 
-	if (!document.getElementById("svelte-1msmuxp-style")) add_css();
+	if (!document.getElementById("svelte-1msmuxp-style")) add_css$1();
 
-	this._fragment = create_main_fragment(this, this._state);
+	this._fragment = create_main_fragment$1(this, this._state);
 
 	if (options.target) {
 		this._fragment.c();
@@ -1093,17 +1201,8 @@ function Overlay(options) {
 }
 
 assign(Overlay.prototype, proto);
-assign(Overlay.prototype, methods);
+assign(Overlay.prototype, methods$1);
 
-document.addEventListener('DOMContentLoaded', function () {
-  var overlay = new Overlay({
-    target: document.querySelector('body')
-  });
-
-  overlay.show(document.querySelector('button'));
-});
-
-// Run on module load
 init();
 
 window.CoachmarkCache = cache;

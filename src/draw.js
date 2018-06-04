@@ -4,6 +4,7 @@ import LeaderLine from 'leader-line';
 import raf from 'raf';
 import cache from './cache';
 import { default as Flow } from './flow';
+import Text from './components/Text.svelte';
 
 const COLOR = '#fff';
 
@@ -62,7 +63,7 @@ export function draw(name) {
   const text = addText(mark.text);
 
   // arrow(coached, text);
-  leaderLine(text, coached);
+  leaderLine(text.getElement(), coached);
 }
 
 function coach(mark) {
@@ -156,36 +157,48 @@ export function addText(textStr) {
   const elm = cache('elm');
   if (!elm) return;
 
-  const text = cache.default('text', () => document.createElement('div'));
+  const text = cache.default('text', () => new Text({
+    target: document.querySelector('body'),
+    data: {
+      target: elm,
+    },
+  }));
+  text.set({ text: textStr });
 
-  const [box1, box2] = splitScreen();
-
-  // See if the element is in box1 or box2;
-  let elmMiddle = middleOf(elm);
-  elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
-
-  let box;
-  if (rectContains(elmMiddle, box1)) {
-    box = box2;
-  } else {
-    box = box1;
-  }
-
-  const textContainer = cache.default('textContainer', () => document.createElement('div'));
-  textContainer.className = 'coachmark-text-container';
-  textContainer.style.top = box.top + 'px';
-  textContainer.style.left = box.left + 'px';
-  textContainer.style.width = box.width + 'px';
-  textContainer.style.height = box.height + 'px';
-
-  textContainer.appendChild(text);
-  document.body.appendChild(textContainer);
-
-  text.className = 'coachmark-text draggable-source';
-  // const ref = (text.innerText || text.textContent);
-  text.textContent = textStr;
+  console.log('text root', text.root);
 
   return text;
+
+  // const text = cache.default('text', () => document.createElement('div'));
+  //
+  // const [box1, box2] = splitScreen();
+  //
+  // // See if the element is in box1 or box2;
+  // let elmMiddle = middleOf(elm);
+  // elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
+  //
+  // let box;
+  // if (rectContains(elmMiddle, box1)) {
+  //   box = box2;
+  // } else {
+  //   box = box1;
+  // }
+  //
+  // const textContainer = cache.default('textContainer', () => document.createElement('div'));
+  // textContainer.className = 'coachmark-text-container';
+  // textContainer.style.top = box.top + 'px';
+  // textContainer.style.left = box.left + 'px';
+  // textContainer.style.width = box.width + 'px';
+  // textContainer.style.height = box.height + 'px';
+  //
+  // textContainer.appendChild(text);
+  // document.body.appendChild(textContainer);
+  //
+  // text.className = 'coachmark-text draggable-source';
+  // // const ref = (text.innerText || text.textContent);
+  // text.textContent = textStr;
+  //
+  // return text;
 }
 
 function leaderLine(from, to) {
@@ -270,61 +283,6 @@ function nextButtonHTML() {
 }
 
 /* Calculations Methods */
-
-function middleOf(node) {
-  let rect = node;
-  if (node instanceof Node) {
-    rect = elementRect(node);
-  }
-
-  return [rect.left + (rect.width / 2), rect.top + (rect.height / 2)];
-}
-
-function rectContains({ x, y }, { left, top, width, height }) {
-  return left <= x && x <= left + width &&
-         top <= y && y <= top + height;
-}
-
-function splitScreen() {
-  const w = document.body.offsetWidth;
-  const h = document.body.offsetHeight;
-
-  let box1;
-  let box2;
-
-  // Split vertically
-  if (w > h) {
-    const boxWidth = Math.floor(w / 2);
-    box1 = {
-      top: 0,
-      left: 0,
-      height: h,
-      width: boxWidth,
-    };
-    box2 = {
-      top: 0,
-      left: boxWidth,
-      height: h,
-      width: w - boxWidth,
-    };
-  } else {
-    const boxHeight = Math.floor(h / 2);
-    box1 = {
-      top: 0,
-      left: 0,
-      height: boxHeight,
-      width: w,
-    };
-    box2 = {
-      top: boxHeight,
-      left: 0,
-      height: h - boxHeight,
-      width: w,
-    };
-  }
-
-  return [box1, box2];
-}
 
 /* NOTE: not in use currently
 function middleOfEdge(node, edge) {

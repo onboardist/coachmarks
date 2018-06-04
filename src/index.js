@@ -5,13 +5,13 @@ import css from './css/main.scss'; /* eslint no-unused-vars: 0 */
 import injectSVG from './inject-svg';
 import Overlay from './components/Overlay.svelte';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = new Overlay({
-    target: document.querySelector('body'),
-  });
-
-  overlay.show(document.querySelector('button'));
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//   const overlay = new Overlay({
+//     target: document.querySelector('body'),
+//   });
+//
+//   overlay.show(document.querySelector('button'));
+// });
 
 // Run on module load
 init();
