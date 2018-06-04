@@ -95,12 +95,12 @@ function coach(mark) {
   // const actionBtn = createActionButton(mark);
   // document.body.appendChild(actionBtn);
 
-  const actionBtn = cache.default('actionBtn', () => new ActionButton({
+  const actionBtn = cache.default('actionButton', () => new ActionButton({
     target: body,
   }));
   actionBtn.set({ coachmark: mark });
-  actionBtn.on('clear', clear);
-  // actionBtn.on('next')
+  actionBtn.on('clear', () => clear());
+  actionBtn.on('next', event => draw(event.next));
 
   // TODO: Make this a setting, to close on click anywhere
   // setTimeout(() => {

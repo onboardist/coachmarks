@@ -47,15 +47,22 @@ import cache from '../cache';
 export default {
   data() {
     return {
-      type: 'close',
+      // type: 'close',
       icon: 'X',
       coachmark: null,
       flow: null,
     }
   },
+  computed: {
+    type: ({ coachmark }) => {
+      if (coachmark && coachmark.flow && coachmark.flow.getNext(coachmark.name)) return 'next';
+
+      return 'close';
+    },
+  },
   methods: {
     handleClick() {
-      const coachmark = this.get('coachmark');
+      const coachmark = this.get().coachmark;
       if (!coachmark) {
         console.error('No coachmark specified for action button');
         return;
@@ -68,7 +75,7 @@ export default {
         const next = flow.getNext(coachmark.name);
         if (next) {
           this.type = 'next';
-          return this.fire('next', next);
+          return this.fire('next', { next });
         } else cache.remove('flow');
       }
 
@@ -76,7 +83,6 @@ export default {
     },
     clear() {
       this.fire('clear');
-      this.destroy();
     },
   }
 }
