@@ -63,11 +63,13 @@ export function draw(name) {
   mark.showing = true;
   mark.name = name;
 
-  const coached = coach(mark);
-  const text = addText(mark.text);
+  raf(() => {
+    const coached = coach(mark);
+    const text = addText(mark.text);
 
-  // arrow(coached, text);
-  leaderLine(text.getTextElement(), coached);
+    // arrow(coached, text);
+    leaderLine(text.getTextElement(), coached);
+  });
 }
 
 function coach(mark) {
@@ -207,20 +209,15 @@ function leaderLine(from, to) {
   if (!from || !to) return;
 
   let line = cache.get('leaderLine');
-  if (line) {
-    line.remove();
-  }
+  if (line) line.remove();
 
   line = new LeaderLine(
-    // from, to,
     LeaderLine.areaAnchor(from, { color: 'transparency' }),
     LeaderLine.areaAnchor(to, { color: 'transparency' }),
     {
       endPlugColor: COLOR,
       startPlugColor: COLOR,
-      // endPlug: 'arrow2',
       endPlugSize: 0.5,
-      // markerEnd: 'url(#coachmark-arrow)',
     },
   );
   cache.set('leaderLine', line);
@@ -235,14 +232,6 @@ function leaderLine(from, to) {
     // TODO: I've disabled the chalk roughness for now, until I can find a way to make the text rough as well
     // line.setAttribute('filter', 'url(#coachmark-chalk)');
   });
-}
-
-function createSVG() {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('height', '100%');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('class', 'coachmark-svg');
-  return svg;
 }
 
 function createActionButton(mark) {

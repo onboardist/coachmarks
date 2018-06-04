@@ -30,7 +30,11 @@ or
 
 ```javascript
 import coachmarks from 'coachmarks';
+```
 
+then
+
+```javascript
 coachmarks.add('start-button', {
   target: '#start-button',
   content: 'Click this button to get started!'.
@@ -45,6 +49,7 @@ coachmarks.add('create-user-button', {
 coachmarks.flow('start-button')
 .next('create-user-button');
 
+// Example: show a coachmark on page load
 document.addEventListener('DOMContentLoaded', () => {
   coachmarks.show('start-button');
 });

@@ -130,8 +130,16 @@ path.coachmark-line {
   stroke-width: 1px;
 }
 
-.leader-line path {
-  filter: 'url(#coachmark-chalk)';
+.leader-line {
+  z-index: 10000;
+
+  path {
+    filter: 'url(#coachmark-chalk)';
+  }
+}
+
+.leader-line {
+  position: fixed
 }
 
 path.coachmark-marker {

@@ -63,3 +63,5 @@ cypress/videos/
 cypress/screenshots/
 
 .cache/
+
+docs/vuepress/.dist/
