@@ -11,8 +11,8 @@ import Overlay from './components/Overlay.svelte';
 const COLOR = '#fff';
 
 // Spacing between line and node
-const lineOffset = 20;
-const elmNames = ['text', 'textContainer', 'overlay', 'actionButton', 'svg', 'path'];
+const lineOffset = 20; // TODO: remove? it's unused
+const elmNames = ['text', 'textContainer', 'overlay', 'actionButton'];
 
 export function clear() {
   hideAll();
@@ -136,37 +136,6 @@ export function addText(textStr) {
   text.position();
 
   return text;
-
-  // const text = cache.default('text', () => document.createElement('div'));
-  //
-  // const [box1, box2] = splitScreen();
-  //
-  // // See if the element is in box1 or box2;
-  // let elmMiddle = middleOf(elm);
-  // elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
-  //
-  // let box;
-  // if (rectContains(elmMiddle, box1)) {
-  //   box = box2;
-  // } else {
-  //   box = box1;
-  // }
-  //
-  // const textContainer = cache.default('textContainer', () => document.createElement('div'));
-  // textContainer.className = 'coachmark-text-container';
-  // textContainer.style.top = box.top + 'px';
-  // textContainer.style.left = box.left + 'px';
-  // textContainer.style.width = box.width + 'px';
-  // textContainer.style.height = box.height + 'px';
-  //
-  // textContainer.appendChild(text);
-  // document.body.appendChild(textContainer);
-  //
-  // text.className = 'coachmark-text draggable-source';
-  // // const ref = (text.innerText || text.textContent);
-  // text.textContent = textStr;
-  //
-  // return text;
 }
 
 function leaderLine(from, to) {
@@ -196,45 +165,6 @@ function leaderLine(from, to) {
     // TODO: I've disabled the chalk roughness for now, until I can find a way to make the text rough as well
     // line.setAttribute('filter', 'url(#coachmark-chalk)');
   });
-}
-
-function createActionButton(mark) {
-  let icon = 'X';
-  let action = clear;
-
-  let flow = cache('flow');
-  if (mark.flow) flow = cache.set('flow', mark.flow);
-
-  if (flow) {
-    const next = flow.getNext(mark.name);
-    if (next) {
-      icon = nextButtonHTML();
-      action = () => {
-        draw(next);
-      };
-    } else cache.remove('flow');
-  }
-
-  const close = cache.default('actionButton', () => document.createElement('div'));
-  close.setAttribute('class', 'coachmark-action-btn');
-  close.innerHTML = icon;
-  if (close.listener) close.removeEventListener('click', close.listener);
-  close.addEventListener('click', action);
-  close.listener = action;
-
-  return close;
-}
-
-function nextButtonHTML() {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); // ok
-  svg.setAttribute('class', 'coachmark-next-button');
-  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  g.setAttribute('transform', 'scale(0.065), translate(100, 140)');
-  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-  use.setAttribute('xlink:href', '#right-arrow');
-  g.appendChild(use);
-  svg.appendChild(g);
-  return svg.outerHTML;
 }
 
 /* Calculations Methods */

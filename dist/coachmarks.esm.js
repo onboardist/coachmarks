@@ -1039,7 +1039,7 @@ assign(Overlay.prototype, methods$2);
 
 var COLOR = '#fff';
 
-var elmNames = ['text', 'textContainer', 'overlay', 'actionButton', 'svg', 'path'];
+var elmNames = ['text', 'textContainer', 'overlay', 'actionButton'];
 
 function clear() {
   hideAll();
@@ -1175,37 +1175,6 @@ function addText(textStr) {
   text.position();
 
   return text;
-
-  // const text = cache.default('text', () => document.createElement('div'));
-  //
-  // const [box1, box2] = splitScreen();
-  //
-  // // See if the element is in box1 or box2;
-  // let elmMiddle = middleOf(elm);
-  // elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
-  //
-  // let box;
-  // if (rectContains(elmMiddle, box1)) {
-  //   box = box2;
-  // } else {
-  //   box = box1;
-  // }
-  //
-  // const textContainer = cache.default('textContainer', () => document.createElement('div'));
-  // textContainer.className = 'coachmark-text-container';
-  // textContainer.style.top = box.top + 'px';
-  // textContainer.style.left = box.left + 'px';
-  // textContainer.style.width = box.width + 'px';
-  // textContainer.style.height = box.height + 'px';
-  //
-  // textContainer.appendChild(text);
-  // document.body.appendChild(textContainer);
-  //
-  // text.className = 'coachmark-text draggable-source';
-  // // const ref = (text.innerText || text.textContent);
-  // text.textContent = textStr;
-  //
-  // return text;
 }
 
 function leaderLine(from, to) {
