@@ -6,9 +6,11 @@
 .text-container {
   position: fixed;
   display: flex;
+  box-sizing: border-box;
   justify-content: center;
   align-items: center;
   padding: 5vmin;
+  z-index: 10002;
 }
 
 .text {
@@ -17,7 +19,7 @@
   line-height: 11vmin; // 11vmin looks better sometimes
   color: #fefefe;
   text-shadow: 2px 2px #333;
-  z-index: 2;
+  /* z-index: 2; */
 }
 </style>
 
@@ -57,13 +59,17 @@ function chooseRenderBox(elm) {
   let elmMiddle = middleOfNode(elm);
   elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
 
+  console.log('boxes', box1, box2);
+  console.log('elmMiddle', elmMiddle);
+
   if (rectContains(elmMiddle, box1)) return box2;
   else return box1;
 }
 
 function splitScreen() {
-  const w = document.body.offsetWidth;
-  const h = document.body.offsetHeight;
+  // const pixelRatio = window.devicePixelRatio || 1;
+  const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
   let box1;
   let box2;

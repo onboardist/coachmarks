@@ -68,7 +68,7 @@ var performanceNow = createCommonjsModule(function (module) {
 
 }).call(commonjsGlobal);
 
-
+//# sourceMappingURL=performance-now.js.map
 });
 
 var root = typeof window === 'undefined' ? commonjsGlobal : window;
@@ -694,8 +694,8 @@ var methods = {
 
 function add_css() {
 	var style = createElement("style");
-	style.id = 'svelte-8lf383-style';
-	style.textContent = ".action-btn.svelte-8lf383{z-index:9999;border-radius:50%;border:3px solid #fff;height:56px;width:56px;position:fixed;top:0;right:0;color:#fff;margin:5vmin;font-size:36px;line-height:51px;text-align:center;cursor:pointer;box-shadow:0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);font-family:sans-serif}.next-button.svelte-8lf383 use.svelte-8lf383{fill:#fff}";
+	style.id = 'svelte-1f159ou-style';
+	style.textContent = ".action-btn.svelte-1f159ou{z-index:10003;border-radius:50%;border:3px solid #fff;height:56px;width:56px;position:fixed;top:0;right:0;color:#fff;margin:5vmin;font-size:36px;line-height:58px;text-align:center;cursor:pointer;box-shadow:0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);font-family:sans-serif}.next-button.svelte-1f159ou use.svelte-1f159ou{fill:#fff}";
 	appendNode(style, document.head);
 }
 
@@ -719,7 +719,7 @@ function create_main_fragment(component, ctx) {
 			div = createElement("div");
 			if_block.c();
 			addListener(div, "click", click_handler);
-			div.className = "action-btn svelte-8lf383";
+			div.className = "action-btn svelte-1f159ou";
 		},
 		m: function m(target, anchor) {
 			insertNode(div, target, anchor);
@@ -756,10 +756,10 @@ function create_if_block(component, ctx) {
 			g = createSvgElement("g");
 			use = createSvgElement("use");
 			setXlinkAttribute(use, "xlink:href", "#right-arrow");
-			setAttribute(use, "class", "svelte-8lf383");
-			setAttribute(g, "transform", "scale(0.065), translate(100, 140)");
+			setAttribute(use, "class", "svelte-1f159ou");
+			setAttribute(g, "transform", "scale(0.065), translate(140, 170)");
 			setAttribute(svg, "xmlns", "http://www.w3.org/2000/svg");
-			setAttribute(svg, "class", "next-button svelte-8lf383");
+			setAttribute(svg, "class", "next-button svelte-1f159ou");
 		},
 		m: function m(target, anchor) {
 			insertNode(svg, target, anchor);
@@ -808,7 +808,7 @@ function ActionButton(options) {
 	this._recompute({ coachmark: 1 }, this._state);
 	this._intro = true;
 
-	if (!document.getElementById("svelte-8lf383-style")) add_css();
+	if (!document.getElementById("svelte-1f159ou-style")) add_css();
 
 	this._fragment = create_main_fragment(this, this._state);
 
@@ -868,12 +868,16 @@ function chooseRenderBox(elm) {
   var elmMiddle = middleOfNode(elm);
   elmMiddle = { x: Math.floor(elmMiddle[0]), y: Math.floor(elmMiddle[1]) };
 
+  console.log('boxes', box1, box2);
+  console.log('elmMiddle', elmMiddle);
+
   if (rectContains(elmMiddle, box1)) return box2;else return box1;
 }
 
 function splitScreen() {
-  var w = document.body.offsetWidth;
-  var h = document.body.offsetHeight;
+  // const pixelRatio = window.devicePixelRatio || 1;
+  var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
   var box1 = void 0;
   var box2 = void 0;
@@ -948,8 +952,8 @@ function rectContains(_ref, _ref2) {
 
 function add_css$1() {
   var style = createElement("style");
-  style.id = 'svelte-i7z06s-style';
-  style.textContent = ".text-container.svelte-i7z06s{position:fixed;display:flex;justify-content:center;align-items:center;padding:5vmin}.text.svelte-i7z06s{font-size:11vmin;font-family:'Short Stack', cursive;line-height:11vmin;color:#fefefe;text-shadow:2px 2px #333;z-index:2}";
+  style.id = 'svelte-1rttw4g-style';
+  style.textContent = ".text-container.svelte-1rttw4g{position:fixed;display:flex;box-sizing:border-box;justify-content:center;align-items:center;padding:5vmin;z-index:10002}.text.svelte-1rttw4g{font-size:11vmin;font-family:'Short Stack', cursive;line-height:11vmin;color:#fefefe;text-shadow:2px 2px #333}";
   appendNode(style, document.head);
 }
 
@@ -961,8 +965,8 @@ function create_main_fragment$1(component, ctx) {
       div = createElement("div");
       div_1 = createElement("div");
       text = createText(ctx.text);
-      div_1.className = "text svelte-i7z06s";
-      div.className = "text-container svelte-i7z06s";
+      div_1.className = "text svelte-1rttw4g";
+      div.className = "text-container svelte-1rttw4g";
     },
     m: function m(target, anchor) {
       insertNode(div, target, anchor);
@@ -995,7 +999,7 @@ function Text(options) {
   this._state = assign(data$1(), options.data);
   this._intro = true;
 
-  if (!document.getElementById("svelte-i7z06s-style")) add_css$1();
+  if (!document.getElementById("svelte-1rttw4g-style")) add_css$1();
 
   if (!options.root) {
     this._oncreate = [];
@@ -1067,8 +1071,8 @@ var methods$2 = {
 
 function add_css$2() {
 	var style = createElement("style");
-	style.id = 'svelte-1msmuxp-style';
-	style.textContent = ".overlay.svelte-1msmuxp{display:none}.overlay.shown.svelte-1msmuxp{display:block}.top.svelte-1msmuxp,.left.svelte-1msmuxp,.right.svelte-1msmuxp,.bottom.svelte-1msmuxp{position:fixed;background:#000;opacity:0.66;margin:0;padding:0}.top.svelte-1msmuxp{top:0;left:0;right:0;width:100%}.left.svelte-1msmuxp{left:0}.right.svelte-1msmuxp{right:0}.bottom.svelte-1msmuxp{bottom:0;left:0;right:0;width:100%}.glow.svelte-1msmuxp{position:absolute}";
+	style.id = 'svelte-1mu97g1-style';
+	style.textContent = ".overlay.svelte-1mu97g1{display:none}.overlay.shown.svelte-1mu97g1{display:block}.top.svelte-1mu97g1,.left.svelte-1mu97g1,.right.svelte-1mu97g1,.bottom.svelte-1mu97g1{position:fixed;background:#000;opacity:0.66;margin:0;padding:0;z-index:10000}.top.svelte-1mu97g1{top:0;left:0;right:0;width:100%}.left.svelte-1mu97g1{left:0}.right.svelte-1mu97g1{right:0}.bottom.svelte-1mu97g1{bottom:0;left:0;right:0;width:100%}.glow.svelte-1mu97g1{position:absolute;z-index:10000}";
 	appendNode(style, document.head);
 }
 
@@ -1086,11 +1090,11 @@ function create_main_fragment$2(component, ctx) {
 			div_3 = createElement("div");
 			text_3 = createText("\n");
 			div_4 = createElement("div");
-			div.className = div_class_value = "top " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp";
-			div_1.className = div_1_class_value = "right " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp";
-			div_2.className = div_2_class_value = "bottom " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp";
-			div_3.className = div_3_class_value = "left " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp";
-			div_4.className = div_4_class_value = "glow " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp";
+			div.className = div_class_value = "top " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1";
+			div_1.className = div_1_class_value = "right " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1";
+			div_2.className = div_2_class_value = "bottom " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1";
+			div_3.className = div_3_class_value = "left " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1";
+			div_4.className = div_4_class_value = "glow " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1";
 		},
 		m: function m(target, anchor) {
 			insertNode(div, target, anchor);
@@ -1109,23 +1113,23 @@ function create_main_fragment$2(component, ctx) {
 			component.refs.glow = div_4;
 		},
 		p: function p(changed, ctx) {
-			if (changed.shown && div_class_value !== (div_class_value = "top " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp")) {
+			if (changed.shown && div_class_value !== (div_class_value = "top " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1")) {
 				div.className = div_class_value;
 			}
 
-			if (changed.shown && div_1_class_value !== (div_1_class_value = "right " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp")) {
+			if (changed.shown && div_1_class_value !== (div_1_class_value = "right " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1")) {
 				div_1.className = div_1_class_value;
 			}
 
-			if (changed.shown && div_2_class_value !== (div_2_class_value = "bottom " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp")) {
+			if (changed.shown && div_2_class_value !== (div_2_class_value = "bottom " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1")) {
 				div_2.className = div_2_class_value;
 			}
 
-			if (changed.shown && div_3_class_value !== (div_3_class_value = "left " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp")) {
+			if (changed.shown && div_3_class_value !== (div_3_class_value = "left " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1")) {
 				div_3.className = div_3_class_value;
 			}
 
-			if (changed.shown && div_4_class_value !== (div_4_class_value = "glow " + (ctx.shown ? 'shown' : '') + " svelte-1msmuxp")) {
+			if (changed.shown && div_4_class_value !== (div_4_class_value = "glow " + (ctx.shown ? 'shown' : '') + " svelte-1mu97g1")) {
 				div_4.className = div_4_class_value;
 			}
 		},
@@ -1169,7 +1173,7 @@ function Overlay(options) {
 	this._state = assign(data$2(), options.data);
 	this._intro = true;
 
-	if (!document.getElementById("svelte-1msmuxp-style")) add_css$2();
+	if (!document.getElementById("svelte-1mu97g1-style")) add_css$2();
 
 	this._fragment = create_main_fragment$2(this, this._state);
 
@@ -1186,6 +1190,7 @@ assign(Overlay.prototype, methods$2);
 
 var COLOR = '#fff';
 
+// Spacing between line and node
 var elmNames = ['text', 'textContainer', 'overlay', 'actionButton'];
 
 function clear() {
@@ -1442,15 +1447,6 @@ function injectSVG() {
   return s;
 }
 
-// document.addEventListener('DOMContentLoaded', () => {
-//   const overlay = new Overlay({
-//     target: document.querySelector('body'),
-//   });
-//
-//   overlay.show(document.querySelector('button'));
-// });
-
-// Run on module load
 init();
 
 window.CoachmarkCache = cache;

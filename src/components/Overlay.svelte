@@ -22,6 +22,7 @@
     opacity: 0.66;
     margin: 0;
     padding: 0;
+    z-index:10000;
   }
 
   .top {
@@ -48,6 +49,7 @@
 
   .glow {
     position: absolute;
+    z-index:10000;
   }
 </style>
 

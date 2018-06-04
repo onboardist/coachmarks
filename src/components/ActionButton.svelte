@@ -1,7 +1,7 @@
 <div class="action-btn" on:click="handleClick()">
   {#if type == 'next' }
     <svg xmlns="http://www.w3.org/2000/svg" class="next-button">
-      <g transform="scale(0.065), translate(100, 140)">
+      <g transform="scale(0.065), translate(140, 170)">
         <use xlink:href="#right-arrow"></use>
       </g>
     </svg>
@@ -16,7 +16,7 @@
 @buttonBorderSize: 3px;
 
 .action-btn {
-  z-index: 9999;
+  z-index: 10003;
   border-radius: 50%;
   border: @buttonBorderSize solid $color;
   height: 56px;
@@ -27,7 +27,7 @@
   color: @color;
   margin: 5vmin;
   font-size: @buttonSize - 20px;
-  line-height: floor(@buttonSize - (@buttonBorderSize * 2 * .75));
+  line-height: 58px; // floor(@buttonSize - (@buttonBorderSize * 2 * .75));
   text-align: center;
   cursor: pointer;
   box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.12), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2);

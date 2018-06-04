@@ -62,7 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
 # Todo
 
 - [ ] Clean up readme
+- [ ] Not showing right here on iPhone X view: https://onboardist.github.io/coachmarks/
 - [ ] Make `coachmarks.show()` return a promise
+- [ ] Fixed headers and footers will take up space. Maybe allow setting a "root" element to overlay on top of
+- [ ] Allow passing in a full set of coachmarks and flows with JSON
+- [ ] Allow setting text and svg color dynamically, or at least at start
 - [x] Remove extraneous packages that are no longer needed now that we're doing leader-line for arrows
 - [x] Change to hand-drawn font
 - [x] Set up "flow" of coachmarks, so one gets displayed after the other

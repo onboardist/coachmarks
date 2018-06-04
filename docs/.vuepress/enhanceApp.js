@@ -9,10 +9,20 @@ export default ({
     // Routing to homepage
     if (to.fullPath === '/') {
       Vue.nextTick(() => {
+        let guideSelector = '.nav-item [href="/coachmarks/guide/"';
+        if (window.getComputedStyle(document.querySelector('.sidebar-button')).display !== 'none') {
+          guideSelector = '.sidebar-button';
+        }
+
         coachmarks.add('try-it', {
-          target: '.nav-item [href="/coachmarks/guide/"',
-          text: 'You tried it! See the guide to get started'
+          target: '.hero h1',
+          text: 'You tried it!'
         });
+        coachmarks.add('guide-link', {
+          target: guideSelector,
+          text: 'Check out the guide to get started'
+        });
+        coachmarks.flow('try-it').next('guide-link');
 
         document.querySelector('.home .action-button').addEventListener('click', (event) => {
           // debugger;

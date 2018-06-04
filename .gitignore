@@ -64,4 +64,4 @@ cypress/screenshots/
 
 .cache/
 
-docs/vuepress/.dist/
+docs/.vuepress/dist/
