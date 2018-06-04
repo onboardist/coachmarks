@@ -1259,6 +1259,15 @@ function injectSVG() {
   return s;
 }
 
+// document.addEventListener('DOMContentLoaded', () => {
+//   const overlay = new Overlay({
+//     target: document.querySelector('body'),
+//   });
+//
+//   overlay.show(document.querySelector('button'));
+// });
+
+// Run on module load
 init();
 
 window.CoachmarkCache = cache;

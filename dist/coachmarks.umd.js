@@ -68,7 +68,7 @@ var performanceNow = createCommonjsModule(function (module) {
 
 }).call(commonjsGlobal);
 
-//# sourceMappingURL=performance-now.js.map
+
 });
 
 var root = typeof window === 'undefined' ? commonjsGlobal : window;
@@ -1391,6 +1391,15 @@ function injectSVG() {
   return s;
 }
 
+// document.addEventListener('DOMContentLoaded', () => {
+//   const overlay = new Overlay({
+//     target: document.querySelector('body'),
+//   });
+//
+//   overlay.show(document.querySelector('button'));
+// });
+
+// Run on module load
 init();
 
 window.CoachmarkCache = cache;
