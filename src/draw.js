@@ -5,12 +5,13 @@ import raf from 'raf';
 import cache from './cache';
 import { default as Flow } from './flow';
 import Text from './components/Text.svelte';
+import Overlay from './components/Overlay.svelte';
 
 const COLOR = '#fff';
 
 // Spacing between line and node
 const lineOffset = 20;
-const elmNames = ['text', 'textContainer', 'coachTop', 'coachLeft', 'coachRight', 'coachBottom', 'glow', 'actionButton', 'svg', 'path'];
+const elmNames = ['text', 'textContainer', 'overlay', 'actionButton', 'svg', 'path'];
 
 export function clear() {
   hideAll();
@@ -86,54 +87,12 @@ function coach(mark) {
 
   cache.set('elm', elm);
 
-  // if (elm.className.indexOf('draggable-source') === -1) elm.className += ' draggable-source';
-
-  // elm.style.position = 'absolute';
-  // elm.style['z-index'] = 102;
-
-  const borderRadius = window.getComputedStyle(elm).getPropertyValue('border-radius');
-  // borderRadius = parseInt(borderRadius, 10);
-
-  const rect = elm.getBoundingClientRect();
-
-  const top = rect.top;
-  const left = rect.left;
-  const width = rect.width;
-  const height = rect.height;
-  const right = left + width;
-  const bottom = top + height;
-
-  const coachTop = cache.default('coachTop', () => document.createElement('div'));
-  coachTop.className = 'coachmark-top';
-  const coachLeft = cache.default('coachLeft', () => document.createElement('div'));
-  coachLeft.className = 'coachmark-left';
-  const coachRight = cache.default('coachRight', () => document.createElement('div'));
-  coachRight.className = 'coachmark-right';
-  const coachBottom = cache.default('coachBottom', () => document.createElement('div'));
-  coachBottom.className = 'coachmark-bottom';
-
-  coachTop.style.height = top + 'px';
-  coachLeft.style.top = top + 'px';
-  coachRight.style.top = coachLeft.style.top;
-  coachLeft.style.height = height + 'px';
-  coachRight.style.height = coachLeft.style.height;
-  coachLeft.style.width = left + 'px';
-  coachRight.style.left = right + 'px';
-  coachBottom.style.top = bottom + 'px';
-
-  const glow = cache.default('glow', () => document.createElement('div'));
-
-  glow.className = 'coachmark-glow';
-  glow.style.top = (top) + 'px';
-  glow.style.left = (left) + 'px';
-  glow.style.width = (width) + 'px';
-  glow.style.height = (height) + 'px';
-  glow.style['border-radius'] = borderRadius;
-  glow.style['box-shadow'] = '0 0 ' + 20 + 'px ' + 10 + 'px #fff'; //  TODO: this style should probably be dynamic
+  const overlay = cache.default('overlay', () => new Overlay({ target: document.querySelector('body') }));
+  overlay.show(elm);
 
   const actionBtn = createActionButton(mark);
 
-  [coachTop, coachLeft, coachRight, coachBottom, glow, actionBtn].forEach(c => {
+  [actionBtn].forEach(c => {
     if (!c.parentNode) {
       document.body.appendChild(c);
     }
